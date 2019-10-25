@@ -62,11 +62,16 @@ const int IDLE = 1; //maybe this as a general status for being mission ready bef
 const int READY_TO_RECIEVE = 2;
 const int READY_TO_SEND = 3;
 
-//error status IDs
-#define ERROR_ADDR 1
-#define ERROR_POWER 2
-#define ERROR_DATAFORMAT 3
-#define ERROR_CALIB 4
-#define ERROR_POLL 5
+//return codes (success and error types)
+enum result_type
+{
+	RESULT_SUCCESS, RESULT_FALSE, ERROR_ADDR, ERROR_POWER, ERROR_DATAFORMAT, ERROR_READ, ERROR_POLL, ERROR_INVALID_STATUS
+}
+
+//sensor status types
+enum sensor_status_type
+{
+	STATUS_IDLE, STATUS_OFF, STATUS_ERROR
+}
 
 #endif

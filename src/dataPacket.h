@@ -17,17 +17,13 @@ struct datapacket {
   float gyro_y;
   float gyro_z;
   float mag_x;
-  float mag_y;
-  float mag_z;
-  float mag_heading; 
+  //float mag_y;
+  //float mag_z;
+  //float mag_heading; 
   float temp_tempC;
   float baro_pressure; // in mmHg
   float baro_altitude; // in meters
 };
-
-//can't do reference in C, so change to pointers
-//can't do reference in C, so change to pointers
-//can't do reference in C, so change to pointers
 
 bool init(datapacket& dp); {/*...*/}
 //initializes data packet's values to 0...?

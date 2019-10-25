@@ -1,0 +1,24 @@
+MRAA/I2C Notes and Information:
+
+MRAA:
+-You MUST set the address that the i2c bus is talking to before every read/write to make sure using the i2c.address(uint8_t address) function
+
+-When writing to i2c, use i2c.write(buffer,numberofbytes), where the first byte in the buffer contains the i2c command/register to write, and the second is the actual 
+
+-When reading from i2c, use i2c.read(uint8_t* data, int length), which will read the data of specified length and put the number of bytes into the data pointer
+
+I2C Basic Operation (as explained in LSM6DS33 datasheet):
+-The transaction on the bus is started through a START (ST) signal. A START condition is
+defined as a HIGH to LOW transition on the data line while the SCL line is held HIGH. After
+this has been transmitted by the master, the bus is considered busy. The next byte of data
+transmitted after the start condition contains the address of the slave in the first 7 bits and
+the eighth bit tells whether the master is receiving data from the slave or transmitting data to
+the slave. When an address is sent, each device in the system compares the first seven bits
+after a start condition with its address. If they match, the device considers itself addressed
+by the master.
+
+-Data transfer with acknowledge is mandatory. The transmitter must release the SDA line
+during the acknowledge pulse. The receiver must then pull the data line LOW so that it
+remains stable low during the HIGH period of the acknowledge clock pulse. A receiver
+which has been addressed is obliged to generate an acknowledge after each byte of data
+received.

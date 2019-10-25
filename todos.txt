@@ -1,0 +1,32 @@
+This document will be used for listing TODOs or ideas for re-designing of code to achieve some better purpose.
+
+This document will have a running record of these TODOs or ideas including who made the suggestion and when did they make it. This helps to identify and keep track of certain ideas/changes that will be made to the code (or will potentially be made).
+
+Most recent suggestions place on top; older towards bottom. Confirmed design changes place in the "TODO" section. Finished major design changes, move from "TODO" to "DONE" section
+
+=============================================TODO:=============================================
+
+-add "Data" struct abstract base class, and each sensor has derived class that holds data members that are specific to that sensor (i.e. LSM6DS33 have 6 readings that are floats from accelerometer and gyroscope, wheras current sensor may be only 2 or 3 float readings)
+-Have poll() of derived classes from "Sensor" abstract base class return instance of "Data" struct
+-Update "datapacket" struct by removing unnecessary data members, and include new ones (such as current/power usage readings)
+-Clean up code in every section
+-Separate code into HEADER files and CPP IMPLEMENTATION files as it should be (header files should NOT CONTAIN IMPLEMENTATIONS)
+-Organize repository holding all of this source code once separating the files into HEADER and Implementation files.
+-Make a Makefile for compiling and linking everything
+-Make a README file
+
+==========================================SUGGESTIONS:==========================================
+
+Harrison Cassar, 4/30/19
+-Potentially replace global variables/unnecessary macros in globals.h with enums (especially those representing status returns and such, just like MRAA library does)
+-Update "datapacket" struct to comply with suggestions from PDR (maybe have "datapacket" abstract base class with more specific data packets, such as separate for avionics data, power data, etc.; could have a general struct that is built when wanting to receive all data)
+-Update "datapacket" and add timestamp/some sort of identifier
+-Remove calibrate function from Sensor-derived class's constructors AND/OR remove calibrate() function altogether, as potentially not needed
+-LSM6DS33 has a STATUS_REG that can be checked for its individual bits to see if data is available for temp/gyro/accelerometer (look into this, as could use as a way to see if read-in data is just old data that was never updated)
+-Look into self-test feature for LSM6DS33 talked about on page 51/78 of datasheet for CTRL5_C register
+-Look into "wake-up" feature for LSM6DS33 (well for any sensor really) for each of the accel and gyro outputs (potential for "not reading data at high rate until hitting X g's")
+
+=============================================DONE:=============================================
+
+-Remove all sensor's separation between "raw" and "processed" data in array data members (remove both)
+-Add "PowerOn" and "PowerOff" functions to sensor base class as suggested by PDR

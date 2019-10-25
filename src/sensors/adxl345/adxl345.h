@@ -8,7 +8,8 @@
 #include "globals.h"
 
 //buffer size
-#define BUFFER_SIZE 6;
+#define BUFFER_SIZE 6
+#define DATA_REG_SIZE 6
 
 //address and ID
 #define ADXL345_I2C_ADDR 0x1D //or 0x53 for address IF ALT ADDRESS pin (Pin 12) is grounded
@@ -42,7 +43,6 @@
 #define ADXL345_YOUT_H 0x35
 #define ADXL345_ZOUT_L 0x36
 #define ADXL345_ZOUT_H 0x37
-#define DATA_REG_SIZE 6
 
 //data and power management
 #define ADXL345_BW_RATE 0x2C
@@ -109,15 +109,19 @@ public:
 			std::cerr << "Unable to initial poll ADXL345." << endl;
 			exit(ERROR_POLL);
 		}
-	};
+
+		m_offsets[0] = 0.003773584;
+    	m_offsets[1] = 0.003773584;
+    	m_offsets[2] = 0.00390625;
+	}
 
 	virtual bool calibrate() {/*...*/}
 	//zeros sensor to current reading (different sensors will have slightly different implementations)
 	//returns true if successfully calibrated; false otherwise
 	//return type can always be changed to an int to allow for more error returns (status constants described in systems.h or in globals.h files)
 
-	virtual bool poll() {
-
+	virtual bool poll()
+	{
 		//set I2C address
 		if (m_i2c.address(ADXL345_I2C_ADDR) != mraa::SUCCESS)
 		{
@@ -144,12 +148,17 @@ public:
 	}
 	//"poll","read","get"; reads raw data from sensor and places it into sensor's respective member variable; maybe into a file as well? or an input stream? and then preprocess function can pull from that?
 
-	virtual bool longPoll() { return false; //dummy}
+	virtual bool longPoll() { return false; /*dummy*/}
 	//call poll() over a longer period of time, averaging out the values (maybe allow time input functionality, or just do poll 10 times and average out the values, storing result into rawAccel array)
 	//"poll","read","get"; reads raw data from sensor and returns it; maybe into a file? or an input stream? or a member variable of the class/struct? and then preprocess function can pull from that?
 	//rawData type is a placeholder for now; will return raw sensor data
 
-	virtual float preprocess() { return 1.0; //dummy}
+	virtual float preprocess()
+	{
+		m_processedAccel[0] = m_rawAccel[0] * m_offsets[0];
+		m_processedAccel[1] = m_rawAccel[1] * m_offsets[1];
+		m_processedAccel[2] = m_rawAccel[2] * m_offsets[2];
+	}
 	//converts raw sensor data into relevant values
 	//make sure to include offsets in the preprocessing(?)
 
@@ -174,12 +183,11 @@ public:
 		std::cout << "ProcessedZ: " << m_processedAccel[3] << endl;
 	}
 
-
-
 private:
 	mraa::I2c m_i2c;
 	float m_rawAccel[3];
 	float m_processedAccel[3];
+	float m_offsets[3];
 	//need something for offsets/scaling for preprocessing/calibration
 	uint8_t m_buffer[BUFFER_SIZE];
 }
