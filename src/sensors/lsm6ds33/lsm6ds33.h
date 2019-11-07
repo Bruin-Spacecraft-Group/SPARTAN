@@ -269,7 +269,7 @@ public:
 			return ERROR_ADDR;
 		}
 
-		if (m_i2c.readReg(LSM6DS33_STATUS_REG,m_buffer,1) == std::invalid_argument)
+		if (m_i2c.readBytesReg(LSM6DS33_STATUS_REG,m_buffer,1) == -1)
 			return ERROR_READ;
 
 		uint8_t temp = 0;

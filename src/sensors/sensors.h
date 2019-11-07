@@ -3,7 +3,7 @@
 #define SENSORS_H
 
 #include <mraa/i2c.hpp>
-#include "globals.h"
+#include "../globals.h"
 
 //rawData pollAll() {/*...*/}
 //test mode function; will call construct datapacket function (abstracted function)

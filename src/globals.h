@@ -66,12 +66,12 @@ const int READY_TO_SEND = 3;
 enum result_type
 {
 	RESULT_SUCCESS, RESULT_FALSE, ERROR_ADDR, ERROR_POWER, ERROR_DATAFORMAT, ERROR_READ, ERROR_POLL, ERROR_INVALID_STATUS
-}
+};
 
 //sensor status types
 enum sensor_status_type
 {
 	STATUS_IDLE, STATUS_OFF, STATUS_ERROR
-}
+};
 
 #endif
