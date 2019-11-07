@@ -7,8 +7,8 @@
 
 #include <iostream>
 #include <cstdlib>
-#include "sensors.h"
-#include "globals.h"
+#include "../sensors.h"
+#include "../../globals.h"
 
 //buffer size for writing values to registers
 #define BUFFER_SIZE 14
@@ -218,7 +218,7 @@ public:
 	}
 
 	//returns RESULT_FALSE if no new data, RESULT_SUCCESS if member data was updated with latest reading, ERROR in the case of an error
-	virtual int poll()
+	virtual bool poll()
 	{
 		if (m_status == STATUS_OFF)
 			return ERROR_INVALID_STATUS;

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "sensors.h"
+#include "../sensors.h"
 #include "lsm6ds33.h"
 
 int main()
