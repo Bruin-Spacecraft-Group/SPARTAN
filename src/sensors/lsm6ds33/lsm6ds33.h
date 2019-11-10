@@ -103,7 +103,7 @@ LSB is 0 (8th bit in address) for write
 class LSM6DS33 : public Sensor
 {
 public:
-	LSM6DS33(int busID, int instance): Sensor(busID, instance), m_i2c(busID)
+	LSM6DS33(int busID, int instance): Sensor(busID, instance), m_i2c(busID,true)
 	{
 		//set offsets
 		m_temp_offset = 1;

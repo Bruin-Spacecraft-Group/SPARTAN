@@ -1,14 +1,17 @@
 #include <iostream>
 #include "../sensors.h"
 #include "lsm6ds33.h"
-
+#include <unistd.h>
 int main()
 {
-	LSM6DS33 lsm6(0, 1);
+	LSM6DS33 lsm6(1, 1);
+
+	std::cout<<"lsm instance created" << std::endl;
 
 	lsm6.powerOn();
 
 	std::cout << "Input number of desired readings: " << std::endl;
+
 	unsigned int numOfReadings;
 	std::cin >> numOfReadings;
 
@@ -18,6 +21,7 @@ int main()
 	{
 		lsm6.poll();
 		lsm6.printValues();
+		usleep(1000000);
 	}
 
 	lsm6.printSensorInfo();
