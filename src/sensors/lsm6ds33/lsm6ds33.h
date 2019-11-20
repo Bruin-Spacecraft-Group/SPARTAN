@@ -310,12 +310,12 @@ public:
 
 private:
 	mraa::I2c m_i2c;
-	float m_temp;
-	float m_accel[3];
-	float m_gyro[3];
-	float m_temp_offset;
-	float m_accel_offsets[3]; //offsets for temp, accel, and gyro for proper calibration purposes
-	float m_gyro_offsets[3];
+	unsigned short m_temp;
+	unsigned short m_accel[3];
+	unsigned short m_gyro[3];
+	unsigned short m_temp_offset;
+	unsigned short m_accel_offsets[3]; //offsets for temp, accel, and gyro for proper calibration purposes
+	unsigned short m_gyro_offsets[3];
 	uint8_t m_buffer[BUFFER_SIZE];
 };
 
