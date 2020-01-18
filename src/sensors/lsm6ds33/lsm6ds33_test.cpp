@@ -20,7 +20,7 @@ int main()
 	for (unsigned int i = 0; i < numOfReadings; i++)
 	{
 		lsm6.poll();
-		lsm6.printValues();
+		lsm6.printRawValues();
 		usleep(1000000);
 	}
 

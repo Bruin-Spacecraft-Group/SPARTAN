@@ -295,7 +295,7 @@ public:
 		std::cout << "======================================" << std::endl;
 	}
 
-	virtual void printValues()
+	virtual void printRawValues()
 	{
 		std::cout << "======================================" << std::endl;
 		std::cout << "Temp: " << m_temp << std::endl;
@@ -307,6 +307,19 @@ public:
 		std::cout << "GyroZ: " << m_gyro[2] << std::endl;
 		std::cout << "======================================" << std::endl;
 	}
+    
+    virtual void printValues() {
+        std::cout << "======================================" << std::endl;
+        std::cout << "Temp: " << m_temp
+    }
+    
+    virtual int * getValues() {
+        for (int i=0; i<3; i++) {
+            m_accel[i] = m_accel[i] * m_accel_offsets[4] + m_accel_offsets[i];
+            m_gyro[i] = m_gyro[i] * m_gyro_offsets[4] + m_gyro_offsets[i];
+        }
+        m_temp = m_temp + m_temp_offset
+    }
 
 private:
 	mraa::I2c m_i2c;
@@ -314,8 +327,8 @@ private:
 	unsigned short m_accel[3];
 	unsigned short m_gyro[3];
 	unsigned short m_temp_offset;
-	unsigned short m_accel_offsets[3]; //offsets for temp, accel, and gyro for proper calibration purposes
-	unsigned short m_gyro_offsets[3];
+	unsigned short m_accel_offsets[4]; // 1, 2, 3 are offsets that are added to the value, 4 is a scale factor applied.
+	unsigned short m_gyro_offsets[4];  // Same as above
 	uint8_t m_buffer[BUFFER_SIZE];
 };
 
