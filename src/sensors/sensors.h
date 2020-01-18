@@ -57,24 +57,10 @@
 
 //EACH SENSOR WILL HAVE THEIR OWN CLASSES; THIS IS JUST TO INDICATE THAT EACH SENSOR WILL HAVE THESE GENERAL FUNCTIONS BUT MODIFIED IN SOME WAY (sensor is an abstract base class)
 //i.e. ADXL345 accel1(I2C_BUS_ID);
-
-#define RAW_BOOL 1
-
-/*
-
- I2c(int bus, bool raw = false)
-     Instantiates an i2c bus. Multiple instances of the same bus can exist and the bus is not guaranteed to be on the correct address before read/write.
-
-     Parameters
-     bus    The i2c bus to use
-     raw    Whether to disable pinmapper for your board
-
- */
-
 class Sensor
 {
 public:
-	Sensor(int busID, int instance) : m_i2c(busID, RAW_BOOL), m_busID(busID), m_status(STATUS_OFF), m_instance(instance) {/*...*/ }
+	Sensor(int busID, int instance) : m_i2c(busID,true), m_busID(busID), m_status(STATUS_OFF), m_instance(instance) {/*...*/ }
 	//constructor that takes in pin number that sensor is connected to; this pin number would be used for all member functions
 
 	virtual int powerOn() = 0;
@@ -100,11 +86,7 @@ public:
 
 	virtual void printSensorInfo() = 0;
 
-	virtual void printRawValues() { /* ... */ };
-    
-    virtual void printValues() {/* ... */ };
-    
-    virtual int* getValues() { return -1 }
+	virtual void printValues() { /* ... */ };
 
 	int getBusID() const
 	{
