@@ -3,6 +3,7 @@
 
 #include "sensors.h"
 #include "globals.h"
+#include <libgpsmm.h>
 
 class GPS : public Sensor {
 
