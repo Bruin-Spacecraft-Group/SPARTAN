@@ -12,6 +12,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
+#include <unistd.h>
 #include "../sensors.h"
 #include "../../globals.h"
 
@@ -111,12 +112,15 @@ class DPS422XTSA1 : public Sensor {
 public:
     DPS422XTSA1(int busID, int instance, uint8_t p_rate, uint8_t p_resolution, uint8_t t_rate, uint8_t t_resolution): Sensor(busID, instance), m_i2c(busID, true) {
         // wait at least 8ms before writing and reading from registers
-        sleep(0.02);
+        usleep(1000000);
         m_status = STATUS_IDLE;
         psr_rate = p_rate;
         psr_resolution = p_resolution;
         tmp_rate = t_rate;
         tmp_resolution = t_resolution;
+        if (m_i2c.address(DPS422XTSA1_I2C_ADDR) != mraa::SUCCESS) {
+            cerr << "Unable to set address." << endl;
+        } 
 
         // set pressure measurement rate and resolution
         uint8_t p_meas = (p_rate << 4) | p_resolution;
@@ -150,11 +154,24 @@ public:
         C11 = (((p_constants[14] << 8) | p_constants[15]) << 1) | (((p_constants[16] & 0x80) >> 7) & 0x1);      // 17 bit
         C12 = ((((p_constants[16] & 0x7F) << 8) | p_constants[17]) << 2) | ((p_constants[18] >> 6) & 0x3);      // 17 bit
         C21 = ((p_constants[18] & 0x3F) << 8) | p_constants[19];                                                // 14 bit
+/*
+
+    m_c00 = ((uint32_t)buffer_prs[0] << 12) | ((uint32_t)buffer_prs[1] << 4) | (((uint32_t)buffer_prs[2] & 0xF0) >> 4);
+    m_c10 = ((uint32_t)(buffer_prs[2] & 0x0F) << 16) | ((uint32_t)buffer_prs[3] << 8) | (uint32_t)buffer_prs[4];
+    m_c01 = ((uint32_t)buffer_prs[5] << 12) | ((uint32_t)buffer_prs[6] << 4) | (((uint32_t)buffer_prs[7] & 0xF0) >> 4);
+    m_c02 = ((uint32_t)(buffer_prs[7] & 0x0F) << 16) | ((uint32_t)buffer_prs[8] << 8) | (uint32_t)buffer_prs[9];
+    m_c20 = ((uint32_t)(buffer_prs[10] & 0x7F) << 8) | (uint32_t)buffer_prs[11];
+    m_c30 = ((uint32_t)(buffer_prs[12] & 0x0F) << 8) | (uint32_t)buffer_prs[13];
+    m_c11 = ((uint32_t)buffer_prs[14] << 9) | ((uint32_t)buffer_prs[15] << 1) | (((uint32_t)buffer_prs[16] & 0x80) >> 7);
+    m_c12 = (((uint32_t)buffer_prs[16] & 0x7F) << 10) | ((uint32_t)buffer_prs[17] << 2) | (((uint32_t)buffer_prs[18] & 0xC0) >> 6);
+    m_c21 = (((uint32_t)buffer_prs[18] & 0x3F) << 8) | ((uint32_t)buffer_prs[19]);
+*/
+
 
         // organize temperature constants
         T_gain = t_constants[0];                                    // 8 bit
-        T_dVbe = t_constants[1] & 0xFE;                             // 7 bit
-        T_Vbe = ((t_constants[1] & 0x1) << 8) | t_constants[2];     // 9 bit
+        T_dVbe = (uint8_t)t_constants[1] >> 1;                             // 7 bit
+        T_Vbe = ((uint8_t)t_constants[1] & 0x1) | ((uint8_t)t_constants[2] << 1);     // 9 bit
     }
 
     virtual int powerOn() { return RESULT_SUCCESS; }
@@ -178,7 +195,7 @@ public:
         tmp_rate = 0;
         tmp_resolution = 0;
         m_pres = 0;
-        m_tmp = 0;
+        m_temp = 0;
     }
 
 /*
@@ -251,24 +268,36 @@ public:
 
     virtual bool poll() {
         if (m_status != STATUS_IDLE) { return ERROR_INVALID_STATUS; }
-        
         // read data values from registers
         if (m_i2c.readBytesReg(DPS422XTSA1_PSR_MSB, m_buffer, DATA_SIZE) == -1) {
-            cerr << "Unable to read bytes from registers. Please wait 8ms from startup before attempting to read from registers." << endl;
-            return ERROR_POLL;
+             cerr << "Poll: Unable to read bytes from registers. Please wait 8ms from startup before attempting to read from registers." << endl;
+             return ERROR_POLL;
         }
+   /* 
+        for(int i = 0; i < DATA_SIZE; i++) {
+            if (m_i2c.readBytesReg(DPS422XTSA1_PSR_MSB, m_buffer, 1) == -1) {
+                 cerr << "Poll: Unable to read bytes from registers. Please wait 8ms from startup before attempting to read from registers." << endl;
+                 m_buffer -= i;
+                 return ERROR_POLL;
+            }
+            m_buffer++;
+        }
+        m_buffer -= DATA_SIZE;
+*/
 
         // Pressure calculations
         float pres_raw = ((((m_buffer[0] << 8) | m_buffer[1]) << 8) | m_buffer[2]);
         float temp_raw = ((((m_buffer[3] << 8) | m_buffer[4]) << 8) | m_buffer[5]);
+        cout << "pres: " << pres_raw << endl;
+        cout << "temp: " << temp_raw << endl;
         float pres_scaled = pres_raw / getkP();
         float temp_x = temp_raw / 1048576;
         float temp_scaled = (8.5 * temp_x) / (1 + 8.8 * temp_x);
         m_pres = C00 + (C10 * pres_scaled) + (C01 * temp_scaled) + (C20 * pow(pres_scaled, 2)) + (C02 * pow(temp_scaled, 2)) + (C30 * pow(pres_scaled, 3)) + (C11 * pres_scaled * temp_scaled) + (C12 * pres_scaled * pow(temp_scaled, 2)) + (C21 * pow(pres_scaled, 2) * temp_scaled);
-
+        
         // Temperature calculations
         float Vbe = T_Vbe * 1.05031 * pow(10, -4) + 0.463232422;
-        float dVbe = T_dVbe × 1.25885 * pow(10, -5) + 0.04027621;
+        float dVbe = T_dVbe * 1.25885 * pow(10, -5) + 0.04027621;
         float adc = T_gain * 8.4375 * pow(10, -5) + 0.675;
         float Vbe_cal = Vbe / adc;
         float dVbe_cal = dVbe / adc;
@@ -282,7 +311,6 @@ public:
         float T_cal = temp_raw / 1048576;
         float mu = T_cal / (1 + ALPHA * T_cal);
         m_temp = (A * mu) + B;
-
         return RESULT_SUCCESS;
     }
     
@@ -291,47 +319,48 @@ public:
         if (m_status == STATUS_ERROR) { return STATUS_ERROR; }
 
         // read data value from register
+/*
         uint8_t* stat;
         if (m_i2c.readBytesReg(DPS422XTSA1_MEAS_CFG, stat, 1) == -1) {
             cerr << "Unable to read byte from measurements register." << endl;
             return STATUS_ERROR;
         }
-        
-        switch(*stat & 0x7) {
+ */       
+        switch(m_buffer[8] & 0x7) {
             case 0x0:
             case 0x4:
                 cout << "Altimeter in Standby Mode. No measurements being taken." << endl;
-                continue;
+                break;  
             case 0x1:
                 cout << "Altimeter in Command Mode. One Pressure measurement being performed according to the selected precision." << endl;
-                continue;
+                break;
             case 0x2:
                 cout << "Altimeter in Command Mode. One Temperature measurement being performed according to the selected precision." << endl;
-                continue;
+                break;
             case 0x3:
                 cout << "Altimeter in Command Mode. One Temperature and one Pressure measurement being performed according to the selected precision." << endl;
-                continue;
+                break;
             case 0x5:
                 cout << "Altimeter in Background Mode. Continuous Pressure measurements being taken according to the selected precision." << endl;
-                continue;
+                break;
             case 0x6:
                 cout << "Altimeter in Background Mode. Continuous Temperature measurements being taken according to the selected precision." << endl;
-                continue;
+                break;
             case 0x7:
                 cout << "Altimeter in Background Mode. Continuous Temperature and Pressure measurements being taken according to the selected precision." << endl;
-                continue;
+                break;
             default:
                 return STATUS_ERROR;
         }
         return STATUS_IDLE;
     }
     
-    virtual void printSensorInfo() const {
+    virtual void printSensorInfo() {
         cout << "Name: DPS422XTSA1" << endl;
         cout << "Status: " << getStatus() << endl;
     }
 
-    virtual void printValues() const {
+    virtual void printValues() {
         cout << "Temperature: " << m_temp << endl;
         cout << "Pressure: " << m_pres << endl;
         cout << "Configuration Registers: " << endl;
@@ -353,21 +382,24 @@ public:
  */
     int getkP() const { return m_kp[psr_resolution]; }
 
-    void getPressureRate() const { return psr_rate; }
-    void getPressureResolution() const { return psr_resolution; }
-    void getTemperatureRate() const { return tmp_rate; }
-    void getTemperatureResolution() const { return tmp_resolution; }
+    uint8_t getPressureRate() const { return psr_rate; }
+    uint8_t getPressureResolution() const { return psr_resolution; }
+    uint8_t getTemperatureRate() const { return tmp_rate; }
+    uint8_t getTemperatureResolution() const { return tmp_resolution; }
 
 private:
+    mraa::I2c m_i2c;
     uint8_t psr_rate = 0, psr_resolution = 0;
     uint8_t tmp_rate = 0, tmp_resolution = 0;
     float m_pres = 0, m_temp = 0;
     float C00, C01, C02, C10, C11, C12, C20, C21, C30;
+//    float m_c00, m_c01, m_c02, m_c10, m_c11, m_c12, m_c20, m_c21, m_c30;
     float T_Vbe, T_dVbe, T_gain;
-    const float m_kp[8] = [524288, 1572864, 3670016, 7864320, 253952, 516096, 1040384, 2088960];
+    float m_kp[8] = {524288, 1572864, 3670016, 7864320, 253952, 516096, 1040384, 2088960};
     uint8_t m_buffer[BUFFER_SIZE];
     uint8_t p_constants[PSR_BUFF_SIZE];
+//    uint8_t buffer_prs[20];
     uint8_t t_constants[TMP_BUFF_SIZE];
-}
+};
 
 #endif /* dps422xtsa1_h */
