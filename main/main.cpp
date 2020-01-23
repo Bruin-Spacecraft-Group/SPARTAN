@@ -1,10 +1,11 @@
 #include <iostream>
 
-#include <sensors/test.h>
-
 #include <data/datapacket.h>
 #include <sensors/sensor.h>
+// #include <sensors/test.h>
 
 int main() {
-    spartan::say_hello();
+    spartan::DataPacket masterDP;
+    spartan::IMUDataPacket hello;
+    hello.populate(masterDP);
 }

@@ -1,5 +1,7 @@
 add_library(
     spartanflightlib
+    ./src/data/datapacket.h
+    ./src/data/datapacket.cpp
     ./src/sensors/test.h
     ./src/sensors/test.cpp
     ./src/sensors/sensor.h
