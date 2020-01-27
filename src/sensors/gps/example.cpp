@@ -6,7 +6,7 @@
 //  reference declarations: https://fossies.org/dox/gpsd-3.20/index.html
 //
 //  compiles without warning as follows:
-//  g++ -Wall -std=c++14 -pedantic $(pkg-config --cflags --libs libgps) gpsd-example.cpp -o gpsd-example
+//  g++ -Wall -std=c++14 -pedantic $(pkg-config --cflags --libs libgps) example.cpp -o example
 //  Free for the taking.
 //  Version 1.4
 
