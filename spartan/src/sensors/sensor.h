@@ -8,7 +8,7 @@ namespace spartan {
     public:
         Sensor() {}
         virtual bool pollData(DataPacket &dp) = 0;
-        virtual void printValues() = 0;
+        virtual void printValues() const = 0;
     };
 } // namespace spartan
 

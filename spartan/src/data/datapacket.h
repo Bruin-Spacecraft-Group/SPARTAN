@@ -32,16 +32,17 @@ namespace spartan {
     };
 
 
+    // Protocol (abstract base class) to which all datapackets conform to
     class PacketType {
     public:
-        virtual void populate(DataPacket &dp) = 0;
+        virtual void populate(const DataPacket &dp) = 0;
     protected:
         unsigned long m_timestamp;
     };
 
     class IMUDataPacket : public PacketType {
     public:
-        virtual void populate(DataPacket &dp);
+        virtual void populate(const DataPacket &dp);
     private:
         float m_accel_y;
         float m_accel_z;
@@ -53,7 +54,7 @@ namespace spartan {
 
     class AltimeterDataPacket : public PacketType {
     public:
-        virtual void populate(DataPacket &dp);
+        virtual void populate(const DataPacket &dp);
     private:
         float m_pressure;
         float m_baro_altitude;
@@ -61,7 +62,7 @@ namespace spartan {
     
     class GPSDataPacket : public PacketType {
     public:
-        virtual void populate(DataPacket &dp);
+        virtual void populate(const DataPacket &dp);
     private:
         float m_latitude;
         float m_longitude;
@@ -70,7 +71,7 @@ namespace spartan {
 
     class AVNHealthPacket : public PacketType {
     public:
-        virtual void populate(DataPacket &dp);
+        virtual void populate(const DataPacket &dp);
     private:
         float m_voltage_AVN;
         float m_IMU1_current;
@@ -82,7 +83,7 @@ namespace spartan {
 
     class FCHealthPacket : public PacketType {
     public:
-        virtual void populate(DataPacket &dp);
+        virtual void populate(const DataPacket &dp);
     private:
         float m_FC_voltage;
         float m_FC_current;
@@ -90,7 +91,7 @@ namespace spartan {
 
     class RadioHealthPacket : public PacketType {
     public:
-        virtual void populate(DataPacket &dp);
+        virtual void populate(const DataPacket &dp);
     private:
         float m_radio_voltage;
         float m_radio_current;
@@ -98,7 +99,7 @@ namespace spartan {
 
     class PayloadHealthPacket : public PacketType {
     public:
-        virtual void populate(DataPacket &dp);
+        virtual void populate(const DataPacket &dp);
     private:
         float m_payload_voltage;
         float m_payload_current;
