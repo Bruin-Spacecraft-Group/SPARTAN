@@ -1,3 +1,6 @@
+#ifndef ADS1115_H_INCLUDED
+#define ADS1115_H_INCLUDED
+
 // #include <mraa/i2c.hpp>
 #include <stdint.h>
 #include <sensors/sensor.h>
@@ -11,3 +14,5 @@ namespace spartan
         virtual void printValues() const;
     };
 } // namespace spartan
+
+#endif // ADS1115_H_INCLUDED
