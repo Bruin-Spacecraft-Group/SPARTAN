@@ -10,18 +10,19 @@ class MDP
 {
 public:
 
-    void set_accel(short accel[3]) {
+    void set_accel(float accel[3]) {
         d_accel = accel;
     }
     
-    void set_gyro(short gyro[3]) {
+    void set_gyro(float gyro[3]) {
         d_gyro = gyro;
     }
 
     char * print_as_JSON() {
-        char * str = new char[50];
-        std::sprintf(str, "{\"timestamp\": %d, \"d_accel\": [%d, %d, %d], \"d_gyro\": [%d, %d, %d]}", 
+        char * str ;
+        std::sprintf(str, "{\"timestamp\": %d, \"temp\": %.10f, \"d_accel\": [%.10f, %.10f, %.10f], \"d_gyro\": [%.10f, %.10f, %.10f]}", 
             timestamp, 
+            temp_from_IMU,
             d_accel[0], 
             d_accel[1], 
             d_accel[2], 
@@ -31,14 +32,16 @@ public:
         );
         return str;
     }
+
     
 
     MDP(int time) {
         timestamp = time;
     }
-private: 
-    short * d_accel;
-    short * d_gyro;
+// private: 
+    float * d_accel;
+    float * d_gyro;
+    float temp_from_IMU;
     int timestamp;
 };
 

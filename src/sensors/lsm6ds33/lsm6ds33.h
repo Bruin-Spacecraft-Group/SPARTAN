@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include "../sensors.h"
 #include "../../globals.h"
+#include "../mdp.h"
 
 //buffer size for writing values to registers
 #define BUFFER_SIZE 14
@@ -100,13 +101,17 @@ LSB is 0 (8th bit in address) for write
 #define LSM6DS33_GYRO_POWER_ON		0x80 //this is at 1.66kHz (high performance)
 #define LSM6DS33_POWER_OFF 			0x00
 
+// Data interpretation
+
+
+
 class LSM6DS33 : public Sensor
 {
 public:
 	LSM6DS33(int busID, int instance): Sensor(busID, instance), m_i2c(busID,true)
 	{
 		//set offsets
-		m_temp_offset = 1;
+		m_temp_offset = 0;
 		m_accel_offsets[0] = 1; //THESE VALUES HAVE NOT BEEN TESTED FOR YET
 		m_accel_offsets[1] = 1;
 		m_accel_offsets[2] = 1;
@@ -256,6 +261,13 @@ public:
 		return RESULT_SUCCESS;
 	}
 
+	virtual bool poll(MDP mdp) {
+
+		mdp.set_accel();
+
+		return RESULT_SUCCESS;
+	}
+
 	int hasNewData()
 	{
 		//NOTE: STATUS_REG on lSM6DS33 used to check if data is available for temp/gyro/accel
@@ -310,25 +322,43 @@ public:
     
     virtual void printValues() {
         std::cout << "======================================" << std::endl;
-        std::cout << "Temp: " << m_temp
+        std::cout << "Temp: " << (int) (m_temp / 16) << "degrees centigrade" << std::endl;
+		std::cout << "AccelX: " << m_accel[0] << std::endl;
+		std::cout << "AccelY: " << m_accel[1] << std::endl;
+		std::cout << "AccelZ: " << m_accel[2] << std::endl;
+		std::cout << "GyroX: " << m_gyro[0] << std::endl;
+		std::cout << "GyroY: " << m_gyro[1] << std::endl;
+		std::cout << "GyroZ: " << m_gyro[2] << std::endl;
+		std::cout << "======================================" << std::endl;
     }
     
-    virtual int * getValues() {
+    virtual float * getValues() {
+		float val[7];
         for (int i=0; i<3; i++) {
-            m_accel[i] = m_accel[i] * m_accel_offsets[4] + m_accel_offsets[i];
-            m_gyro[i] = m_gyro[i] * m_gyro_offsets[4] + m_gyro_offsets[i];
+            val[1+i] = (m_accel[i] + m_accel_offsets[i]) * m_accel_offsets[4];
+            val[4+i] = (m_gyro[i] + m_gyro_offsets[i]) * m_gyro_offsets[4] ;
         }
-        m_temp = m_temp + m_temp_offset
+        val[0] = (m_temp / 16) + m_temp_offset
+		return val;
     }
+
+	void calibrate(int count) {
+		
+		for (int i=0; i<count; i++) {
+			poll();
+
+		}
+		
+	}
 
 private:
 	mraa::I2c m_i2c;
-	unsigned short m_temp;
-	unsigned short m_accel[3];
-	unsigned short m_gyro[3];
-	unsigned short m_temp_offset;
-	unsigned short m_accel_offsets[4]; // 1, 2, 3 are offsets that are added to the value, 4 is a scale factor applied.
-	unsigned short m_gyro_offsets[4];  // Same as above
+	int m_temp;
+	int m_accel[3];
+	int m_gyro[3];
+	float m_temp_offset;
+	float m_accel_offsets[4]; // 1, 2, 3 are offsets that are added to the value, 4 is a scale factor applied.
+	float m_gyro_offsets[4];  // Same as above
 	uint8_t m_buffer[BUFFER_SIZE];
 };
 
