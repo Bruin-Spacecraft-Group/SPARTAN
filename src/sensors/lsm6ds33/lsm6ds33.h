@@ -248,22 +248,22 @@ public:
 		//record rawacceleration values using data reads for x,y,z respectively
 		//DATAx0 is the least significant byte, and DATAx1 is the most significant byte
 		//conversion of raw sensor data into relevant values based on constant offset values
-		m_temp = ((m_buffer[1] << 8) | m_buffer[0]) * m_temp_offset;
+		m_temp = ((m_buffer[1] << 8) | m_buffer[0]) + m_temp_offset;
 
-		m_accel[0] = ((m_buffer[3] << 8) | m_buffer[2]) * m_accel_offsets[0];
-		m_accel[1] = ((m_buffer[5] << 8) | m_buffer[4]) * m_accel_offsets[1];
-		m_accel[2] = ((m_buffer[7] << 8) | m_buffer[6]) * m_accel_offsets[2];
+		m_gyro[0] = ((m_buffer[3] << 8) | m_buffer[2]) * m_accel_offsets[0];
+		m_gyro[1] = ((m_buffer[5] << 8) | m_buffer[4]) * m_accel_offsets[1];
+		m_gyro[2] = ((m_buffer[7] << 8) | m_buffer[6]) * m_accel_offsets[2];
 
-		m_gyro[0] = ((m_buffer[9] << 8) | m_buffer[8]) * m_gyro_offsets[0];
-		m_gyro[1] = ((m_buffer[11] << 8) | m_buffer[10]) * m_gyro_offsets[1];
-		m_gyro[2] = ((m_buffer[13] << 8) | m_buffer[12]) * m_gyro_offsets[2];
+		m_accel[0] = ((m_buffer[9] << 8) | m_buffer[8]) * m_gyro_offsets[0];
+		m_accel[1] = ((m_buffer[11] << 8) | m_buffer[10]) * m_gyro_offsets[1];
+		m_accel[2] = ((m_buffer[13] << 8) | m_buffer[12]) * m_gyro_offsets[2];
 
 		return RESULT_SUCCESS;
 	}
 
 	virtual bool poll(MDP mdp) {
 
-		mdp.set_accel();
+		//mdp.set_accel(m_accel);
 
 		return RESULT_SUCCESS;
 	}
@@ -319,43 +319,59 @@ public:
 		std::cout << "GyroZ: " << m_gyro[2] << std::endl;
 		std::cout << "======================================" << std::endl;
 	}
+
+    const float accel_offset[4] = {0.061, 0.122, 0.244, 0.488};
+    const float gyro_offset[5] = {4.375, 8.75, 17.5, 35, 70};
     
     virtual void printValues() {
         std::cout << "======================================" << std::endl;
         std::cout << "Temp: " << (int) (m_temp / 16) << "degrees centigrade" << std::endl;
-		std::cout << "AccelX: " << m_accel[0] << std::endl;
-		std::cout << "AccelY: " << m_accel[1] << std::endl;
-		std::cout << "AccelZ: " << m_accel[2] << std::endl;
-		std::cout << "GyroX: " << m_gyro[0] << std::endl;
-		std::cout << "GyroY: " << m_gyro[1] << std::endl;
-		std::cout << "GyroZ: " << m_gyro[2] << std::endl;
+		std::cout << "AccelX: " << (float) (m_accel[0]*accel_offset[0]) << std::endl;
+		std::cout << "AccelY: " << (float) (m_accel[1]*accel_offset[0]) << std::endl;
+		std::cout << "AccelZ: " << (float) (m_accel[2]*accel_offset[0]) << std::endl;
+		std::cout << "GyroX: " << (float) (m_gyro[0]*gyro_offset[0]) << std::endl;
+		std::cout << "GyroY: " << (float) (m_gyro[1]*gyro_offset[0]) << std::endl;
+		std::cout << "GyroZ: " << (float) (m_gyro[2]*gyro_offset[0]) << std::endl;
 		std::cout << "======================================" << std::endl;
     }
-    
+   /*
     virtual float * getValues() {
 		float val[7];
         for (int i=0; i<3; i++) {
             val[1+i] = (m_accel[i] + m_accel_offsets[i]) * m_accel_offsets[4];
             val[4+i] = (m_gyro[i] + m_gyro_offsets[i]) * m_gyro_offsets[4] ;
         }
-        val[0] = (m_temp / 16) + m_temp_offset
+        val[0] = (m_temp / 16) + m_temp_offset;
 		return val;
-    }
+    } */
 
-	void calibrate(int count) {
-		
+    double avg[6]= {
+0, 0, 0, 0, 0, 0
+};
+	double * calibrate(int count) {
+
 		for (int i=0; i<count; i++) {
 			poll();
+            for (int i=0; i<3; i++) {
+                avg[i] += m_accel[i];
+                avg[i+3] += m_gyro[i];
+            }
 
 		}
+
+        for (int i=0; i<6; i++) {
+            avg[i] /= count;
+        }
+        
+        return avg;
 		
 	}
 
 private:
 	mraa::I2c m_i2c;
-	int m_temp;
-	int m_accel[3];
-	int m_gyro[3];
+	short m_temp;
+	short m_accel[3];
+	short m_gyro[3];
 	float m_temp_offset;
 	float m_accel_offsets[4]; // 1, 2, 3 are offsets that are added to the value, 4 is a scale factor applied.
 	float m_gyro_offsets[4];  // Same as above
