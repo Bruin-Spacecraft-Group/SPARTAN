@@ -1,0 +1,3 @@
+add_executable(flight_software main.cpp)
+
+target_link_libraries(flight_software PRIVATE spartanflightlib)
