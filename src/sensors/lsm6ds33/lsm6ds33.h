@@ -97,7 +97,7 @@ LSB is 0 (8th bit in address) for write
 #define LSM6DS33_MD2_CFG           	0x5F
 
 //useful values
-#define LSM6DS33_ACCEL_POWER_ON		0xA0 //this is at 6.6kHz (high performance)
+#define LSM6DS33_ACCEL_POWER_ON		0x88 //this is normal mode at +-4g
 #define LSM6DS33_GYRO_POWER_ON		0x80 //this is at 1.66kHz (high performance)
 #define LSM6DS33_POWER_OFF 			0x00
 
@@ -135,7 +135,7 @@ public:
 		//send "Power On" command for accelerometer
 		//change from default accelerometer full-scale selection to +-16g instead of +-2g
 		m_buffer[0] = LSM6DS33_CTRL1_XL;
-		m_buffer[1] = LSM6DS33_ACCEL_POWER_ON | 0x4;
+		m_buffer[1] = LSM6DS33_ACCEL_POWER_ON;
 		
 		if (m_i2c.write(m_buffer, 2) == mraa::ERROR_INVALID_PARAMETER)
 			std::cerr << "Invalid parameter." << std::endl;
@@ -166,12 +166,21 @@ public:
 		//change from default gyroscope full-scale selection to +-, 'OR' value here with LSM6DS33_GYRO_POWER_ON
 		m_buffer[0] = LSM6DS33_CTRL2_G;
 		m_buffer[1] = LSM6DS33_GYRO_POWER_ON; //MIGHT WANT TO CHANGE THIS 
-		
 		if (m_i2c.write(m_buffer, 2) != mraa::SUCCESS)
 		{
 			std::cerr << "Unable to write GYRO_POWER_ON to LSM6DS33." << std::endl;
 			return ERROR_POWER;
 		}
+
+
+		m_buffer[0] = LSM6DS33_CTRL3_C;
+		m_buffer[1] = 0x04;
+		if (m_i2c.write(m_buffer, 2) != mraa::SUCCESS)
+		{
+			std::cerr << "Unable to write GYRO_POWER_ON to LSM6DS33." << std::endl;
+			return ERROR_POWER;
+		}
+
 
 		//run first update of sensor
 		if (poll() == false)

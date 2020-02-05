@@ -16,7 +16,7 @@ int main(int argc, char * argv[])
 	std::cin >> numOfReadings;
 
 	std::cout << "Total number of readings: " << numOfReadings << std::endl;
-/*    
+    
 	for (unsigned int i = 0; i < numOfReadings; i++)
 	{
 		lsm6.poll();
@@ -24,7 +24,7 @@ int main(int argc, char * argv[])
         lsm6.printValues();
 		usleep(1000000);
 	} 
-*/
+
     lsm6.calibrate(numOfReadings);
     std::cout << lsm6.avg[0] << std::endl;
     std::cout << lsm6.avg[1] << std::endl;
