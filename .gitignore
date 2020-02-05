@@ -1,2 +1,5 @@
+# Editor configurations
+.vscode/
+
 # CMake build directory
 _build/
