@@ -10,6 +10,7 @@
 #include "../sensors.h"
 #include "../../globals.h"
 #include "../mdp.h"
+#include "lsm6add.h"
 
 //buffer size for writing values to registers
 #define BUFFER_SIZE 14
@@ -29,95 +30,142 @@ LSB is 1 (8th bit in address) for read
 LSB is 0 (8th bit in address) for write
 */
 
-//registers
-#define LSM6DS33_FIFO_CTRL1			0x06
-#define LSM6DS33_FIFO_CTRL2			0x07
-#define LSM6DS33_FIFO_CTRL3			0x08
-#define LSM6DS33_FIFO_CTRL4			0x09
-#define LSM6DS33_FIFO_CTRL5			0x0A
-#define LSM6DS33_ORIENT_CFG_G		0x0B
-
-#define LSM6DS33_INT1_CTRL			0x0D
-#define LSM6DS33_INT2_CTRL			0x0E
-#define LSM6DS33_WHO_AM_I			0x0F
-#define LSM6DS33_CTRL1_XL			0x10
-#define LSM6DS33_CTRL2_G			0x11
-#define LSM6DS33_CTRL3_C			0x12
-#define LSM6DS33_CTRL4_C			0x13
-#define LSM6DS33_CTRL5_C			0x14
-#define LSM6DS33_CTRL6_C			0x15
-#define LSM6DS33_CTRL7_G			0x16
-
-#define LSM6DS33_CTRL8_XL          	0x17
-#define LSM6DS33_CTRL9_XL          	0x18
-#define LSM6DS33_CTRL10_C          	0x19
-
-#define LSM6DS33_WAKE_UP_SRC       	0x1B
-#define LSM6DS33_TAP_SRC           	0x1C
-#define LSM6DS33_D6D_SRC           	0x1D
-#define LSM6DS33_STATUS_REG       	0x1E
-
-#define LSM6DS33_OUT_TEMP_L        	0x20 //lower 8-bits of overall 16-bit word in two's complement (applies to all data output registers)
-#define LSM6DS33_OUT_TEMP_H       	0x21
-#define LSM6DS33_OUTX_L_G          	0x22
-#define LSM6DS33_OUTX_H_G          	0x23
-#define LSM6DS33_OUTY_L_G          	0x24
-#define LSM6DS33_OUTY_H_G          	0x25
-#define LSM6DS33_OUTZ_L_G          	0x26
-#define LSM6DS33_OUTZ_H_G          	0x27
-#define LSM6DS33_OUTX_L_XL         	0x28
-#define LSM6DS33_OUTX_H_XL         	0x29
-#define LSM6DS33_OUTY_L_XL         	0x2A
-#define LSM6DS33_OUTY_H_XL         	0x2B
-#define LSM6DS33_OUTZ_L_XL         	0x2C
-#define LSM6DS33_OUTZ_H_XL         	0x2D
-#define LSM6DS33_FIFO_STATUS1      	0x3A
-#define LSM6DS33_FIFO_STATUS2      	0x3B
-#define LSM6DS33_FIFO_STATUS3      	0x3C
-#define LSM6DS33_FIFO_STATUS4      	0x3D
-#define LSM6DS33_FIFO_DATA_OUT_L   	0x3E
-#define LSM6DS33_FIFO_DATA_OUT_H   	0x3F
-#define LSM6DS33_TIMESTAMP0_REG    	0x40
-#define LSM6DS33_TIMESTAMP1_REG    	0x41
-#define LSM6DS33_TIMESTAMP2_REG    	0x42
-
-#define LSM6DS33_STEP_TIMESTAMP_L  	0x49
-#define LSM6DS33_STEP_TIMESTAMP_H  	0x4A
-#define LSM6DS33_STEP_COUNTER_H    	0x4C
-
-#define LSM6DS33_FUNC_SRC          	0x53
-
-#define LSM6DS33_TAP_CFG           	0x58
-#define LSM6DS33_TAP_THS_6D        	0x59
-#define LSM6DS33_INT_DUR2          	0x5A
-#define LSM6DS33_WAKE_UP_THS       	0x5B
-#define LSM6DS33_WAKE_UP_DUR       	0x5C
-#define LSM6DS33_FREE_FALL         	0x5D
-#define LSM6DS33_MD1_CFG           	0x5E
-#define LSM6DS33_MD2_CFG           	0x5F
-
 //useful values
-#define LSM6DS33_ACCEL_POWER_ON		0x88 //this is normal mode at +-4g
-#define LSM6DS33_GYRO_POWER_ON		0x80 //this is at 1.66kHz (high performance)
 #define LSM6DS33_POWER_OFF 			0x00
 
-// Data interpretation
+// Setting the I2C slave address
+#define LSM6DS33_SA0_HIGH_ADDRESS 0b1101011
+#define LSM6DS33_SA0_LOW_ADDRESS  0b1101010
 
+// Available settings
 
+enum AccelRange { _2g=0b0000, _4g=0b1000, _8g=0b1100, _16g=0b0100}; 	// (00: ±2 g; 01: ±16 g; 10: ±4 g; 11: ±8 g)
+enum AccelAAFreq { _400hz=0b00, _200hz=0b01, _100hz=0b10, _50hz=0b11 }	// (00: 400 Hz; 01: 200 Hz; 10: 100 Hz; 11: 50 Hz)
+enum GyroRange { _125dps=0b0010, _250dps=0b0000, _500dps=0b0100, _1000dps=0b1000, _2000dps=0b1100}; 	
+// first two digits(00: 250 dps; 01: 500 dps; 10: 1000 dps; 11: 2000 dps)  third: 125 dps. Default value: 0 (0: disabled; 1: enabled) fourth: 0
+enum ODR { odr_12hz=0b0001, odr_26Hz=0b0010, odr_52Hz=0b0011, 
+odr_104Hz=0b0100, 
+odr_208Hz=0b0101, 
+odr_416Hz=0b0110, 
+odr_833Hz=0b0111, 
+odr_1660Hz=0b1000, // Gyro ODR only up to 1660, Accel has the following two.
+odr_3330Hz=0b1001, 
+odr_6660Hz=0b1010};
 
 class LSM6DS33 : public Sensor
 {
 public:
-	LSM6DS33(int busID, int instance): Sensor(busID, instance), m_i2c(busID,true)
+	// vector template 
+	template<typename T> struct vector {
+		T x, y, z;
+	};
+
+	struct offsets {
+		float _temp_offset = 0;
+		vector<float> _accel_offsets; // 1, 2, 3 are offsets that are added to the value, 4 is a scale factor applied.
+		vector<float> _gyro_offsets;  // Same as above
+	};
+	
+	// IMU settings
+	// Change defaults here
+
+	struct lsm6Settings {
+		AccelRange accelRange = _4g;
+		AccelAAFreq accelAAFreq = _400hz;
+		GyroRange gyroRange = _500dps;
+		ODR accel_odr = odr_1660Hz;
+		ODR gyro_odr = odr_1660Hz;
+	} m_settings;
+
+	offsets m_offsets = {0, {.x=1, .y=1, .z=1}, {.x=1, .y=1, .z=1}};
+	
+
+	bool writeReg(uint8_t* buffer, unsigned short size);
+
+	bool updateSettings() {
+
+		// Update multiplier constant
+
+		switch (m_settings.accelRange) {
+			case _2g: _accel_multiplier = accel_multiplier[0]; break;
+			case _4g: _accel_multiplier = accel_multiplier[1]; break;
+			case _8g: _accel_multiplier = accel_multiplier[2]; break;
+			case _16g: _accel_multiplier = accel_multiplier[3]; break;
+		}
+
+		switch (m_settings.gyroRange) {
+			case _125dps: _gyro_multiplier = gyro_multiplier[0]; break;
+			case _250dps: _gyro_multiplier = gyro_multiplier[1]; break;
+			case _500dps: _gyro_multiplier = gyro_multiplier[2]; break;
+			case _1000dps: _gyro_multiplier = gyro_multiplier[3]; break;
+			case _2000dps: _gyro_multiplier = gyro_multiplier[3]; break;
+		}
+
+		// Accelerometer settings
+		m_buffer[0] = CTRL1_XL;
+		m_buffer[1] = (m_settings.accel_odr << 8) | m_settings.accelRange | m_settings.accelAAFreq;
+
+		if (!writeReg(m_buffer, 2))
+			return false;
+
+		m_buffer[0] = CTRL2_G;
+		m_buffer[1] = (m_settings.gyro_odr << 8) | m_settings.gyroRange;
+
+		if (!writeReg(m_buffer, 2))
+			return false;
+
+		
+		return true;
+	}
+
+	bool updateSettings(lsm6Settings settings) {
+		m_settings = settings;
+		updateSettings();
+	}
+
+	uint8_t lsm6Address;
+
+	LSM6DS33(	int busID, 
+				int instance, 
+				lsm6Settings settings,
+				lsm6ID		//  Either 0 or 1 (can only connect 2 lsm6ds33 modules)
+			): Sensor(busID, instance), 
+				m_i2c(busID,true), 
+				m_settings(settings)  // raw=true, disable pinmapper for board
 	{
-		//set offsets
-		m_temp_offset = 0;
-		m_accel_offsets[0] = 1; //THESE VALUES HAVE NOT BEEN TESTED FOR YET
-		m_accel_offsets[1] = 1;
-		m_accel_offsets[2] = 1;
-		m_gyro_offsets[0] = 1; //THESE VALUES HAVE NOT BEEN TESTED FOR YET
-		m_gyro_offsets[1] = 1;
-		m_gyro_offsets[2] = 1;
+		if (lsm6ID)
+			lsm6Address = HIGH_ADDRESS;
+		else 
+			lsm6Address = LOW_ADDRESS;
+		
+	}
+
+	bool writeReg(uint8_t* buffer, unsigned short size) {
+		mraa::Result msg = m_i2c.write(buffer, 2);
+
+		// Error handling
+		if (msg == mraa::SUCESS) 
+			return true;
+		else if (msg == mraa::ERROR_INVALID_PARAMETER)
+			std::cerr << "Invalid parameter." << std::endl;
+		else if (msg == mraa::ERROR_INVALID_HANDLE)
+			std::cerr << "ERROR_INVALID_HANDLE" << std::endl;
+		else if (msg == mraa::ERROR_NO_RESOURCES)
+			std::cerr << "ERROR_NO_RESOURCES" << std::endl;
+		else if (msg == mraa::ERROR_INVALID_RESOURCE)
+			std::cerr << "ERROR_INVALID_RESOURCE" << std::endl;
+		else if (msg == mraa::ERROR_INVALID_QUEUE_TYPE)
+			std::cerr << "ERROR_INVALID_QUEUE_TYPE" << std::endl;
+		else if (msg == mraa::ERROR_NO_DATA_AVAILABLE)
+			std::cerr << "ERROR_NO_DATA_AVAILABLE" << std::endl;
+		else if (msg == mraa::ERROR_INVALID_PLATFORM)
+			std::cerr << "ERROR_INVALID_PLATFORM" << std::endl;
+		else if (msg == mraa::ERROR_PLATFORM_NOT_INITIALISED)
+			std::cerr << "ERROR_PLATFORM_NOT_INITIALISED" << std::endl;
+		else if (msg == mraa::ERROR_UNSPECIFIED)
+			std::cerr << "ERROR_UNSPECIFIED" << std::endl;
+		
+		return false;
 	}
 
 	virtual int powerOn()
@@ -126,62 +174,28 @@ public:
 			return RESULT_SUCCESS;
 
 		//set I2C address
-		if (m_i2c.address(LSM6DS33_I2C_ADDR) != mraa::SUCCESS)
+		
+		if (m_i2c.address(lsm6Address) != mraa::SUCCESS)
 		{
 			std::cerr << "Unable to set I2C address." << std::endl;
 			return ERROR_ADDR;
 		}
 
-		//send "Power On" command for accelerometer
-		//change from default accelerometer full-scale selection to +-16g instead of +-2g
-		m_buffer[0] = LSM6DS33_CTRL1_XL;
-		m_buffer[1] = LSM6DS33_ACCEL_POWER_ON;
-		
-		if (m_i2c.write(m_buffer, 2) == mraa::ERROR_INVALID_PARAMETER)
-			std::cerr << "Invalid parameter." << std::endl;
-		if (m_i2c.write(m_buffer, 2) == mraa::ERROR_INVALID_HANDLE)
-			std::cerr << "ERROR_INVALID_HANDLE" << std::endl;
-		if (m_i2c.write(m_buffer, 2) == mraa::ERROR_NO_RESOURCES)
-			std::cerr << "ERROR_NO_RESOURCES" << std::endl;
-		if (m_i2c.write(m_buffer, 2) == mraa::ERROR_INVALID_RESOURCE)
-			std::cerr << "ERROR_INVALID_RESOURCE" << std::endl;
-		if (m_i2c.write(m_buffer, 2) == mraa::ERROR_INVALID_QUEUE_TYPE)
-			std::cerr << "ERROR_INVALID_QUEUE_TYPE" << std::endl;
-		if (m_i2c.write(m_buffer, 2) == mraa::ERROR_NO_DATA_AVAILABLE)
-			std::cerr << "ERROR_NO_DATA_AVAILABLE" << std::endl;
-		if (m_i2c.write(m_buffer, 2) == mraa::ERROR_INVALID_PLATFORM)
-			std::cerr << "ERROR_INVALID_PLATFORM" << std::endl;
-		if (m_i2c.write(m_buffer, 2) == mraa::ERROR_PLATFORM_NOT_INITIALISED)
-			std::cerr << "ERROR_PLATFORM_NOT_INITIALISED" << std::endl;
-		if (m_i2c.write(m_buffer, 2) == mraa::ERROR_UNSPECIFIED)
-			std::cerr << "ERROR_UNSPECIFIED" << std::endl;
-
-		if (m_i2c.write(m_buffer, 2) != mraa::SUCCESS)
-		{
-			std::cerr << "Unable to write ACCEL_POWER_ON to LSM6DS33." << std::endl;
-			return ERROR_POWER;
+		// Update settings for accelerometer and gyroscope
+		if (!updateSettings(settings)) {
+			std::cerr << "Update setting failed" << std::endl;
+			return ERROR_ADDR;
 		}
 
-		//send "Power On" command for gyroscope
-		//change from default gyroscope full-scale selection to +-, 'OR' value here with LSM6DS33_GYRO_POWER_ON
-		m_buffer[0] = LSM6DS33_CTRL2_G;
-		m_buffer[1] = LSM6DS33_GYRO_POWER_ON; //MIGHT WANT TO CHANGE THIS 
-		if (m_i2c.write(m_buffer, 2) != mraa::SUCCESS)
-		{
-			std::cerr << "Unable to write GYRO_POWER_ON to LSM6DS33." << std::endl;
-			return ERROR_POWER;
-		}
-
-
-		m_buffer[0] = LSM6DS33_CTRL3_C;
+		/* CTRL3_C has default 1 on IF_INC page 49 in datasheet
+		m_buffer[0] = CTRL3_C;
 		m_buffer[1] = 0x04;
-		if (m_i2c.write(m_buffer, 2) != mraa::SUCCESS)
+		if (!writeReg(m_buffer, 2))
 		{
 			std::cerr << "Unable to write GYRO_POWER_ON to LSM6DS33." << std::endl;
 			return ERROR_POWER;
 		}
-
-
+		*/
 		//run first update of sensor
 		if (poll() == false)
 		{
@@ -200,27 +214,27 @@ public:
 			return RESULT_SUCCESS;
 
 		//set I2C address
-		if (m_i2c.address(LSM6DS33_I2C_ADDR) != mraa::SUCCESS)
+		if (m_i2c.address(lsm6Address) != mraa::SUCCESS)
 		{
 			std::cerr << "Unable to set I2C address." << std::endl;
 			return ERROR_ADDR;
 		}
 
 		//send "Power Off" command for accelerometer
-		m_buffer[0] = LSM6DS33_CTRL1_XL;
-		m_buffer[1] = LSM6DS33_POWER_OFF;
+		m_buffer[0] = CTRL1_XL;
+		m_buffer[1] = POWER_OFF;
 
-		if (m_i2c.write(m_buffer, 2) != mraa::SUCCESS)
+		if (!writeReg(m_buffer, 2))
 		{
 			std::cerr << "Unable to write POWER_OFF to LSM6DS33's Accelerometer." << std::endl;
 			return ERROR_POWER;
 		}
 
 		//send "Power Off" command for gyroscope
-		m_buffer[0] = LSM6DS33_CTRL2_G;
-		m_buffer[1] = LSM6DS33_POWER_OFF;
+		m_buffer[0] = CTRL2_G;
+		m_buffer[1] = POWER_OFF;
 
-		if (m_i2c.write(m_buffer, 2) != mraa::SUCCESS)
+		if (!writeReg(m_buffer, 2))
 		{
 			std::cerr << "Unable to write POWER_OFF to LSM6DS33's Gyroscope." << std::endl;
 			return ERROR_POWER;
@@ -232,6 +246,8 @@ public:
 	}
 
 	//returns RESULT_FALSE if no new data, RESULT_SUCCESS if member data was updated with latest reading, ERROR in the case of an error
+	
+	
 	virtual bool poll()
 	{
 		if (m_status == STATUS_OFF)
@@ -257,15 +273,15 @@ public:
 		//record rawacceleration values using data reads for x,y,z respectively
 		//DATAx0 is the least significant byte, and DATAx1 is the most significant byte
 		//conversion of raw sensor data into relevant values based on constant offset values
-		m_temp = ((m_buffer[1] << 8) | m_buffer[0]) + m_temp_offset;
+		m_temp = ((m_buffer[1] << 8) | m_buffer[0]) + m_offsets._temp_offset;
 
-		m_gyro[0] = ((m_buffer[3] << 8) | m_buffer[2]) * m_accel_offsets[0];
-		m_gyro[1] = ((m_buffer[5] << 8) | m_buffer[4]) * m_accel_offsets[1];
-		m_gyro[2] = ((m_buffer[7] << 8) | m_buffer[6]) * m_accel_offsets[2];
+		m_gyro[0] = ((m_buffer[3] << 8) | m_buffer[2]) * _accel_multiplier;
+		m_gyro[1] = ((m_buffer[5] << 8) | m_buffer[4]) * _accel_multiplier;
+		m_gyro[2] = ((m_buffer[7] << 8) | m_buffer[6]) * _accel_multiplier;
 
-		m_accel[0] = ((m_buffer[9] << 8) | m_buffer[8]) * m_gyro_offsets[0];
-		m_accel[1] = ((m_buffer[11] << 8) | m_buffer[10]) * m_gyro_offsets[1];
-		m_accel[2] = ((m_buffer[13] << 8) | m_buffer[12]) * m_gyro_offsets[2];
+		m_accel[0] = ((m_buffer[9] << 8) | m_buffer[8]) * _gyro_multiplier;
+		m_accel[1] = ((m_buffer[11] << 8) | m_buffer[10]) * _gyro_multiplier;
+		m_accel[2] = ((m_buffer[13] << 8) | m_buffer[12]) * _gyro_multiplier;
 
 		return RESULT_SUCCESS;
 	}
@@ -316,7 +332,7 @@ public:
 		std::cout << "======================================" << std::endl;
 	}
 
-	virtual void printRawValues()
+	void printRawValues()
 	{
 		std::cout << "======================================" << std::endl;
 		std::cout << "Temp: " << m_temp << std::endl;
@@ -329,12 +345,20 @@ public:
 		std::cout << "======================================" << std::endl;
 	}
 
-    const float accel_offset[4] = {0.061, 0.122, 0.244, 0.488};
-    const float gyro_offset[5] = {4.375, 8.75, 17.5, 35, 70};
+	void printEscapedRawValues() {
+		printRawValues();
+		std::cout << "\033[100D" << std::flush;
+		std::cout << "\033[9A" << std::flush;
+	}
+
+    const float accel_multiplier[4] = {0.061, 0.122, 0.244, 0.488};
+	const float _accel_multiplier;
+    const float gyro_multiplier[5] = {4.375, 8.75, 17.5, 35, 70};
+	const float _gyro_multiplier;
     
     virtual void printValues() {
         std::cout << "======================================" << std::endl;
-        std::cout << "Temp: " << (int) (m_temp / 16) << "degrees centigrade" << std::endl;
+        std::cout << "Temp: " << (int) (m_temp / 16) << "degrees celcius" << std::endl;
 		std::cout << "AccelX: " << (float) (m_accel[0]*accel_offset[0]) << std::endl;
 		std::cout << "AccelY: " << (float) (m_accel[1]*accel_offset[0]) << std::endl;
 		std::cout << "AccelZ: " << (float) (m_accel[2]*accel_offset[0]) << std::endl;
@@ -355,8 +379,8 @@ public:
     } */
 
     double avg[6]= {
-0, 0, 0, 0, 0, 0
-};
+		0, 0, 0, 0, 0, 0
+	};
 	double * calibrate(int count) {
 
 		for (int i=0; i<count; i++) {
@@ -376,14 +400,14 @@ public:
 		
 	}
 
+
+
 private:
 	mraa::I2c m_i2c;
 	short m_temp;
-	short m_accel[3];
-	short m_gyro[3];
-	float m_temp_offset;
-	float m_accel_offsets[4]; // 1, 2, 3 are offsets that are added to the value, 4 is a scale factor applied.
-	float m_gyro_offsets[4];  // Same as above
+	vector<short> m_accel; // using short because 16-byte data output. c++ translate the raw binary output according to two's complement. 
+	vector<short> m_gyro;
+
 	uint8_t m_buffer[BUFFER_SIZE];
 };
 
