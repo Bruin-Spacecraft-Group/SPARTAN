@@ -3,3 +3,5 @@
 
 # CMake build directory
 _build/
+.idea/workspace.xml
+src/sensors/.DS_Store
