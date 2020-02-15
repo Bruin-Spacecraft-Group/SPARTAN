@@ -9,7 +9,7 @@ Table of contents
 * [Build instructions](#build-instructions)
 * [Installation](#installation)
 * [Sensor docs](#sensor-documentations)
-    * [LSM6 Inertial Measurement Unit]()
+    * [LSM6 Inertial Measurement Unit](spartan/src/docs/lsm6.md)
 
 <!--te-->
 
