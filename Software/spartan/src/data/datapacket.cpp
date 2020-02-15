@@ -2,14 +2,16 @@
 
 void spartan::IMUDataPacket::populate(const DataPacket &dp) {
     m_timestamp = dp.timestamp;
-    m_accel_y = dp.accel_y;
-    m_accel_z = dp.accel_z;
-    m_gyro_x = dp.gyro_x;
-    m_gyro_y = dp.gyro_y;
-    m_gyro_z = dp.gyro_z;
-    m_temp = dp.temp;
+    // m_accel_y = dp.accel_y;
+    // m_accel_z = dp.accel_z;
+    // m_gyro_x = dp.gyro_x;
+    // m_gyro_y = dp.gyro_y;
+    // m_gyro_z = dp.gyro_z;
+    // m_temp = dp.temp;
 }
 
+
+/*
 void spartan::AltimeterDataPacket::populate(const DataPacket &dp) {
     m_timestamp = dp.timestamp;
     m_pressure = dp.pressure;
@@ -50,3 +52,4 @@ void spartan::PayloadHealthPacket::populate(const DataPacket &dp) {
     m_payload_voltage = dp.payload_voltage;
     m_payload_current = dp.payload_current;
 }
+*/

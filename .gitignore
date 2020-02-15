@@ -5,3 +5,4 @@
 _build/
 .idea/workspace.xml
 src/sensors/.DS_Store
+.DS_Store

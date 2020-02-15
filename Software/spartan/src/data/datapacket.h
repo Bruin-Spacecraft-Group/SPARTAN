@@ -1,6 +1,8 @@
 #ifndef DATAPACKET_H_INCLUDED
 #define DATAPACKET_H_INCLUDED
 
+#include <fstream>
+
 namespace spartan {
     struct DataPacket {
         unsigned long timestamp;
@@ -76,12 +78,14 @@ namespace spartan {
      *  6: temp] */
     class IMUDataPacket : public PacketType {
     public:
+        // Size of data array
         int getSize() const {
             return 7;
         }
         virtual void populate(const DataPacket &dp);
-        // Size of data array
     };
+
+    
 
     /* Commented to test new simplified generic structure
     class PacketType {
