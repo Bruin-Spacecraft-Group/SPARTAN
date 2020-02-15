@@ -3,7 +3,7 @@
 
 #include <data/datapacket.h>
 #include <mraa/i2c.hpp>
-#include <../globals.h>
+#include "../globals.h"
 
 namespace spartan {
     class Sensor {
