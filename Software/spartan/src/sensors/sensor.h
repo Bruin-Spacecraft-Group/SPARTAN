@@ -48,15 +48,16 @@ namespace spartan {
         // Data getters
         virtual bool pollData(PacketType & dp) const = 0;
         virtual void printValues() const = 0;
-    };
-
+    
     protected:
  	    int m_status;
     private:
 	    mraa::I2c m_i2c; //bus that sensor is connected to
 	    int m_busID;
 	    int m_instance; //support for multiple sensors of same type
-};
-} // namespace spartan
+    };
+
+}
+ // namespace spartan
 
 #endif // SENSOR_H_INCLUDED
