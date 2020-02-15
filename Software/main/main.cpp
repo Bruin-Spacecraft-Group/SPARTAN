@@ -13,16 +13,18 @@ int main() {
     sensors[0] = new spartan::LSM6DS33(0, 0);
 
     // TODO: Initialize DataPackets
-    spartan::DataPacket masterPacket;
-    dataPackets[0] = new spartan::IMUDataPacket;
+    // spartan::DataPacket masterPacket;
+    // dataPackets[0] = new spartan::IMUDataPacket;
 
     // TODO: flight loop
-    for (int i = 0; i < sensors.size(); ++i) {
-        sensors[i]->pollData(masterPacket);
+    for (int i = 0; i < sensors.size(); i++) {
+        sensors[i]->pollData(dataPackets[i]);
     }
-    for (int i = 0; i < dataPackets.size(); ++i) {
+    /*
+    for (int i = 0; i < dataPackets.size(); i++) {
         dataPackets[i]->populate(masterPacket);
     }
+    */
 
     // TODO: Send to comms (write to SD card and send to radio)
 }
