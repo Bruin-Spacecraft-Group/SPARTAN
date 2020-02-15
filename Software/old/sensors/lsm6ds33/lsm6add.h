@@ -1,14 +1,14 @@
 
-/*
 
-The Slave ADdress (SAD) associated to the LSM6DS33 is 110101xb. The SDO or SA0 pin can be used to modify the less significant bit of the device address. If the SDO/SA0 pin is
-connected to the supply voltage, LSb is ‘1’ (address 1101011b); else if the SDO/SA0 pin is
-connected to ground, the LSb value is ‘0’ (address 1101010b). This solution permits to
-connect and address two different inertial modules to the same I2C bus.
+// The Slave ADdress (SAD) associated to the LSM6DS33 is 110101xb. The SDO/SA0 pin
+// can be used to modify the less significant bit of the device address. If the SDO/SA0 pin is
+// connected to the supply voltage, LSb is ‘1’ (address 1101011b); else if the SDO/SA0 pin is
+// connected to ground, the LSb value is ‘0’ (address 1101010b). This solution permits to
+// connect and address two different inertial modules to the same I2C bus.
 
-LSB is 1 (8th bit in address) for read
-LSB is 0 (8th bit in address) for write
-*/
+// LSB is 1 (8th bit in address) for read
+// LSB is 0 (8th bit in address) for write
+
 
 enum utils {
     BUFFER_SIZE       = 14
