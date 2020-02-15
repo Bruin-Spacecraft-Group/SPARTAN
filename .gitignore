@@ -1,18 +1,15 @@
-<<<<<<< HEAD
 # Editor configurations
-.vscode/
 
 # CMake build directory
 _build/
-.idea/workspace.xml
+.idea/
+.vscode/
+
 src/sensors/.DS_Store
 .DS_Store
-=======
 
 .DS_Store
-.vscode/c_cpp_properties.json
-.vscode/c_cpp_properties.json
-a.out
+
 .docs
 .idea/workspace.xml
->>>>>>> IMU
+
