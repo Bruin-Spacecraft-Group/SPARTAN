@@ -1,8 +1,43 @@
 # LSM6DS33 Manual
 
-## On the Agenda
-1. Test different ODR with different filters
-    * Try applying 400Hz on 
+## Constructors
+
+1. Init without settings
+```c++
+LSM6DS33(int busID, int lsm6ID);
+ ```
+where lsm6ID is either 0 or 1, changes the I2C address of lsm6. (can only connect 2 lsm6ds33 modules)
+
+2. Init with settings
+
+The settings struct is structured as the following
+```c++
+struct lsm6Settings {
+    AccelRange accelRange;
+    AccelAAFreq accelAAFreq;
+    GyroRange gyroRange;
+    ODR accel_odr;
+    ODR gyro_odr;
+};
+LSM6DS33(int busID, int lsm6ID, lsm6Settings settings);
+```
+
+3. Update lsm6 settings
+```c++
+// Make sure to power on before updating settings
+bool updateSettings(lsm6Settings settings);
+```
+
+4. Demo 
+```c++
+LSM6DS33 lsm6(1, 0); // Use lower lsm6 address
+lsm6.powerOn();
+lsm6Settings settings = { _4g, _400hz, _500dps,  odr_1660Hz, odr_1660Hz }; // The default setting
+lsm6.updateSettings(settings);
+
+```
+
+Enum specification are below. 
 
 ## Configuration of **LSM6**
 
@@ -50,19 +85,7 @@ enum AccelAAFreq {
 
 On startup, the accelerometer is set to high performance. `XL_HM_MODE=0` To switch to normal/low power mode, set `XL_HM_MODE=1`
 
-ODR | Value
-:---:|---:|
-12.5hz| 0b0001
-26Hz|0b0010
-52Hz|0b0011
-104Hz|0b0100
-208Hz|0b0101
-416Hz|0b0110
-833Hz|0b0111
-1.66kHz|0b1000
-3.33kHz|0b1001
-6.66kHz|0b1010
-// Ignore for now.
+
 
 ### Gyroscope
 
@@ -77,3 +100,34 @@ enum GyroRange {
 }; 	
 ```
 
+### ODR
+
+Output data rate 
+
+ODR | Value
+:---:|---:|
+12.5hz| 0b0001
+26Hz|0b0010
+52Hz|0b0011
+104Hz|0b0100
+208Hz|0b0101
+416Hz|0b0110
+833Hz|0b0111
+1.66kHz|0b1000
+3.33kHz|0b1001
+6.66kHz|0b1010
+
+```c++
+enum ODR { 
+    odr_12hz=0b0001, 
+    odr_26Hz=0b0010, 
+    odr_52Hz=0b0011, 
+    odr_104Hz=0b0100, 
+    odr_208Hz=0b0101, 
+    odr_416Hz=0b0110, 
+    odr_833Hz=0b0111, 
+    odr_1660Hz=0b1000, // Gyro ODR only up to 1660, Accel has the following two.
+    odr_3330Hz=0b1001, 
+    odr_6660Hz=0b1010
+};
+```

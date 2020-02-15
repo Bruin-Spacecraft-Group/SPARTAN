@@ -1,4 +1,3 @@
-//another found GPIO interface library for the raspberry pi: http://wiringpi.com/reference/i2c-library/
 //data sheet and other info about sensor can be referenced here: https://www.st.com/resource/en/datasheet/lsm6ds33.pdf
 
 #ifndef LSM6DS33_H
@@ -13,45 +12,15 @@
 #include "../mdp.h"
 #include "lsm6add.h"
 
-//buffer size for writing values to registers
-#define BUFFER_SIZE 14
-#define DATA_REG_SIZE 14
-
-//address
-#define LSM6DS33_I2C_ADDR 0x6A //7-bit address form; default in 'write' state; implies connection to supply voltage; 0xD4 for connection to ground; general form: 110101xb
-
-/*
-The Slave ADdress (SAD) associated to the LSM6DS33 is 110101xb. The SDO/SA0 pin
-can be used to modify the less significant bit of the device address. If the SDO/SA0 pin is
-connected to the supply voltage, LSb is ‘1’ (address 1101011b); else if the SDO/SA0 pin is
-connected to ground, the LSb value is ‘0’ (address 1101010b). This solution permits to
-connect and address two different inertial modules to the same I2C bus.
-
-LSB is 1 (8th bit in address) for read
-LSB is 0 (8th bit in address) for write
-*/
-
-//useful values
-#define LSM6DS33_POWER_OFF 			0x00
-
-// Setting the I2C slave address
-#define LSM6DS33_SA0_HIGH_ADDRESS 0b1101011
-#define LSM6DS33_SA0_LOW_ADDRESS  0b1101010
-
+namespace spartan {
 // Available settings
 
 enum AccelRange { _2g=0b0000, _4g=0b1000, _8g=0b1100, _16g=0b0100}; 	// (00: ±2 g; 01: ±16 g; 10: ±4 g; 11: ±8 g)
 enum AccelAAFreq { _400hz=0b00, _200hz=0b01, _100hz=0b10, _50hz=0b11 };	// (00: 400 Hz; 01: 200 Hz; 10: 100 Hz; 11: 50 Hz)
 enum GyroRange { _125dps=0b0010, _250dps=0b0000, _500dps=0b0100, _1000dps=0b1000, _2000dps=0b1100}; 	
 // first two digits(00: 250 dps; 01: 500 dps; 10: 1000 dps; 11: 2000 dps)  third: 125 dps. Default value: 0 (0: disabled; 1: enabled) fourth: 0
-enum ODR { odr_12hz=0b0001, odr_26Hz=0b0010, odr_52Hz=0b0011, 
-odr_104Hz=0b0100, 
-odr_208Hz=0b0101, 
-odr_416Hz=0b0110, 
-odr_833Hz=0b0111, 
-odr_1660Hz=0b1000, // Gyro ODR only up to 1660, Accel has the following two.
-odr_3330Hz=0b1001, 
-odr_6660Hz=0b1010};
+enum ODR { odr_12hz=0b0001, odr_26Hz=0b0010, odr_52Hz=0b0011, odr_104Hz=0b0100, odr_208Hz=0b0101, odr_416Hz=0b0110, odr_833Hz=0b0111, odr_1660Hz=0b1000, // Gyro ODR only up to 1660, Accel has the following two
+.odr_3330Hz=0b1001, odr_6660Hz=0b1010};
 
 class LSM6DS33 : public Sensor
 {
@@ -159,10 +128,9 @@ public:
 
 	
 	LSM6DS33(	int busID, 
-				int instance, 
 				int lsm6ID,		//  Either 0 or 1 (can only connect 2 lsm6ds33 modules)
 				lsm6Settings settings
-			): Sensor(busID, instance), 
+			): Sensor(busID, lsm6ID), 
 				m_i2c(busID,true), 
 				m_settings(settings)  // raw=true, disable pinmapper for board
 	{
@@ -174,9 +142,8 @@ public:
 	}
 
 	LSM6DS33(	int busID, 
-				int instance, 
 				int lsm6ID		//  Either 0 or 1 (can only connect 2 lsm6ds33 modules)
-			): Sensor(busID, instance), 
+			): Sensor(busID, lsm6ID), 
 				m_i2c(busID,true)
 	{
 		if (lsm6ID)
@@ -284,7 +251,7 @@ public:
 		}
 
 		//read temp,x,y,z (14 bytes) into buffer
-		if (m_i2c.readBytesReg(OUT_TEMP_L, m_buffer, DATA_REG_SIZE) == -1)
+		if (m_i2c.readBytesReg(OUT_TEMP_L, m_buffer, BUFFER_SIZE) == -1)
 		{
 			std::cerr << "Unable to read data bytes starting from LSM6DS33_OUT_TEMP_L." << std::endl;
 			return ERROR_POLL;
@@ -433,5 +400,7 @@ private:
 
 	uint8_t m_buffer[BUFFER_SIZE];
 };
+
+}
 
 #endif

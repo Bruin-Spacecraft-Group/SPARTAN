@@ -2,9 +2,12 @@
 #include "../sensors.h"
 #include "lsm6ds33.h"
 #include <unistd.h>
+
+using namespace spartan;
+
 int main(int argc, char * argv[])
 {
-	LSM6DS33 lsm6(1, 1, 0);
+	LSM6DS33 lsm6(1, 0);
 
 	std::cout<<"lsm instance created" << std::endl;
 
