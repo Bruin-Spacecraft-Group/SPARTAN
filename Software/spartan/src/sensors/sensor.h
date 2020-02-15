@@ -42,8 +42,6 @@ namespace spartan {
         }
         // Standard sensor implementation
 
-        virtual int powerOn() = 0;
-	    virtual int powerOff() = 0;
 
         // Data getters
         virtual bool pollData(PacketType & dp) const = 0;

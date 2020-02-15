@@ -47,7 +47,7 @@ public:
 		ODR gyro_odr = odr_1660Hz;
 	} m_settings;
 
-	offsets m_offsets = {0, {.x=1, .y=1, .z=1}, {.x=1, .y=1, .z=1}};
+	offsets m_offsets = {0, {.x=0, .y=0, .z=0}, {.x=0, .y=0, .z=0}};
 	
 
 
@@ -327,7 +327,7 @@ public:
 		std::cout << "GyroZ: " <<  std::setw(6) << m_gyro.z << std::endl;
 		std::cout << "======================================" << std::endl;
 	}
-
+	
 	void printEscapedRawValues(int lines) {
 		printRawValues();
 		std::cout << "\033[100D" << std::flush;
@@ -339,18 +339,18 @@ public:
 	float _accel_multiplier;
     const float gyro_multiplier[5] = {4.375, 8.75, 17.5, 35, 70};
 	float _gyro_multiplier;
-   /* 
+    
     virtual void printValues() {
         std::cout << "======================================" << std::endl;
-        std::cout << "Temp: " << (int) (m_temp / 16) << "degrees celcius" << std::endl;
-		std::cout << "AccelX: " << (float) (m_accel.x*accel_offset[0]) << std::endl;
-		std::cout << "AccelY: " << (float) (m_accel.y*accel_offset[0]) << std::endl;
-		std::cout << "AccelZ: " << (float) (m_accel.z*accel_offset[0]) << std::endl;
-		std::cout << "GyroX: " << (float) (m_gyro.x*gyro_offset[0]) << std::endl;
-		std::cout << "GyroY: " << (float) (m_gyro.y*gyro_offset[0]) << std::endl;
-		std::cout << "GyroZ: " << (float) (m_gyro.z*gyro_offset[0]) << std::endl;
-		std::cout << "======================================" << std::endl;
-    }*/
+        std::cout << "Temp: " << ((m_temp / 16) + m_offsets._temp_offset << "degrees celcius" << std::endl;
+	std::cout << "AccelX: " << (float) ((m_accel.x*_accel_multiplier) * m_offsets._accel_offsets.x) << std::endl;
+	std::cout << "AccelY: " << (float)  ((m_accel.y*_accel_multiplier) * m_offsets._accel_offsets.y)  < std::endl;
+	std::cout << "AccelZ: " << (float)  ((m_accel.z*_accel_multiplier) * m_offsets._accel_offsets.z) << std::endl;
+	std::cout << "GyroX: " << (float) ((m_gyro.x*_gyro_multiplier) * m_offsets._gyro_offsets.x) << std::endl;
+	std::cout << "GyroY: " << (float) ((m_gyro.y*_gyro_multiplier) * m_offsets._gyro_offsets.y) << std::endl;
+	std::cout << "GyroZ: " << (float) ((m_gyro.z*_gyro_multiplier) * m_offsets._gyro_offsets.z)<< std::endl;
+	std::cout << "======================================" << std::endl;
+    }
    /*
     virtual float * getValues() {
 		float val[7];
