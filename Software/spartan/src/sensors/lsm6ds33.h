@@ -359,7 +359,7 @@ public:
 		return true;
 	}
     
-    virtual void printValues() {
+    virtual void printValues() const {
         std::cout << "======================================" << std::endl;
         std::cout << "Temp: " << ((m_temp / 16) + m_offsets._temp_offset << "degrees celcius" << std::endl;
 		std::cout << "AccelX: " << (float) ((m_accel.x*_accel_multiplier) * m_offsets._accel_offsets.x) << std::endl;
