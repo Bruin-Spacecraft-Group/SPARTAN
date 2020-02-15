@@ -7,6 +7,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include <chrono>
 #include "sensor.h"
 #include "../globals.h"
 #include "../constants.h"
@@ -339,17 +340,35 @@ public:
 	float _accel_multiplier;
     const float gyro_multiplier[5] = {4.375, 8.75, 17.5, 35, 70};
 	float _gyro_multiplier;
+
+	virtual bool pollData(IMUDataPacket * dp) const {
+		if (poll() != RESULT_SUCCESS) 
+			return false;
+		// Initalize an data array
+		float * arr = new float[7];
+		arr[0] = (float) ((m_temp / 16) + m_offsets._temp_offset);
+		arr[1] = (float) ((m_accel.x*_accel_multiplier) * m_offsets._accel_offsets.x);
+		arr[2] = (float) ((m_accel.y*_accel_multiplier) * m_offsets._accel_offsets.y);
+		arr[3] = (float) ((m_accel.z*_accel_multiplier) * m_offsets._accel_offsets.z);
+		arr[4] = (float) ((m_gyro.x*_gyro_multiplier) * m_offsets._gyro_offsets.x);
+		arr[5] = (float) ((m_gyro.y*_gyro_multiplier) * m_offsets._gyro_offsets.y);
+		arr[6] = (float) ((m_gyro.z*_gyro_multiplier) * m_offsets._gyro_offsets.z);
+
+		dp = new IMUDataPacket(getTime(), arr);
+
+		return true;
+	}
     
     virtual void printValues() {
         std::cout << "======================================" << std::endl;
         std::cout << "Temp: " << ((m_temp / 16) + m_offsets._temp_offset << "degrees celcius" << std::endl;
-	std::cout << "AccelX: " << (float) ((m_accel.x*_accel_multiplier) * m_offsets._accel_offsets.x) << std::endl;
-	std::cout << "AccelY: " << (float)  ((m_accel.y*_accel_multiplier) * m_offsets._accel_offsets.y)  < std::endl;
-	std::cout << "AccelZ: " << (float)  ((m_accel.z*_accel_multiplier) * m_offsets._accel_offsets.z) << std::endl;
-	std::cout << "GyroX: " << (float) ((m_gyro.x*_gyro_multiplier) * m_offsets._gyro_offsets.x) << std::endl;
-	std::cout << "GyroY: " << (float) ((m_gyro.y*_gyro_multiplier) * m_offsets._gyro_offsets.y) << std::endl;
-	std::cout << "GyroZ: " << (float) ((m_gyro.z*_gyro_multiplier) * m_offsets._gyro_offsets.z)<< std::endl;
-	std::cout << "======================================" << std::endl;
+		std::cout << "AccelX: " << (float) ((m_accel.x*_accel_multiplier) * m_offsets._accel_offsets.x) << std::endl;
+		std::cout << "AccelY: " << (float) ((m_accel.y*_accel_multiplier) * m_offsets._accel_offsets.y)  < std::endl;
+		std::cout << "AccelZ: " << (float) ((m_accel.z*_accel_multiplier) * m_offsets._accel_offsets.z) << std::endl;
+		std::cout << "GyroX: " << (float) ((m_gyro.x*_gyro_multiplier) * m_offsets._gyro_offsets.x) << std::endl;
+		std::cout << "GyroY: " << (float) ((m_gyro.y*_gyro_multiplier) * m_offsets._gyro_offsets.y) << std::endl;
+		std::cout << "GyroZ: " << (float) ((m_gyro.z*_gyro_multiplier) * m_offsets._gyro_offsets.z)<< std::endl;
+		std::cout << "======================================" << std::endl;
     }
    /*
     virtual float * getValues() {

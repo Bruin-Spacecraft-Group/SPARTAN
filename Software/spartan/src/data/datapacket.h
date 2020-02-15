@@ -67,15 +67,23 @@ namespace spartan {
                 in >> dp.data[i];
             return in;
         }
+        
+        PacketType(unsigned long timestamp, float * data) {
+            m_timestamp = timestamp;
+            this->data = data;
+        }
+
 
     protected:
         unsigned long m_timestamp;
         float * data;
     };
 
-    /* [0: accel.x, 1: .y, 2: .z,
+    /* (timestamp, 
+     *  [0: accel.x, 1: .y, 2: .z,
      *  3: gyro.x, 4: .y, 5: .z,
-     *  6: temp] */
+     *  6: temp] )
+     * */
     class IMUDataPacket : public PacketType {
     public:
         // Size of data array
@@ -85,7 +93,7 @@ namespace spartan {
         virtual void populate(const DataPacket &dp);
     };
 
-    
+
 
     /* Commented to test new simplified generic structure
     class PacketType {

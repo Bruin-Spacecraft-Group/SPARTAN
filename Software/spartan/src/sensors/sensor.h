@@ -4,6 +4,7 @@
 #include <data/datapacket.h>
 #include <mraa/i2c.hpp>
 #include "../globals.h"
+#include <chrono>
 
 namespace spartan {
     class Sensor {
@@ -19,6 +20,10 @@ namespace spartan {
         virtual void printSensorInfo() = 0;
 
         virtual void printValues() { /* ... */ };
+
+        unsigned long getTime() {
+            return (unsigned long) chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now().time_since_epoch()).count();
+        }
 
         int getBusID() const
         {
@@ -44,7 +49,7 @@ namespace spartan {
 
 
         // Data getters
-        virtual bool pollData(PacketType & dp) const = 0;
+        virtual bool pollData(PacketType * dp) const = 0;
         virtual void printValues() const = 0;
     
     protected:
