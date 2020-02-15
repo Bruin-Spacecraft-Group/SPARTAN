@@ -1,4 +1,4 @@
-namespace lsm6 {
+namespace spartan {
     enum utils {
         BUFFER_SIZE       = 14
     };

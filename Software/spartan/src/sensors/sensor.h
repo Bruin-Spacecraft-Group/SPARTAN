@@ -2,6 +2,7 @@
 #define SENSOR_H_INCLUDED
 
 #include <data/datapacket.h>
+#include <mraa/i2c.hpp>
 
 namespace spartan {
     class Sensor {

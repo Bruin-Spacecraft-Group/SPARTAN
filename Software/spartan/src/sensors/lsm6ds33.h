@@ -10,11 +10,11 @@
 #include "sensor.h"
 #include "../../globals.h"
 #include "../mdp.h"
+#include "constants.h"
 
 namespace spartan {
 // Available settings
 
-using namespace lsm6;
 
 enum AccelRange { _2g=0b0000, _4g=0b1000, _8g=0b1100, _16g=0b0100}; 	// (00: ±2 g; 01: ±16 g; 10: ±4 g; 11: ±8 g)
 enum AccelAAFreq { _400hz=0b00, _200hz=0b01, _100hz=0b10, _50hz=0b11 };	// (00: 400 Hz; 01: 200 Hz; 10: 100 Hz; 11: 50 Hz)
