@@ -20,7 +20,7 @@ enum AccelAAFreq { _400hz=0b00, _200hz=0b01, _100hz=0b10, _50hz=0b11 };	// (00: 
 enum GyroRange { _125dps=0b0010, _250dps=0b0000, _500dps=0b0100, _1000dps=0b1000, _2000dps=0b1100}; 	
 // first two digits(00: 250 dps; 01: 500 dps; 10: 1000 dps; 11: 2000 dps)  third: 125 dps. Default value: 0 (0: disabled; 1: enabled) fourth: 0
 enum ODR { odr_12hz=0b0001, odr_26Hz=0b0010, odr_52Hz=0b0011, odr_104Hz=0b0100, odr_208Hz=0b0101, odr_416Hz=0b0110, odr_833Hz=0b0111, odr_1660Hz=0b1000, // Gyro ODR only up to 1660, Accel has the following two
-.odr_3330Hz=0b1001, odr_6660Hz=0b1010};
+odr_3330Hz=0b1001, odr_6660Hz=0b1010};
 
 class LSM6DS33 : public Sensor
 {
