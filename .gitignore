@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Editor configurations
 .vscode/
 
@@ -6,3 +7,12 @@ _build/
 .idea/workspace.xml
 src/sensors/.DS_Store
 .DS_Store
+=======
+
+.DS_Store
+.vscode/c_cpp_properties.json
+.vscode/c_cpp_properties.json
+a.out
+.docs
+.idea/workspace.xml
+>>>>>>> IMU
