@@ -6,8 +6,15 @@
 namespace spartan {
     class Sensor {
     public:
-        Sensor() {}
-        virtual bool pollData(DataPacket &dp) = 0;
+        Sensor(int busID, int instance) {}
+
+        // Standard sensor implementation
+
+        virtual int powerOn() = 0;
+	    virtual int powerOff() = 0;
+
+        // Data getters
+        virtual bool pollData(PacketType & dp) const = 0;
         virtual void printValues() const = 0;
     };
 } // namespace spartan
