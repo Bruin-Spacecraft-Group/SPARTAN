@@ -9,7 +9,7 @@
 #include <cstdlib>
 #include "sensor.h"
 #include "../globals.h"
-#include "constants.h"
+#include "../constants.h"
 
 namespace spartan {
 // Available settings
