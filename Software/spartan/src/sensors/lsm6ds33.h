@@ -8,8 +8,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include "sensor.h"
-#include "../../globals.h"
-#include "../mdp.h"
+#include "../globals.h"
 #include "constants.h"
 
 namespace spartan {
@@ -274,13 +273,7 @@ public:
 		return RESULT_SUCCESS;
 	}
 
-	virtual bool poll(MDP mdp) {
-
-		//mdp.set_accel(m_accel);
-
-		return RESULT_SUCCESS;
-	}
-
+	
 	int hasNewData()
 	{
 		//NOTE: STATUS_REG on lSM6DS33 used to check if data is available for temp/gyro/accel
