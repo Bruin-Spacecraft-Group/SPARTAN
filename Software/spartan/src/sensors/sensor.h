@@ -12,7 +12,7 @@ namespace spartan {
         Sensor(int busID, int instance) : m_i2c(busID,true), m_busID(busID), m_status(STATUS_OFF), m_instance(instance) {/*...*/ }
         //constructor that takes in pin number that sensor is connected to; this pin number would be used for all member functions
 
-        virtual char * name() = 0;
+        virtual const char * name() const = 0;
 
         virtual int powerOn() = 0;
         virtual int powerOff() = 0;

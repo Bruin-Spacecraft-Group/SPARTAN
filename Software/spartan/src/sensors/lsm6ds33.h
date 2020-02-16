@@ -404,8 +404,8 @@ public:
 	}
 */
 
-virtual char * name() {
-	char * str = "LSM6DS33";
+virtual const char * name() const {
+	const char * str = "LSM6DS33";
 	return str;
 }
 

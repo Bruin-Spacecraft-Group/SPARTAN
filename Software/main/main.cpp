@@ -16,9 +16,17 @@ int main() {
     // spartan::DataPacket masterPacket;
     // dataPackets[0] = new spartan::IMUDataPacket;
     
+    //spartan::LSM6DS33 lsm6(1, 0);
+    //lsm6.powerOn();
+    //lsm6.poll();
+    //lsm6.printEscapedRawValues(9);
+
+sensors[0]->powerOn();
+sensors[0]->poll();
+sensors[0]->printValues();
     // Initialization of sensors
     for (int i = 0; i < sensors.size(); i++) {
-	sensors[i]->powerOn();
+	//sensors[i]->powerOn();
     }
     // TODO: flight loop
     for (int i = 0; i < sensors.size(); i++) {
