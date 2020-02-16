@@ -242,20 +242,20 @@ public:
 
 		if (hasNewData() == RESULT_FALSE)
 			//std::cerr << "No new data" << std::endl;
-			return RESULT_FALSE;
+			return false;
 
 		//set I2C address
 		if (m_i2c.address(lsm6Address) != mraa::SUCCESS)
 		{
 			std::cerr << "Unable to set I2C address." << std::endl;
-			return ERROR_ADDR;
+			return false;
 		}
 
 		//read temp,x,y,z (14 bytes) into buffer
 		if (m_i2c.readBytesReg(OUT_TEMP_L, m_buffer, BUFFER_SIZE) == -1)
 		{
 			std::cerr << "Unable to read data bytes starting from LSM6DS33_OUT_TEMP_L." << std::endl;
-			return ERROR_POLL;
+			return false;
 		}
 
 		//record rawacceleration values using data reads for x,y,z respectively
@@ -271,7 +271,7 @@ public:
 		m_accel.y = ((m_buffer[11] << 8) | m_buffer[10]);
 		m_accel.z = ((m_buffer[13] << 8) | m_buffer[12]);
 
-		return RESULT_SUCCESS;
+		return true;
 	}
 
 	
@@ -334,6 +334,10 @@ public:
 		std::cout << "\033[100D" << std::flush;
 		std::cout << "\033[" << lines << "A" << std::flush;
 	
+	}
+
+	void normalizeCursor(int lines) {
+		std::cout << "\033[" << lines << "B" << std::flush;
 	}
 
     const float accel_multiplier[4] = {0.061, 0.122, 0.244, 0.488};
