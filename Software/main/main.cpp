@@ -15,13 +15,20 @@ int main() {
     // TODO: Initialize DataPackets
     // spartan::DataPacket masterPacket;
     // dataPackets[0] = new spartan::IMUDataPacket;
-
+    
+    // Initialization of sensors
+    for (int i = 0; i < sensors.size(); i++) {
+	sensors[i]->powerOn();
+    }
     // TODO: flight loop
     for (int i = 0; i < sensors.size(); i++) {
-        sensors[i]->pollData(dataPackets[i]);
+        bool result = sensors[i]->pollData(dataPackets[i]);
+	if (!result)
+	    std::cerr << "Sensor name: " << sensors[i]->name() << " instance; " << sensors[i]->getInstance() << " poll data error!" << std::endl;
     }
 
-    std::cout << dataPackets[0] << std::endl;
+    std::cout << dataPackets[0]->getSize() << std::endl;
+    std::cout << *dataPackets[0] << std::endl;
     /*
     for (int i = 0; i < dataPackets.size(); i++) {
         dataPackets[i]->populate(masterPacket);
