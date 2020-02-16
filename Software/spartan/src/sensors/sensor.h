@@ -49,7 +49,7 @@ namespace spartan {
 
 
         // Data getters
-        virtual bool pollData(PacketType * dp) = 0;
+        virtual bool pollData(DataPacket * dp) = 0;
         virtual void printValues() const = 0;
     
     protected:
