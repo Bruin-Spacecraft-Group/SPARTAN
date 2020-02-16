@@ -341,7 +341,7 @@ public:
     const float gyro_multiplier[5] = {4.375, 8.75, 17.5, 35, 70};
 	float _gyro_multiplier;
 
-	virtual bool pollData(IMUDataPacket * dp) const {
+	virtual bool pollData(DataPacket * dp) const {
 		if (poll() != RESULT_SUCCESS) 
 			return false;
 		// Initalize an data array
