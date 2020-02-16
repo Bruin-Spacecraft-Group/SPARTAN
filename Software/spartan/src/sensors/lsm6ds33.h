@@ -404,6 +404,10 @@ public:
 	}
 */
 
+virtual char * name() {
+	char * str = "LSM6DS33";
+	return str;
+}
 
 private:
 	mraa::I2c m_i2c;
