@@ -341,7 +341,7 @@ public:
     const float gyro_multiplier[5] = {4.375, 8.75, 17.5, 35, 70};
 	float _gyro_multiplier;
 
-	virtual bool pollData(DataPacket * dp) const {
+	virtual bool pollData(DataPacket * dp) {
 		if (poll() != RESULT_SUCCESS) 
 			return false;
 		// Initalize an data array
@@ -361,7 +361,7 @@ public:
     
     virtual void printValues() const {
         std::cout << "======================================" << std::endl;
-        std::cout << "Temp: " << ((m_temp / 16) + m_offsets._temp_offset << "degrees celcius" << std::endl;
+        std::cout << "Temp: " << ((m_temp / 16) + m_offsets._temp_offset) << "degrees celcius" << std::endl;
 		std::cout << "AccelX: " << (float) ((m_accel.x*_accel_multiplier) * m_offsets._accel_offsets.x) << std::endl;
 		std::cout << "AccelY: " << (float) ((m_accel.y*_accel_multiplier) * m_offsets._accel_offsets.y) << std::endl;
 		std::cout << "AccelZ: " << (float) ((m_accel.z*_accel_multiplier) * m_offsets._accel_offsets.z) << std::endl;
