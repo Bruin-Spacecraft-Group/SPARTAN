@@ -1,6 +1,7 @@
 #include "datapacket.h"
 
-void spartan::IMUDataPacket::populate(const DataPacket &dp) {
+/*
+void spartan::IMUDataPacket::populate(const MasterDataPacket &dp) {
     m_timestamp = dp.timestamp;
     // m_accel_y = dp.accel_y;
     // m_accel_z = dp.accel_z;
@@ -9,7 +10,7 @@ void spartan::IMUDataPacket::populate(const DataPacket &dp) {
     // m_gyro_z = dp.gyro_z;
     // m_temp = dp.temp;
 }
-
+*/
 
 /*
 void spartan::AltimeterDataPacket::populate(const DataPacket &dp) {
