@@ -20,6 +20,8 @@ int main() {
     for (int i = 0; i < sensors.size(); i++) {
         sensors[i]->pollData(dataPackets[i]);
     }
+
+    std::cout << dataPackets[0] << std::endl;
     /*
     for (int i = 0; i < dataPackets.size(); i++) {
         dataPackets[i]->populate(masterPacket);
