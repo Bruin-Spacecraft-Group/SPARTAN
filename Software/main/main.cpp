@@ -28,7 +28,6 @@ std::cout << "DIVIDER" << std::endl;
 sensors[0]->powerOn();
 sensors[0]->poll();
 sensors[0]->printValues();
-spartan::DataPacket * dp;
 std::cout << sensors[0]->pollData(dp) << std::endl;
 
 //std::cout << *dp << std::endl;
