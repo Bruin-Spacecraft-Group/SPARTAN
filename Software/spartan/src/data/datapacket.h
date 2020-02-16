@@ -92,7 +92,7 @@ namespace spartan {
         }
         virtual void populate(const DataPacket &dp);
 
-        IMUDataPacket(unsigned long timestamp, float * data): DataPacket(timestamp, data) {}
+        IMUDataPacket(unsigned long timestamp, float * data): PacketType(timestamp, data) {}
     };
 
 
