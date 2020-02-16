@@ -346,7 +346,7 @@ public:
 	float _gyro_multiplier;
 
 	virtual bool pollData(DataPacket * dp) {
-		if (poll() != RESULT_SUCCESS) 
+		if (!poll()) 
 			return false;
 		// Initalize an data array
 		float * arr = new float[7];

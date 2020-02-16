@@ -16,14 +16,24 @@ int main() {
     // spartan::DataPacket masterPacket;
     // dataPackets[0] = new spartan::IMUDataPacket;
     
-    //spartan::LSM6DS33 lsm6(1, 0);
-    //lsm6.powerOn();
-    //lsm6.poll();
-    //lsm6.printEscapedRawValues(9);
+    spartan::LSM6DS33 lsm6(1, 0);
+    lsm6.powerOn();
+    std::cout << lsm6.poll() << std::endl;
+    lsm6.printValues();
+spartan::LSM6DS33 * l6 = dynamic_cast<spartan::LSM6DS33 *>(sensors[0]);
+l6->powerOn();
+l6->poll();
+l6->printValues();
+std::cout << "DIVIDER" << std::endl;
 
 sensors[0]->powerOn();
 sensors[0]->poll();
 sensors[0]->printValues();
+spartan::DataPacket * dp;
+std::cout << sensors[0]->pollData(dp) << std::endl;
+
+//std::cout << *dp << std::endl;
+std::cout << dp->getSize() << std::endl;
     // Initialization of sensors
     for (int i = 0; i < sensors.size(); i++) {
 	//sensors[i]->powerOn();
