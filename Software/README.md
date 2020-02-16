@@ -15,7 +15,14 @@ Table of contents
 
 # Build instructions
 
+If you're lazy:
+
+```shell
+./build.sh
 ```
+If you like typing stuff:
+
+```shell
 cmake -B _build
 cd _build
 cmake --build .
