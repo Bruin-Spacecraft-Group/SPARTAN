@@ -6,7 +6,7 @@
 #include <sensors/lsm6ds33.h>
 
 int main() {
-    std::array<spartan::PacketType*, 2> dataPackets;
+    std::array<spartan::DataPacket*, 2> dataPackets;
     std::array<spartan::Sensor*, 1> sensors;
 
     // TODO: Initialize Sensors
