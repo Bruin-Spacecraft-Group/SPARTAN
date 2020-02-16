@@ -363,7 +363,7 @@ public:
         std::cout << "======================================" << std::endl;
         std::cout << "Temp: " << ((m_temp / 16) + m_offsets._temp_offset << "degrees celcius" << std::endl;
 		std::cout << "AccelX: " << (float) ((m_accel.x*_accel_multiplier) * m_offsets._accel_offsets.x) << std::endl;
-		std::cout << "AccelY: " << (float) ((m_accel.y*_accel_multiplier) * m_offsets._accel_offsets.y)  < std::endl;
+		std::cout << "AccelY: " << (float) ((m_accel.y*_accel_multiplier) * m_offsets._accel_offsets.y) << std::endl;
 		std::cout << "AccelZ: " << (float) ((m_accel.z*_accel_multiplier) * m_offsets._accel_offsets.z) << std::endl;
 		std::cout << "GyroX: " << (float) ((m_gyro.x*_gyro_multiplier) * m_offsets._gyro_offsets.x) << std::endl;
 		std::cout << "GyroY: " << (float) ((m_gyro.y*_gyro_multiplier) * m_offsets._gyro_offsets.y) << std::endl;
