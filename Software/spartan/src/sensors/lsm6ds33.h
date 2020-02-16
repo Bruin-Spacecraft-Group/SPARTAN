@@ -345,7 +345,7 @@ public:
     const float gyro_multiplier[5] = {4.375, 8.75, 17.5, 35, 70};
 	float _gyro_multiplier;
 
-	virtual bool pollData(DataPacket * dp) {
+	virtual bool pollData(DataPacket * & dp) {
 		if (!poll()) 
 			return false;
 		// Initalize an data array
