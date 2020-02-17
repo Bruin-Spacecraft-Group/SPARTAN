@@ -143,7 +143,7 @@ public:
 
 	LSM6DS33(	int busID, 
 				int lsm6ID		//  Either 0 or 1 (can only connect 2 lsm6ds33 modules)
-			): Sensor(busID, lsm6ID), 
+			): Sensor(busID, lsm6ID)
 	{
 		if (lsm6ID)
 			lsm6Address = HIGH_ADDRESS;

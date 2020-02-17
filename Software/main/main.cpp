@@ -45,7 +45,7 @@ int main() {
     std::ofstream fout;
     fout.open("data.txt");
 
-    while (count < 100)) {
+    while (count < 100) {
         for (int i = 0; i < sensors.size(); i++) {
             // Polls data from sensor #i
             if (!(sensors[i]->pollData(dataPackets[i])))
