@@ -68,6 +68,8 @@ namespace spartan {
                 in >> dp.data[i];
             return in;
         }
+
+        DataPacket() {}
         
         DataPacket(unsigned long timestamp, float * data) {
             m_timestamp = timestamp;
