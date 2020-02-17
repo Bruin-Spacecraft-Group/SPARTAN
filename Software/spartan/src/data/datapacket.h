@@ -4,6 +4,7 @@
 #include <fstream>
 
 namespace spartan {
+    /* Tentatively deprecated
     struct MasterDataPacket {
         unsigned long timestamp;
 
@@ -32,7 +33,7 @@ namespace spartan {
         float payload_voltage;
         float payload_current;
     };
-
+    */
 
     // Protocol (abstract base class) to which all datapackets conform to
     /*

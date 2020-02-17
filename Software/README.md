@@ -7,10 +7,8 @@ Table of contents
 
 <!--ts-->
 * [Build instructions](#build-instructions)
-* [Installation](#installation)
 * [Sensor docs](#sensor-documentations)
     * [LSM6 Inertial Measurement Unit](spartan/src/docs/lsm6.md)
-
 <!--te-->
 
 # Build instructions
@@ -30,4 +28,8 @@ cmake --build .
 ```
 
 # Sensor documentations
+* [Sensor Abstract class requirements](spartan/src/docs/sensor.md) *(Must Read!)*
 * [LSM6DS33](spartan/src/docs/lsm6.md)
+
+# Data packet documentation
+* [Data packet structure and implementation examples](spartan/src/docs/dp.md)

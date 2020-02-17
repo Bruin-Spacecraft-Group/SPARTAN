@@ -132,7 +132,6 @@ public:
 				int lsm6ID,		//  Either 0 or 1 (can only connect 2 lsm6ds33 modules)
 				lsm6Settings settings
 			): Sensor(busID, lsm6ID), 
-				m_i2c(busID,true), 
 				m_settings(settings)  // raw=true, disable pinmapper for board
 	{
 		if (lsm6ID)
@@ -145,7 +144,6 @@ public:
 	LSM6DS33(	int busID, 
 				int lsm6ID		//  Either 0 or 1 (can only connect 2 lsm6ds33 modules)
 			): Sensor(busID, lsm6ID), 
-				m_i2c(busID,true)
 	{
 		if (lsm6ID)
 			lsm6Address = HIGH_ADDRESS;
@@ -328,7 +326,7 @@ public:
 		std::cout << "GyroZ: " <<  std::setw(6) << m_gyro.z << std::endl;
 		std::cout << "======================================" << std::endl;
 	}
-	
+	/*
 	void printEscapedRawValues(int lines) {
 		printRawValues();
 		std::cout << "\033[100D" << std::flush;
@@ -339,7 +337,7 @@ public:
 	void normalizeCursor(int lines) {
 		std::cout << "\033[" << lines << "B" << std::flush;
 	}
-
+	*/
     const float accel_multiplier[4] = {0.061, 0.122, 0.244, 0.488};
 	float _accel_multiplier;
     const float gyro_multiplier[5] = {4.375, 8.75, 17.5, 35, 70};
@@ -363,7 +361,7 @@ public:
 		return true;
 	}
     
-    virtual void printValues() const {
+    virtual int printValues() const {
         std::cout << "======================================" << std::endl;
         std::cout << "Temp: " << ((m_temp / 16) + m_offsets._temp_offset) << "degrees celcius" << std::endl;
 		std::cout << "AccelX: " << (float) ((m_accel.x*_accel_multiplier) + m_offsets._accel_offsets.x) << std::endl;
@@ -373,6 +371,7 @@ public:
 		std::cout << "GyroY: " << (float) ((m_gyro.y*_gyro_multiplier) + m_offsets._gyro_offsets.y) << std::endl;
 		std::cout << "GyroZ: " << (float) ((m_gyro.z*_gyro_multiplier) + m_offsets._gyro_offsets.z)<< std::endl;
 		std::cout << "======================================" << std::endl;
+		return 9; // # of lines
     }
    /*
     virtual float * getValues() {
@@ -414,11 +413,9 @@ virtual const char * name() const {
 }
 
 private:
-	mraa::I2c m_i2c;
 	short m_temp;
 	vector<short> m_accel; // using short because 16-byte data output. c++ translate the raw binary output according to two's complement. 
 	vector<short> m_gyro;
-
 	uint8_t m_buffer[BUFFER_SIZE];
 };
 

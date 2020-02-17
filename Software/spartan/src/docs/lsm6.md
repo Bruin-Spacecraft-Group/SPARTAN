@@ -1,4 +1,5 @@
 # LSM6DS33 Manual
+Any questions DM [*Johnson Zhou*](https://github.com/Clumsyndicate) on Slack
 
 ## Constructors
 
@@ -22,6 +23,8 @@ struct lsm6Settings {
 LSM6DS33(int busID, int lsm6ID, lsm6Settings settings);
 ```
 
+Enum specification are below. 
+
 3. Update lsm6 settings
 ```c++
 // Make sure to power on before updating settings
@@ -35,9 +38,13 @@ lsm6.powerOn();
 lsm6Settings settings = { _4g, _400hz, _500dps,  odr_1660Hz, odr_1660Hz }; // The default setting
 lsm6.updateSettings(settings);
 
+lsm6.printValues();
+while (true) {
+    // Use Escaped option for continual data output
+    lsm6.printEscapedRawValues(9); 
+}
 ```
 
-Enum specification are below. 
 
 ## Configuration of **LSM6**
 
