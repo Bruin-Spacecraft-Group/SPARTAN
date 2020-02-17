@@ -67,14 +67,14 @@ int main() {
     */
 
     // TODO: Send to comms (write to SD card and send to radio)
-
+    /*
     std::cout << "Read from file" << std::endl;
     std::ifstream in;
     in.open("data.txt");
     for (int i=0; i<100; i++) {
-        spartan::DataPacket dp;
+        spartan::DataPacket * dp;
         in >> dp;
         std::cout << "Read: " << std::endl;
         std::cout << dp;
-    }
+    } */
 }
