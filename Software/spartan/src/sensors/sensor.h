@@ -28,7 +28,7 @@ namespace spartan {
         // Debug options
         virtual int printValues() const = 0;
         void printEscapedValues(bool normalize) const {
-            printValues();
+            int lines = printValues();
             std::cout << "\033[100D" << std::flush;
             std::cout << "\033[" << lines << "A" << std::flush;
             if (normalize) {
