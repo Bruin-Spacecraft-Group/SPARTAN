@@ -39,6 +39,7 @@ int main() {
     for (int i = 0; i < sensors.size(); i++) {
 	    sensors[i]->powerOn();
     }
+
     // TODO: flight loop
     int count = 0;
 
@@ -50,9 +51,10 @@ int main() {
             // Polls data from sensor #i
             if (!(sensors[i]->pollData(dataPackets[i])))
                 std::cerr << "Sensor name: " << sensors[i]->name() << " instance; " << sensors[i]->getInstance() << " poll data error!" << std::endl;
-
-            std::cout << "Packet size " << dataPackets[i]->getSize() << std::endl;
-            std::cout << *dataPackets[i] << std::endl;
+            if (debug) {
+                std::cout << "Packet size " << dataPackets[i]->getSize() << std::endl;
+                std::cout << *dataPackets[i] << std::endl;
+            }
             fout << *dataPackets[i];
         }
         count++;
@@ -66,5 +68,13 @@ int main() {
 
     // TODO: Send to comms (write to SD card and send to radio)
 
-    
+    std::cout << "Read from file" << std::endl;
+    std::ifstream in;
+    in.open("data.txt");
+    for (int i=0; i<100; i++) {
+        spartan::DataPacket dp;
+        in >> dp;
+        std::cout << "Read: " << std::endl;
+        std::cout << dp;
+    }
 }
