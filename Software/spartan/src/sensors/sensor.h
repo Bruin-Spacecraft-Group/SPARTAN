@@ -5,6 +5,7 @@
 #include <mraa/i2c.hpp>
 #include "../globals.h"
 #include <chrono>
+#include <iostream>
 
 namespace spartan {
     class Sensor {
