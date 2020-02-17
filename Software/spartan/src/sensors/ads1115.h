@@ -11,7 +11,7 @@ namespace spartan
     public:
         ADS1115(int bus, uint8_t address);
         virtual bool pollData(spartan::DataPacket &dp);
-        virtual void printValues() const;
+        virtual int printValues() const;
     };
 } // namespace spartan
 
