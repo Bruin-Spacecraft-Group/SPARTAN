@@ -1,4 +1,0 @@
-Look into code for GPS position logging via RaspberryPi and C code (obviously would need to change to be in accordance with the other code we have already in C++)
-http://walterdalmut.com/2013/11/23/raspberry-pi-c-gps-nmea-library-global-positioning-system/
-https://github.com/wdalmut/libgps
-
