@@ -44,7 +44,7 @@ int mraa::Uart::writeStr(std::string data) {
 
 // Miscellaneous data functions
 
-bool mraa::Uart::dataAvailable(unsigned int millis = 0) {
+bool mraa::Uart::dataAvailable(unsigned int millis) {
     return true;
 }
 

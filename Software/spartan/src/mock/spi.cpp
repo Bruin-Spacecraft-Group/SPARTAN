@@ -9,10 +9,21 @@ mraa::Spi::~Spi(){}
 
 // SPI interface settings
 
-mraa::Result mraa::Spi::mode(Spi_Mode mode) {}
-mraa::Result mraa::Spi::frequency(int hz) {}
-mraa::Result mraa::Spi::lsbmode(bool lsb) {}
-mraa::Result mraa::Spi::bitPerWord(unsigned int bits) {}
+mraa::Result mraa::Spi::mode(Spi_Mode mode) {
+    return mraa::SUCCESS;
+}
+
+mraa::Result mraa::Spi::frequency(int hz) {
+    return mraa::SUCCESS;
+}
+
+mraa::Result mraa::Spi::lsbmode(bool lsb) {
+    return mraa::SUCCESS;
+}
+
+mraa::Result mraa::Spi::bitPerWord(unsigned int bits) {
+    return mraa::SUCCESS;
+}
 
 // Read/write functions
 

@@ -2,7 +2,7 @@
 
 // Contructors/destructors
 
-mraa::I2c::I2c(int bus, bool raw = false) {}
+mraa::I2c::I2c(int bus, bool raw) {}
 mraa::I2c::I2c(void* i2c_context) {}
 mraa::I2c::~I2c() {}
 
