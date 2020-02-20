@@ -31,4 +31,29 @@ namespace mraa
         I2C_FAST = 1, /**< up to 400Khz */
         I2C_HIGH = 2  /**< up to 3.4Mhz */
     } I2cMode;
+
+    /**
+     * MRAA SPI Modes
+     */
+    typedef enum {
+        SPI_MODE0 = 0, /**< CPOL = 0, CPHA = 0, Clock idle low, data is clocked in on rising edge,
+                        output data (change) on falling edge */
+        SPI_MODE1 = 1, /**< CPOL = 0, CPHA = 1, Clock idle low, data is clocked in on falling edge,
+                        output data (change) on rising edge */
+        SPI_MODE2 = 2, /**< CPOL = 1, CPHA = 0, Clock idle low, data is clocked in on falling edge,
+                        output data (change) on rising edge */
+        SPI_MODE3 = 3, /**< CPOL = 1, CPHA = 1, Clock idle low, data is clocked in on rising, edge
+                        output data (change) on falling edge */
+    } Spi_Mode;
+
+    /**
+     * Enum representing different uart parity states
+     */
+    typedef enum {
+        UART_PARITY_NONE = 0,
+        UART_PARITY_EVEN = 1,
+        UART_PARITY_ODD = 2,
+        UART_PARITY_MARK = 3,
+        UART_PARITY_SPACE = 4
+    } UartParity;
 }
