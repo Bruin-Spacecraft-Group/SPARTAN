@@ -1,10 +1,10 @@
 // based on some example I copied off the internet
 // https://gist.github.com/elimpnick/8313815ac387e6757f751dc8960f03d7
 
+#include <iostream>
 #include <libgpsmm.h>
 
 #include "mtk3339.h"
-#include <iostream>
 
 spartan::MTK3339::MTK3339() : m_gps("localhost", DEFAULT_GPSD_PORT) {}
 
