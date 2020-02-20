@@ -1,8 +1,7 @@
 #ifndef SPI_H_INCLUDED
 #define SPI_H_INCLUDED
 
-#include "spi.h"
-#include "types.hpp"
+#include "types.h"
 #include <stdexcept>
 
 namespace mraa

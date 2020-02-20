@@ -1,8 +1,7 @@
 #ifndef UART_H_INCLUDED
 #define UART_H_INCLUDED
 
-#include "uart.h"
-#include "types.hpp"
+#include "types.h"
 #include <stdlib.h>
 #include <stdexcept>
 #include <cstring>
