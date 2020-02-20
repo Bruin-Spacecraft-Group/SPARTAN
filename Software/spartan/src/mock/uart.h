@@ -4,7 +4,7 @@
 #include "types.h"
 #include <stdlib.h>
 #include <stdexcept>
-#include <cstring>
+#include <string>
 
 namespace mraa
 {

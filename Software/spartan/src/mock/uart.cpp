@@ -1,94 +1,77 @@
 #include "uart.h"
 
-mraa::Uart::Uart(int uart) {
-    m_uart = mraa_uart_init(uart);
+// Constructors/destructors
 
-    if (m_uart == NULL) {
-        throw std::invalid_argument("Error initialising UART");
-    }
-}
+mraa::Uart::Uart(int uart) {}
+mraa::Uart::Uart(std::string path) {}
+mraa::Uart::Uart(void* uart_context) {}
+mraa::Uart::~Uart() {}
 
-mraa::Uart::Uart(std::string path) {
-    m_uart = mraa_uart_init_raw(path.c_str());
-
-    if (m_uart == NULL) {
-        throw std::invalid_argument("Error initialising UART");
-    }
-}
-
-mraa::Uart::Uart(void* uart_context) {
-    m_uart = (mraa_uart_context) uart_context;
-
-    if (m_uart == NULL) {
-        throw std::invalid_argument("Invalid UART context");
-    }
-}
-
-mraa::Uart::~Uart() {
-    mraa_uart_stop(m_uart);
-}
+// UART interface settings
 
 std::string mraa::Uart::getDevicePath() {
-    std::string ret_val(mraa_uart_get_dev_path(m_uart));
-    return ret_val;
+    return "/dev/does/not/exist";
 }
 
+// Read/write functions
+
 int mraa::Uart::read(char* data, int length) {
-    return mraa_uart_read(m_uart, data, (size_t) length);
+    return std::rand();
 }
 
 int mraa::Uart::write(const char* data, int length) {
-    return mraa_uart_write(m_uart, data, (size_t) length);
+    return length;
 }
 
 std::string mraa::Uart::readStr(int length) {
-    char* data = (char*) malloc(sizeof(char) * length);
+    char* data = (char*) std::malloc(sizeof(char) * length);
     if (data == NULL) {
         throw std::bad_alloc();
     }
 
-    int v = mraa_uart_read(m_uart, data, (size_t) length);
-    std::string ret(data, v);
-    free(data);
+    for (int i = 0; i < length; i++) {
+        data[i] = (char) std::rand();
+    }
+    std::string ret(data, length);
+    std::free(data);
     return ret;
 }
 
 int mraa::Uart::writeStr(std::string data) {
     // this is data.length() not +1 because we want to avoid the '\0' char
-    return mraa_uart_write(m_uart, data.c_str(), (data.length()));
+    return data.length();
 }
 
+// Miscellaneous data functions
+
 bool mraa::Uart::dataAvailable(unsigned int millis = 0) {
-    if (mraa_uart_data_available(m_uart, millis))
-        return true;
-    else
-        return false;
+    return true;
 }
 
 mraa::Result mraa::Uart::flush() {
-    return (Result) mraa_uart_flush(m_uart);
+    return mraa::SUCCESS;
 }
 
 mraa::Result mraa::Uart::sendBreak(int duration) {
-    return (Result) mraa_uart_sendbreak(m_uart, duration);
+    return mraa::SUCCESS;
 }
 
 mraa::Result mraa::Uart::setBaudRate(unsigned int baud) {
-    return (Result) mraa_uart_set_baudrate(m_uart, baud);
+    return mraa::SUCCESS;
 }
 
 mraa::Result mraa::Uart::setMode(int bytesize, UartParity parity, int stopbits) {
-    return (Result) mraa_uart_set_mode(m_uart, bytesize, (mraa_uart_parity_t) parity, stopbits);
+    return mraa::SUCCESS;
 }
 
 mraa::Result mraa::Uart::setFlowcontrol(bool xonxoff, bool rtscts) {
-    return (Result) mraa_uart_set_flowcontrol(m_uart, xonxoff, rtscts);
+    return mraa::SUCCESS;
 }
 
 mraa::Result mraa::Uart::setTimeout(int read, int write, int interchar) {
-    return (Result) mraa_uart_set_timeout(m_uart, read, write, interchar);
+    return mraa::SUCCESS;
 }
 
 mraa::Result mraa::Uart::setNonBlocking(bool nonblock) {
-    return (Result) mraa_uart_set_non_blocking(m_uart, nonblock);
+    return mraa::SUCCESS;
 }

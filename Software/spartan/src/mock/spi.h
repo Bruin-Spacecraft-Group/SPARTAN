@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include <stdexcept>
+#include <new>
 
 namespace mraa
 {

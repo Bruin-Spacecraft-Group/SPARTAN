@@ -1,79 +1,63 @@
 #include "i2c.h"
 
-mraa::I2c::I2c(int bus, bool raw = false) {
-    if (raw) {
-        m_i2c = mraa_i2c_init_raw(bus);
-    } else {
-        m_i2c = mraa_i2c_init(bus);
-    }
-    if (m_i2c == NULL) {
-        throw std::invalid_argument("Invalid i2c bus");
-    }
-}
+// Contructors/destructors
 
-mraa::I2c::I2c(void* i2c_context) {
-    m_i2c = (mraa_i2c_context) i2c_context;
-    if (m_i2c == NULL) {
-        throw std::invalid_argument("Invalid I2C context");
-    }
-}
+mraa::I2c::I2c(int bus, bool raw = false) {}
+mraa::I2c::I2c(void* i2c_context) {}
+mraa::I2c::~I2c() {}
 
-mraa::I2c::~I2c() {
-    mraa_i2c_stop(m_i2c);
-}
+// I2C interface settings
 
 mraa::Result mraa::I2c::frequency(mraa::I2cMode mode) {
-    return (Result) mraa_i2c_frequency(m_i2c, (mraa_i2c_mode_t) mode);
+    return mraa::SUCCESS;
 }
 
 mraa::Result mraa::I2c::address(uint8_t address) {
-    return (Result) mraa_i2c_address(m_i2c, address);
+    return mraa::SUCCESS;
 }
 
+// Read functions
+
 uint8_t mraa::I2c::readByte() {
-    int x = mraa_i2c_read_byte(m_i2c);
-    if (x == -1) {
-        throw std::invalid_argument("Unknown error in I2c::readByte()");
-    }
-    return (uint8_t) x;
+    return (uint8_t) std::rand();
 }
 
 int mraa::I2c::read(uint8_t* data, int length) {
-    return mraa_i2c_read(m_i2c, data, length);
+    for (int i = 0; i < length; i++) {
+        data[i] = (uint8_t) std::rand();
+    }
+    return length;
 }
 
 uint8_t mraa::I2c::readReg(uint8_t reg) {
-    int x = mraa_i2c_read_byte_data(m_i2c, reg);
-    if (x == -1) {
-        throw std::invalid_argument("Unknown error in I2c::readReg()");
-    }
-    return (uint8_t) x;
+    return (uint8_t) std::rand();
 }
 
 uint16_t mraa::I2c::readWordReg(uint8_t reg) {
-    int x = mraa_i2c_read_word_data(m_i2c, reg);
-    if (x == -1) {
-        throw std::invalid_argument("Unknown error in I2c::readReg()");
-    }
-    return (uint16_t) x;
+    return (uint16_t) std::rand();
 }
 
 int mraa::I2c::readBytesReg(uint8_t reg, uint8_t* data, int length) {
-    return mraa_i2c_read_bytes_data(m_i2c, reg, data, length);
+    for (int i = 0; i < length; i++) {
+        data[i] = (uint8_t) std::rand();
+    }
+    return length;
 }
 
+// Write functions
+
 mraa::Result mraa::I2c::writeByte(uint8_t data) {
-    return (Result) mraa_i2c_write_byte(m_i2c, data);
+    return mraa::SUCCESS;
 }
 
 mraa::Result mraa::I2c::write(const uint8_t* data, int length) {
-    return (Result) mraa_i2c_write(m_i2c, data, length);
+    return mraa::SUCCESS;
 }
 
 mraa::Result mraa::I2c::writeReg(uint8_t reg, uint8_t data) {
-    return (Result) mraa_i2c_write_byte_data(m_i2c, data, reg);
+    return mraa::SUCCESS;
 }
 
 mraa::Result mraa::I2c::writeWordReg(uint8_t reg, uint16_t data) {
-    return (Result) mraa_i2c_write_word_data(m_i2c, data, reg);
+    return mraa::SUCCESS;
 }
