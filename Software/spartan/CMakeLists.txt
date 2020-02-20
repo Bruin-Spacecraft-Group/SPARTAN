@@ -1,6 +1,7 @@
 add_library(
     spartanflightlib
 
+    ./src/mock/types.h
     ./src/mock/i2c.h
     ./src/mock/i2c.cpp
     ./src/mock/spi.h
