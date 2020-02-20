@@ -167,6 +167,6 @@ namespace mraa
          */
         Result setNonBlocking(bool nonblock);
     };
-}
+} // namespace mraa
 
 #endif // UART_H_INCLUDED

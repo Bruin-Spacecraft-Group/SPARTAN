@@ -141,6 +141,6 @@ namespace mraa
          */
         Result bitPerWord(unsigned int bits);
     };
-}
+} // namespace mraa
 
 #endif // SPI_H_INCLUDED

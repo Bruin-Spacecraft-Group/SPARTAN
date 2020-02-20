@@ -58,4 +58,4 @@ namespace mraa
         UART_PARITY_MARK = 3,
         UART_PARITY_SPACE = 4
     } UartParity;
-}
+} // namespace mraa

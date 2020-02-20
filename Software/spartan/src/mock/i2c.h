@@ -136,6 +136,6 @@ namespace mraa
          */
         Result writeWordReg(uint8_t reg, uint16_t data);
     };
-}
+} // namespace mraa
 
 #endif // I2C_H_INCLUDED
