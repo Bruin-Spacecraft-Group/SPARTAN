@@ -1,16 +1,17 @@
 #ifndef SENSOR_H_INCLUDED
 #define SENSOR_H_INCLUDED
 
-#include <data/datapacket.h>
-#include <mraa/i2c.hpp>
-#include "../globals.h"
 #include <chrono>
 #include <iostream>
+#include <data/datapacket.h>
+#include <mraa/i2c.hpp>
+
+#include "globals.h"
 
 namespace spartan {
     class Sensor {
     public:
-        Sensor(int busID, int instance) : m_i2c(busID,true), m_busID(busID), m_status(STATUS_OFF), m_instance(instance) {/*...*/ }
+        Sensor(int busID, int instance) : m_busID(busID), m_status(STATUS_OFF), m_instance(instance) {/*...*/ }
         //constructor that takes in pin number that sensor is connected to; this pin number would be used for all member functions
 
         // Identification, standard max length is 15 characters
@@ -46,13 +47,11 @@ namespace spartan {
         //return status (operate with interfaced constants described in globals.h)
         virtual int getStatus() const { return m_status; }
         int getInstance() const { return m_instance; }
-        mraa::I2c getI2C() const { return m_i2c; }
 
     protected:
  	    int m_status;
-	    mraa::I2c m_i2c; //bus that sensor is connected to
 	    int m_busID;
-	    int m_instance; //support for multiple sensors of same type
+	    int m_instance; // support for multiple sensors of same type
     };
 
 }
