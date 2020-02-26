@@ -1,6 +1,30 @@
 #include "datapacket.h"
 
-/*
+// Generic constructor
+spartan::DataPacket::DataPacket(unsigned long timestamp, float * data) {
+    m_timestamp = timestamp;
+    this->data = data;
+}
+
+// Generic write
+std::ostream& spartan::operator<<(std::ostream& out, const spartan::DataPacket& dp) {
+    out << dp.m_timestamp << "\n";
+    out << dp.getSize() << "\n";
+    for (int i=0; i<dp.getSize(); i++)
+        out << dp.data[i] << "\n";
+    return out;
+}
+
+// Generic read
+std::istream & spartan::operator>>(std::istream &in, spartan::DataPacket & dp) {
+    in >> dp.m_timestamp;
+    in.ignore(256, '\n'); // Don't really need the size
+    for (int i = 0; i < dp.getSize(); i++)
+        in >> dp.data[i];
+    return in;
+}
+
+/* Deprecated. Corresponds to deprecated definitions in `mdp.h`.
 void spartan::IMUDataPacket::populate(const MasterDataPacket &dp) {
     m_timestamp = dp.timestamp;
     // m_accel_y = dp.accel_y;
@@ -10,9 +34,7 @@ void spartan::IMUDataPacket::populate(const MasterDataPacket &dp) {
     // m_gyro_z = dp.gyro_z;
     // m_temp = dp.temp;
 }
-*/
 
-/*
 void spartan::AltimeterDataPacket::populate(const DataPacket &dp) {
     m_timestamp = dp.timestamp;
     m_pressure = dp.pressure;
