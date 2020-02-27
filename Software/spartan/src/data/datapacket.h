@@ -15,9 +15,9 @@ namespace spartan {
      */
     class DataPacket {
     public:
-        DataPacket(unsigned long timestamp, MasterDataPacket &dp);
+        DataPacket(unsigned long timestamp);
 
-        // virtual void populate(const MasterDataPacket & dp) = 0;
+        virtual void populate(const MasterDataPacket & dp) = 0;
 
         // Each sensor packet would implement this to vary data array size
         virtual int getSize() const = 0;
@@ -38,10 +38,11 @@ namespace spartan {
      */
     class IMUDataPacket : public DataPacket {
     public:
+        IMUDataPacket(unsigned long timestamp);
         IMUDataPacket(unsigned long timestamp, MasterDataPacket &dp);
         ~IMUDataPacket();
 
-        // virtual void populate(const MasterDataPacket &dp);
+        virtual void populate(const MasterDataPacket &dp);
 
         // Size of data array
         int getSize() const;

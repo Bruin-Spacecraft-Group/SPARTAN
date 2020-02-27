@@ -14,4 +14,4 @@ add_library(
     ./src/globals.h
 )
 
-target_include_directories(spartanflightlib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src" "/usr/local/include")
+target_include_directories(spartanflightlib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")

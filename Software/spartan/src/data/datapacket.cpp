@@ -2,9 +2,7 @@
 
 // Generic DataPacket
 
-spartan::DataPacket::DataPacket(unsigned long timestamp, MasterDataPacket &dp) {
-    m_timestamp = timestamp;
-}
+spartan::DataPacket::DataPacket(unsigned long timestamp) : m_timestamp(timestamp) {}
 
 std::ostream& spartan::operator<<(std::ostream &out, const spartan::DataPacket &dp) {
     out << dp.m_timestamp << "\n";
@@ -24,14 +22,30 @@ std::istream & spartan::operator>>(std::istream &in, spartan::DataPacket &dp) {
 
 // IMUDataPacket
 
+spartan::IMUDataPacket::IMUDataPacket(unsigned long timestamp)
+    : DataPacket(timestamp) {
+    // Initalize an data array
+    m_data = new float[7];
+}
+
 spartan::IMUDataPacket::IMUDataPacket(unsigned long timestamp, MasterDataPacket &dp)
-    : DataPacket(timestamp, dp) {
+    : DataPacket(timestamp) {
     // Initalize an data array
     m_data = new float[7] { dp.temp, dp.accel_x, dp.accel_y, dp.accel_z, dp.gyro_x, dp.gyro_y, dp.gyro_z };
 }
 
 spartan::IMUDataPacket::~IMUDataPacket() {
     delete[] m_data;
+}
+
+void spartan::IMUDataPacket::populate(const MasterDataPacket &dp) {
+    m_data[0] = dp.temp;
+    m_data[1] = dp.accel_x;
+    m_data[2] = dp.accel_y;
+    m_data[3] = dp.accel_z;
+    m_data[4] = dp.gyro_x;
+    m_data[5] = dp.gyro_y;
+    m_data[6] = dp.gyro_z;
 }
 
 int spartan::IMUDataPacket::getSize() const {
