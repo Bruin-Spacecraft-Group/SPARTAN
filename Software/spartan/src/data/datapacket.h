@@ -2,6 +2,7 @@
 #define DATAPACKET_H_INCLUDED
 
 #include <fstream>
+#include <data/mdp.h>
 
 namespace spartan {
     // Protocol (abstract base class) to which all datapackets conform to
@@ -14,7 +15,7 @@ namespace spartan {
      */
     class DataPacket {
     public:
-        DataPacket(unsigned long timestamp, float * data);
+        DataPacket(unsigned long timestamp, MasterDataPacket &dp);
 
         // virtual void populate(const MasterDataPacket & dp) = 0;
 
@@ -27,8 +28,8 @@ namespace spartan {
 
     protected:
         unsigned long m_timestamp;
-        float * data;
-    };
+        float *m_data;
+    }; // class DataPacket
 
     /* (timestamp, 
      *  [0: accel.x, 1: .y, 2: .z,
@@ -37,13 +38,14 @@ namespace spartan {
      */
     class IMUDataPacket : public DataPacket {
     public:
-        IMUDataPacket(unsigned long timestamp, float *data) : DataPacket(timestamp, data) {}
+        IMUDataPacket(unsigned long timestamp, MasterDataPacket &dp);
+        ~IMUDataPacket();
 
         // virtual void populate(const MasterDataPacket &dp);
 
         // Size of data array
-        int getSize() const { return 7; }
-    };
+        int getSize() const;
+    }; // class IMUDataPacket
 } // namespace spartan
 
 #endif // DATAPACKET_H_INCLUDED

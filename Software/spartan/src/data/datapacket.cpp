@@ -1,27 +1,41 @@
 #include "datapacket.h"
 
-// Generic constructor
-spartan::DataPacket::DataPacket(unsigned long timestamp, float * data) {
+// Generic DataPacket
+
+spartan::DataPacket::DataPacket(unsigned long timestamp, MasterDataPacket &dp) {
     m_timestamp = timestamp;
-    this->data = data;
 }
 
-// Generic write
 std::ostream& spartan::operator<<(std::ostream &out, const spartan::DataPacket &dp) {
     out << dp.m_timestamp << "\n";
     out << dp.getSize() << "\n";
-    for (int i=0; i<dp.getSize(); i++)
-        out << dp.data[i] << "\n";
+    for (int i=0; i < dp.getSize(); i++)
+        out << dp.m_data[i] << "\n";
     return out;
 }
 
-// Generic read
 std::istream & spartan::operator>>(std::istream &in, spartan::DataPacket &dp) {
     in >> dp.m_timestamp;
     in.ignore(256, '\n'); // Don't really need the size
     for (int i = 0; i < dp.getSize(); i++)
-        in >> dp.data[i];
+        in >> dp.m_data[i];
     return in;
+}
+
+// IMUDataPacket
+
+spartan::IMUDataPacket::IMUDataPacket(unsigned long timestamp, MasterDataPacket &dp)
+    : DataPacket(timestamp, dp) {
+    // Initalize an data array
+    m_data = new float[7] { dp.temp, dp.accel_x, dp.accel_y, dp.accel_z, dp.gyro_x, dp.gyro_y, dp.gyro_z };
+}
+
+spartan::IMUDataPacket::~IMUDataPacket() {
+    delete[] m_data;
+}
+
+int spartan::IMUDataPacket::getSize() const {
+    return 7;
 }
 
 /* Deprecated. Corresponds to deprecated definitions in `mdp.h`.
