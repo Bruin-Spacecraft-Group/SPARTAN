@@ -14,4 +14,8 @@ add_library(
     ./src/globals.h
 )
 
-target_include_directories(spartanflightlib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+    target_include_directories(spartanflightlib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src" "/usr/local/include")
+else()
+    target_include_directories(spartanflightlib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
+endif()

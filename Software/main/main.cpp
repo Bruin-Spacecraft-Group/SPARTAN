@@ -46,11 +46,16 @@ int main() {
     std::ofstream fout;
     fout.open("data.txt");
 
+    spartan::MasterDataPacket mdp;
+
     while (count < 100) {
         for (int i = 0; i < sensors.size(); i++) {
             // Polls data from sensor #i
-            if (!(sensors[i]->pollData(dataPackets[i])))
-                std::cerr << "Sensor name: " << sensors[i]->name() << " instance; " << sensors[i]->getInstance() << " poll data error!" << std::endl;
+            if (!(sensors[i]->pollData(mdp))) {
+                std::cerr << "Sensor name: " << sensors[i]->name() << " instance; " << sensors[i]->getInstance()
+                    << " poll data error!" << std::endl;
+            }
+            dataPackets[i]->populate(mdp);
             if (debug) {
                 std::cout << "Packet size " << dataPackets[i]->getSize() << std::endl;
                 std::cout << *dataPackets[i] << std::endl;
