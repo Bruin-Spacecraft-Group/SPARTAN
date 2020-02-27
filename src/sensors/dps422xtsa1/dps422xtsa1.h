@@ -16,7 +16,7 @@
 #include "../sensors.h"
 #include "../../globals.h"
 
-#define BUFFER_SIZE 9
+#define BUFFER_SIZE 3
 #define DATA_SIZE 9
 #define PSR_BUFF_SIZE 20
 #define PSR_SIZE 20
@@ -79,8 +79,6 @@
 #define DPS422XTSA1_PSR_COEFF_1         0x26 // b<7:0>: C00 <19:12>
 #define DPS422XTSA1_PSR_COEFF_2         0x27 // b<7:0>: C00 <11:4>
 #define DPS422XTSA1_PSR_COEFF_3         0x28 // b<7:4>: C00 <3:0>   b<3:0>: C10<19:16>
-#define DPS422XTSA1_PSR_COEFF_4         0x29 // b<7:0>: C10<15:8>
-#define DPS422XTSA1_PSR_COEFF_5         0x2A // b<7:0>: C10<7:0>
 #define DPS422XTSA1_PSR_COEFF_6         0x2B // b<7:0>: C01<19:12>
 #define DPS422XTSA1_PSR_COEFF_7         0x2C // b<7:0>: C01<11:4>
 #define DPS422XTSA1_PSR_COEFF_8         0x2D // b<7:4>: C01<3:0>    b<3:0>: C02<19:16>
@@ -154,6 +152,32 @@ public:
         C11 = (((p_constants[14] << 8) | p_constants[15]) << 1) | (((p_constants[16] & 0x80) >> 7) & 0x1);      // 17 bit
         C12 = ((((p_constants[16] & 0x7F) << 8) | p_constants[17]) << 2) | ((p_constants[18] >> 6) & 0x3);      // 17 bit
         C21 = ((p_constants[18] & 0x3F) << 8) | p_constants[19];                                                // 14 bit
+
+        getTwosComplement(&C00, 20);
+        getTwosComplement(&C10, 20);
+        getTwosComplement(&C01, 20);
+        getTwosComplement(&C02, 20);
+        getTwosComplement(&C20, 15);
+        getTwosComplement(&C30, 12);
+        getTwosComplement(&C11, 17);
+        getTwosComplement(&C12, 17);
+        getTwosComplement(&C21, 14);
+
+
+        cout << C00 << endl;
+        cout << C10 << endl;
+        cout << C01 << endl;
+        cout << C02 << endl;
+        cout << C20 << endl;
+        cout << C30 << endl;
+        cout << C11 << endl;
+        cout << C12 << endl;
+        cout << C21 << endl;
+
+
+
+
+
 /*
 
     m_c00 = ((uint32_t)buffer_prs[0] << 12) | ((uint32_t)buffer_prs[1] << 4) | (((uint32_t)buffer_prs[2] & 0xF0) >> 4);
@@ -172,6 +196,10 @@ public:
         T_gain = t_constants[0];                                    // 8 bit
         T_dVbe = (uint8_t)t_constants[1] >> 1;                             // 7 bit
         T_Vbe = ((uint8_t)t_constants[1] & 0x1) | ((uint8_t)t_constants[2] << 1);     // 9 bit
+
+        getTwosComplement(&T_gain, 8);
+        getTwosComplement(&T_dVbe, 7);
+        getTwosComplement(&T_Vbe, 9);
     }
 
     virtual int powerOn() { return RESULT_SUCCESS; }
@@ -273,6 +301,7 @@ public:
              cerr << "Poll: Unable to read bytes from registers. Please wait 8ms from startup before attempting to read from registers." << endl;
              return ERROR_POLL;
         }
+
    /* 
         for(int i = 0; i < DATA_SIZE; i++) {
             if (m_i2c.readBytesReg(DPS422XTSA1_PSR_MSB, m_buffer, 1) == -1) {
@@ -286,16 +315,32 @@ public:
 */
 
         // Pressure calculations
-        float pres_raw = ((((m_buffer[0] << 8) | m_buffer[1]) << 8) | m_buffer[2]);
-        float temp_raw = ((((m_buffer[3] << 8) | m_buffer[4]) << 8) | m_buffer[5]);
+        int32_t pres_raw = (uint32_t)m_buffer[0] << 16 | (uint32_t)m_buffer[1] << 8 | (uint32_t)m_buffer[2];
+        getTwosComplement(&pres_raw, 24);
+        int32_t temp_raw = (uint32_t)m_buffer[3] << 16 | (uint32_t)m_buffer[4] << 8 | (uint32_t)m_buffer[5];
+        getTwosComplement(&temp_raw, 24);
+
+        // temp_raw actual = 89370, pres_raw actual = -1392105
         cout << "pres: " << pres_raw << endl;
         cout << "temp: " << temp_raw << endl;
+
+        // Pressure calculations
+        calcPres(pres_raw, temp_raw);
+        // Temperature calculations
+        calcTemp(temp_raw);
+        return RESULT_SUCCESS;
+    }
+   
+    void calcPres(int32_t pres_raw, int32_t temp_raw) {
         float pres_scaled = pres_raw / getkP();
         float temp_x = temp_raw / 1048576;
         float temp_scaled = (8.5 * temp_x) / (1 + 8.8 * temp_x);
         m_pres = C00 + (C10 * pres_scaled) + (C01 * temp_scaled) + (C20 * pow(pres_scaled, 2)) + (C02 * pow(temp_scaled, 2)) + (C30 * pow(pres_scaled, 3)) + (C11 * pres_scaled * temp_scaled) + (C12 * pres_scaled * pow(temp_scaled, 2)) + (C21 * pow(pres_scaled, 2) * temp_scaled);
         
-        // Temperature calculations
+        cout << "calculated pres: " << m_pres << endl; 
+    }
+
+    void calcTemp(int32_t temp_raw) {
         float Vbe = T_Vbe * 1.05031 * pow(10, -4) + 0.463232422;
         float dVbe = T_dVbe * 1.25885 * pow(10, -5) + 0.04027621;
         float adc = T_gain * 8.4375 * pow(10, -5) + 0.675;
@@ -308,12 +353,15 @@ public:
         float A = A0 * (Vbe_cal + ALPHA * dVbe_cal) * (1 + kPTAT);
         float B = -273.15 * (1 + kPTAT) - kPTAT * T_calib;
 
-        float T_cal = temp_raw / 1048576;
+        float T_cal = (float)temp_raw / 1048576;
         float mu = T_cal / (1 + ALPHA * T_cal);
         m_temp = (A * mu) + B;
-        return RESULT_SUCCESS;
+
+        cout << "calculated temp: " << m_temp << endl;
+
     }
-    
+
+ 
     virtual int getStatus() const {
         if (m_status == STATUS_OFF) { return STATUS_OFF; }
         if (m_status == STATUS_ERROR) { return STATUS_ERROR; }
@@ -368,6 +416,17 @@ public:
         cout << "              Temperature: " << m_buffer[7] << endl;
         cout << "              Measurements: " << m_buffer[8] << endl;
     }
+    
+
+    void getTwosComplement(int32_t *raw, uint8_t length)
+    {
+
+        if (*raw & ((uint32_t)1 << (length - 1))) {
+
+            *raw -= (uint32_t)1 << length;
+        }
+    }
+
 /* 
  kp corresponds to pressure resolution bits
    bit - Samples - kP
@@ -392,9 +451,9 @@ private:
     uint8_t psr_rate = 0, psr_resolution = 0;
     uint8_t tmp_rate = 0, tmp_resolution = 0;
     float m_pres = 0, m_temp = 0;
-    float C00, C01, C02, C10, C11, C12, C20, C21, C30;
+    int32_t C00, C01, C02, C10, C11, C12, C20, C21, C30;
 //    float m_c00, m_c01, m_c02, m_c10, m_c11, m_c12, m_c20, m_c21, m_c30;
-    float T_Vbe, T_dVbe, T_gain;
+    int32_t T_Vbe, T_dVbe, T_gain;
     float m_kp[8] = {524288, 1572864, 3670016, 7864320, 253952, 516096, 1040384, 2088960};
     uint8_t m_buffer[BUFFER_SIZE];
     uint8_t p_constants[PSR_BUFF_SIZE];

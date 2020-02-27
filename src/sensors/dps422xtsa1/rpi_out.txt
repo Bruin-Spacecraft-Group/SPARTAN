@@ -1,0 +1,55 @@
+pres: 1.382e+07
+temp: 3.67625e+06
+0Name: DPS422XTSA1
+Status: Altimeter in Background Mode. Continuous Temperature and Pressure measurements being taken according to the selected precision.
+0
+pres: 1.382e+07
+temp: 3.67625e+06
+Temperature: 384.652
+Pressure: 3.09174e+06
+Configuration Registers: 
+              Pressure: 3
+              Temperature: 3
+              Measurements: Ç
+pres: 1.38202e+07
+temp: 3.67619e+06
+Temperature: 384.652
+Pressure: 3.09177e+06
+Configuration Registers: 
+              Pressure: 3
+              Temperature: 3
+              Measurements: Ç
+pres: 1.382e+07
+temp: 3.67624e+06
+Temperature: 384.652
+Pressure: 3.09174e+06
+Configuration Registers: 
+              Pressure: 3
+              Temperature: 3
+              Measurements: Ç
+pres: 1.38199e+07
+temp: 3.67625e+06
+Temperature: 384.652
+Pressure: 3.09172e+06
+Configuration Registers: 
+              Pressure: 3
+              Temperature: 3
+              Measurements: Ç
+pres: 1.38202e+07
+temp: 3.67619e+06
+Temperature: 384.652
+Pressure: 3.09177e+06
+Configuration Registers: 
+              Pressure: 3
+              Temperature: 3
+              Measurements: Ç
+pres: 1.382e+07
+temp: 3.67628e+06
+Temperature: 384.652
+Pressure: 3.09175e+06
+Configuration Registers: 
+              Pressure: 3
+              Temperature: 3
+              Measurements: Ç
+pres: 1.382e+07
+temp: 3.67624e+06
