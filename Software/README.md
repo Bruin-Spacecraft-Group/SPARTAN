@@ -28,11 +28,6 @@ cmake --build .
 ./main/flight_software
 ```
 
-Note that after running either command once, for all future builds you only have to run
-```shell
-cmake --build .
-```
-
 # Sensor documentations
 * [Sensor Abstract class requirements](spartan/src/docs/sensor.md) *(Must Read!)*
 * [LSM6DS33](spartan/src/docs/lsm6.md)

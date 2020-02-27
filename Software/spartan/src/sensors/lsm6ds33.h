@@ -16,16 +16,44 @@
 namespace spartan {
     // Available settings
 
+    enum AccelRange {
+        _2g=0b0000,
+        _4g=0b1000,
+        _8g=0b1100,
+        _16g=0b0100
+    }; 	// (00: ±2 g; 01: ±16 g; 10: ±4 g; 11: ±8 g)
 
-    enum AccelRange { _2g=0b0000, _4g=0b1000, _8g=0b1100, _16g=0b0100}; 	// (00: ±2 g; 01: ±16 g; 10: ±4 g; 11: ±8 g)
-    enum AccelAAFreq { _400hz=0b00, _200hz=0b01, _100hz=0b10, _50hz=0b11 };	// (00: 400 Hz; 01: 200 Hz; 10: 100 Hz; 11: 50 Hz)
-    enum GyroRange { _125dps=0b0010, _250dps=0b0000, _500dps=0b0100, _1000dps=0b1000, _2000dps=0b1100}; 	
-    // first two digits(00: 250 dps; 01: 500 dps; 10: 1000 dps; 11: 2000 dps)  third: 125 dps. Default value: 0 (0: disabled; 1: enabled) fourth: 0
-    enum ODR { odr_12hz=0b0001, odr_26Hz=0b0010, odr_52Hz=0b0011, odr_104Hz=0b0100, odr_208Hz=0b0101, odr_416Hz=0b0110, odr_833Hz=0b0111, odr_1660Hz=0b1000, // Gyro ODR only up to 1660, Accel has the following two
-    odr_3330Hz=0b1001, odr_6660Hz=0b1010};
+    enum AccelAAFreq {
+        _400hz=0b00,
+        _200hz=0b01,
+        _100hz=0b10,
+        _50hz=0b11
+    };	// (00: 400 Hz; 01: 200 Hz; 10: 100 Hz; 11: 50 Hz)
 
-    class LSM6DS33 : public Sensor
-    {
+    enum GyroRange {
+        _125dps=0b0010,
+        _250dps=0b0000,
+        _500dps=0b0100,
+        _1000dps=0b1000,
+        _2000dps=0b1100
+    };
+    // first two digits(00: 250 dps; 01: 500 dps; 10: 1000 dps; 11: 2000 dps)
+    // third: 125 dps. Default value: 0 (0: disabled; 1: enabled) fourth: 0
+
+    enum ODR {
+        odr_12hz=0b0001,
+        odr_26Hz=0b0010,
+        odr_52Hz=0b0011,
+        odr_104Hz=0b0100,
+        odr_208Hz=0b0101,
+        odr_416Hz=0b0110,
+        odr_833Hz=0b0111,
+        odr_1660Hz=0b1000, // Gyro ODR only up to 1660, Accel has the following two
+        odr_3330Hz=0b1001,
+        odr_6660Hz=0b1010
+    };
+
+    class LSM6DS33 : public Sensor {
     public:
         // vector template 
         template<typename T> struct vector {
@@ -40,7 +68,6 @@ namespace spartan {
         
         // IMU settings
         // Change defaults here
-
         struct lsm6Settings {
             AccelRange accelRange = _4g;
             AccelAAFreq accelAAFreq = _400hz;
@@ -85,19 +112,6 @@ namespace spartan {
         virtual void printSensorInfo();
         void printRawValues();
 
-        /*
-        void printEscapedRawValues(int lines) {
-            printRawValues();
-            std::cout << "\033[100D" << std::flush;
-            std::cout << "\033[" << lines << "A" << std::flush;
-        
-        }
-
-        void normalizeCursor(int lines) {
-            std::cout << "\033[" << lines << "B" << std::flush;
-        }
-        */
-
         const float accel_multiplier[4] = {0.061, 0.122, 0.244, 0.488};
         float _accel_multiplier;
         const float gyro_multiplier[5] = {4.375, 8.75, 17.5, 35, 70};
@@ -105,42 +119,7 @@ namespace spartan {
 
         virtual bool pollData(DataPacket * & dp);
         virtual int printValues() const;
-
-    /*
-        virtual float * getValues() {
-            float val[7];
-            for (int i=0; i<3; i++) {
-                val[1+i] = (m_accel[i] + m_accel_offsets[i]) * m_accel_offsets[4];
-                val[4+i] = (m_gyro[i] + m_gyro_offsets[i]) * m_gyro_offsets[4] ;
-            }
-            val[0] = (m_temp / 16) + m_temp_offset;
-            return val;
-        }
-
-        double avg[6]= {
-            0, 0, 0, 0, 0, 0
-        };
-        double * calibrate(int count) {
-
-            for (int i=0; i<count; i++) {
-                poll();
-                for (int i=0; i<3; i++) {
-                    avg[i] += m_accel[i];
-                    avg[i+3] += m_gyro[i];
-                }
-
-            }
-
-            for (int i=0; i<6; i++) {
-                avg[i] /= count;
-            }
-            
-            return avg;
-            
-        }
-        */
-
-    virtual const char * name() const;
+        virtual const char * name() const;
 
     private:
         short m_temp;

@@ -1,8 +1,9 @@
 #include "lsm6ds33.h"
 
 // Constructors
-LSM6DS33(int busID, int lsm6ID, lsm6Settings settings)
-    : Sensor(busID, lsm6ID), m_settings(settings) { // raw=true, disable pinmapper for board
+
+spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID, spartan::LSM6DS33::lsm6Settings settings)
+    : Sensor(busID, lsm6ID), m_settings(settings), m_i2c(busID, true) { // raw=true, disable pinmapper for board
     if (lsm6ID)
         lsm6Address = HIGH_ADDRESS;
     else
@@ -10,7 +11,8 @@ LSM6DS33(int busID, int lsm6ID, lsm6Settings settings)
     setMultipliers();
 }
 
-LSM6DS33(int busID, int lsm6ID): Sensor(busID, lsm6ID) {
+spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID)
+    : Sensor(busID, lsm6ID), m_i2c(busID, true) {
     if (lsm6ID)
         lsm6Address = HIGH_ADDRESS;
     else
@@ -86,7 +88,7 @@ bool spartan::LSM6DS33::updateSettings() {
     return true;
 }
 
-bool spartan::LSM6DS33::updateSettings(lsm6Settings settings) {
+bool spartan::LSM6DS33::updateSettings(spartan::LSM6DS33::lsm6Settings settings) {
     m_settings = settings;
     return updateSettings();
 }
@@ -159,6 +161,8 @@ int spartan::LSM6DS33::powerOff() {
     return RESULT_SUCCESS;
 }
 
+// Polling functions
+
 bool spartan::LSM6DS33::poll() {
     if (m_status == STATUS_OFF)
         return ERROR_INVALID_STATUS;
@@ -218,6 +222,8 @@ int spartan::LSM6DS33::hasNewData() {
     }
 }
 
+// Debug output
+
 void spartan::LSM6DS33::printSensorInfo() {
     std::cout << "======================================" << std::endl;
     std::cout << "Type: LSM6DS33" << std::endl;
@@ -238,6 +244,8 @@ void spartan::LSM6DS33::printRawValues() {
     std::cout << "GyroZ: " <<  std::setw(6) << m_gyro.z << std::endl;
     std::cout << "======================================" << std::endl;
 }
+
+// Older functions
 
 bool spartan::LSM6DS33::pollData(DataPacket * & dp) {
     if (!poll())
@@ -273,3 +281,51 @@ const char *spartan::LSM6DS33::name() const {
     const char * str = "LSM6DS33";
     return str;
 }
+
+// Unused functions
+
+/*
+void printEscapedRawValues(int lines) {
+    printRawValues();
+    std::cout << "\033[100D" << std::flush;
+    std::cout << "\033[" << lines << "A" << std::flush;
+
+}
+
+void normalizeCursor(int lines) {
+    std::cout << "\033[" << lines << "B" << std::flush;
+}
+*/
+
+/*
+virtual float * getValues() {
+    float val[7];
+    for (int i=0; i<3; i++) {
+        val[1+i] = (m_accel[i] + m_accel_offsets[i]) * m_accel_offsets[4];
+        val[4+i] = (m_gyro[i] + m_gyro_offsets[i]) * m_gyro_offsets[4] ;
+    }
+    val[0] = (m_temp / 16) + m_temp_offset;
+    return val;
+}
+
+double avg[6]= {
+    0, 0, 0, 0, 0, 0
+};
+double * calibrate(int count) {
+
+    for (int i=0; i<count; i++) {
+        poll();
+        for (int i=0; i<3; i++) {
+            avg[i] += m_accel[i];
+            avg[i+3] += m_gyro[i];
+        }
+
+    }
+
+    for (int i=0; i<6; i++) {
+        avg[i] /= count;
+    }
+
+    return avg;
+}
+*/
