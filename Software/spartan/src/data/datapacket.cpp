@@ -7,7 +7,7 @@ spartan::DataPacket::DataPacket(unsigned long timestamp, float * data) {
 }
 
 // Generic write
-std::ostream& spartan::operator<<(std::ostream& out, const spartan::DataPacket& dp) {
+std::ostream& spartan::operator<<(std::ostream &out, const spartan::DataPacket &dp) {
     out << dp.m_timestamp << "\n";
     out << dp.getSize() << "\n";
     for (int i=0; i<dp.getSize(); i++)
@@ -16,7 +16,7 @@ std::ostream& spartan::operator<<(std::ostream& out, const spartan::DataPacket& 
 }
 
 // Generic read
-std::istream & spartan::operator>>(std::istream &in, spartan::DataPacket & dp) {
+std::istream & spartan::operator>>(std::istream &in, spartan::DataPacket &dp) {
     in >> dp.m_timestamp;
     in.ignore(256, '\n'); // Don't really need the size
     for (int i = 0; i < dp.getSize(); i++)

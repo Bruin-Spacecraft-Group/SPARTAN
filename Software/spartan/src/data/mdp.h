@@ -5,6 +5,7 @@ namespace spartan {
     struct MasterDataPacket {
         unsigned long timestamp;
 
+        float accel_x;
         float accel_y;
         float accel_z;
         float gyro_x;

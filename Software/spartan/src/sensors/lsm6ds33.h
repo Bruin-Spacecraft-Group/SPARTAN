@@ -78,12 +78,6 @@ namespace spartan {
 
         offsets m_offsets = {0, {.x=0, .y=0, .z=0}, {.x=0, .y=0, .z=0}};
 
-        bool writeReg(uint8_t* buffer, unsigned short size);
-
-        void setMultipliers();
-        bool updateSettings();
-        bool updateSettings(lsm6Settings settings);
-
         uint8_t lsm6Address;
 
         LSM6DS33(	int busID, 
@@ -102,6 +96,12 @@ namespace spartan {
         virtual bool poll();
         int hasNewData();
 
+        bool writeReg(uint8_t* buffer, unsigned short size);
+
+        void setMultipliers();
+        bool updateSettings();
+        bool updateSettings(lsm6Settings settings);
+
         //virtual bool longPoll() { return false; /*dummy*/}
         // call poll() over a longer period of time, averaging out the values (maybe allow time input functionality, or
         // just do poll 10 times and average out the values, storing result into rawAccel array)
@@ -117,7 +117,7 @@ namespace spartan {
         const float gyro_multiplier[5] = {4.375, 8.75, 17.5, 35, 70};
         float _gyro_multiplier;
 
-        virtual bool pollData(DataPacket * & dp);
+        virtual bool pollData(MasterDataPacket &dp);
         virtual int printValues() const;
         virtual const char * name() const;
 

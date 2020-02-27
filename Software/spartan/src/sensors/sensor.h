@@ -6,6 +6,7 @@
 #include <mraa/i2c.hpp>
 
 #include <data/datapacket.h>
+#include <data/mdp.h>
 #include <globals.h>
 
 namespace spartan {
@@ -25,7 +26,7 @@ namespace spartan {
         virtual bool poll() = 0;
 
         // Data getters
-        virtual bool pollData(DataPacket * & dp) = 0;
+        virtual bool pollData(MasterDataPacket &dp) = 0;
 
         // Debug options
         virtual int printValues() const = 0;

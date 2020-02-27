@@ -22,8 +22,8 @@ namespace spartan {
         virtual int getSize() const = 0;
 
         // Read and write PacketType data through file stream
-        friend std::ostream& operator<<(std::ostream& out, const DataPacket& dp);
-        friend std::istream& operator>>(std::istream& in, DataPacket& dp);
+        friend std::ostream &operator<<(std::ostream &out, const DataPacket &dp);
+        friend std::istream &operator>>(std::istream &in, DataPacket &dp);
 
     protected:
         unsigned long m_timestamp;

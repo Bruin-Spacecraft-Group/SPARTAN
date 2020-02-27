@@ -245,22 +245,18 @@ void spartan::LSM6DS33::printRawValues() {
     std::cout << "======================================" << std::endl;
 }
 
-// Older functions
+// Override sensor base class functions
 
-bool spartan::LSM6DS33::pollData(DataPacket * & dp) {
+bool spartan::LSM6DS33::pollData(MasterDataPacket &dp) {
     if (!poll())
         return false;
-    // Initalize an data array
-    float * arr = new float[7];
-    arr[0] = (float) ((m_temp / 16) + m_offsets._temp_offset);
-    arr[1] = (float) ((m_accel.x*_accel_multiplier) + m_offsets._accel_offsets.x);
-    arr[2] = (float) ((m_accel.y*_accel_multiplier) + m_offsets._accel_offsets.y);
-    arr[3] = (float) ((m_accel.z*_accel_multiplier) + m_offsets._accel_offsets.z);
-    arr[4] = (float) ((m_gyro.x*_gyro_multiplier) + m_offsets._gyro_offsets.x);
-    arr[5] = (float) ((m_gyro.y*_gyro_multiplier) + m_offsets._gyro_offsets.y);
-    arr[6] = (float) ((m_gyro.z*_gyro_multiplier) + m_offsets._gyro_offsets.z);
-
-    dp = new IMUDataPacket(getTime(), arr);
+    dp.temp = (float) ((m_temp / 16) + m_offsets._temp_offset);
+    dp.accel_x = (float) ((m_accel.x*_accel_multiplier) + m_offsets._accel_offsets.x);
+    dp.accel_y = (float) ((m_accel.y*_accel_multiplier) + m_offsets._accel_offsets.y);
+    dp.accel_z = (float) ((m_accel.z*_accel_multiplier) + m_offsets._accel_offsets.z);
+    dp.gyro_x = (float) ((m_gyro.x*_gyro_multiplier) + m_offsets._gyro_offsets.x);
+    dp.gyro_y = (float) ((m_gyro.y*_gyro_multiplier) + m_offsets._gyro_offsets.y);
+    dp.gyro_z = (float) ((m_gyro.z*_gyro_multiplier) + m_offsets._gyro_offsets.z);
     return true;
 }
 
