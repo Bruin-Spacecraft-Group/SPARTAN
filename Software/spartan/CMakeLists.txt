@@ -1,6 +1,7 @@
 add_library(
     spartanflightlib
 
+    ./src/data/mdp.h
     ./src/data/datapacket.h
     ./src/data/datapacket.cpp
     ./src/sensors/sensor.h
