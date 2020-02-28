@@ -1,7 +1,5 @@
 # Spartan Data Packet docs
 
-*Note: PacketType has been renamed to DataPacket, while MasterDataPacket has been tentatively deprecated.*
-
 ## Must implement functions
 
 ```c++
@@ -9,14 +7,15 @@ virtual int getSize() const = 0;
 // example:
 class IMUDataPacket : public DataPacket {
 public:
-    // Size of data array
-    int getSize() const {
-        return 7;
-    }
-    // virtual void populate(const MasterDataPacket &dp);
+    IMUDataPacket(unsigned long timestamp);
+    IMUDataPacket(unsigned long timestamp, MasterDataPacket &dp);
+    ~IMUDataPacket();
 
-    IMUDataPacket(unsigned long timestamp, float * data): DataPacket(timestamp, data) {}
-};
+    virtual void populate(const MasterDataPacket &dp);
+
+    // Size of data array
+    int getSize() const;
+}; // class IMUDataPacket
 ```
 
 ## Format of serialization
@@ -35,10 +34,14 @@ input stream is exactly the same.
 
 Example input and output
 ```c++
-DataPacket * dp;
-lsm6.poll(dp);
+spartan::MasterDataPacket mdp;
+IMUDataPacket imu_dp(/* timestamp */);
+
+lsm6.poll(mdp);
+imu_dp.populate(mdp);
+
 std::ofstream out;
 out.open(filePath);
-out << * dp;
+out << imu_dp;
 out.close();
 ```

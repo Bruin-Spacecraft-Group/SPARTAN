@@ -1,6 +1,7 @@
 # SPARTAN-Flight-Software
 
-A sensor driver library and main flight loop implemented by the Bruinspace Project Reach Software team. Based on Intel's mraa library for low level i2c communications. 
+A sensor driver library and main flight loop implemented by the Bruinspace Project Reach Software team. Based on
+Intel's [MRAA library](https://github.com/eclipse/mraa) for low level I2C communications.
 
 Table of contents
 =================
@@ -18,8 +19,8 @@ If you're lazy:
 ```shell
 ./build.sh
 ```
-If you like typing stuff:
 
+If you like typing stuff:
 ```shell
 cmake -B _build
 cd _build

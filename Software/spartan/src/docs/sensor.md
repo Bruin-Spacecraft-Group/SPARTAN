@@ -38,5 +38,4 @@ int getBusID() const { return m_busID; }
 //return status (operate with interfaced constants described in globals.h)
 virtual int getStatus() const { return m_status; }
 int getInstance() const { return m_instance; }
-mraa::I2c getI2C() const { return m_i2c; }
 ```
