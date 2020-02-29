@@ -123,8 +123,8 @@ public:
 	}
 	//return true if status was updated successfully (statusValue input was a valid status); false if otherwise
 	*/
- protected:
- 	int m_status;
+protected:
+	int m_status;
 private:
 	mraa::I2c m_i2c; //bus that sensor is connected to
 	int m_busID;
