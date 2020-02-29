@@ -1,7 +1,8 @@
 #include <array>
+#include <chrono>
 #include <iostream>
 #include <fstream>
-#include <unistd.h>
+#include <thread>
 
 #include <data/datapacket.h>
 #include <sensors/ads1115.h>
@@ -24,7 +25,7 @@ int main() {
     fout.open("data.txt");
 
     for (int count = 0; count < 100; count++) {
-        sleep(1);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
         // Polls data from IMU
         if (!(imu->pollData(mdp))) {
@@ -33,7 +34,6 @@ int main() {
         }
         imuPacket->populate(mdp);
         std::cout << "Packet size " << imuPacket->getSize() << std::endl;
-        std::cout << *imuPacket << std::endl;
 
         fout << *imuPacket;
         std::cout << *imuPacket << std::endl;
