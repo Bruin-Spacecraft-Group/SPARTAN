@@ -23,7 +23,6 @@ add_library(
     ./src/sensors/ads1115.cpp
     ./src/sensors/lsm6ds33.h
     ./src/sensors/lsm6ds33.cpp
-    ./src/constants.h
     ./src/globals.h
 )
 
