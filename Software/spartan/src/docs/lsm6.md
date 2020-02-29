@@ -14,11 +14,11 @@ where lsm6ID is either 0 or 1, changes the I2C address of lsm6. (can only connec
 The settings struct is structured as the following
 ```c++
 struct lsm6Settings {
-    AccelRange accelRange;
-    AccelAAFreq accelAAFreq;
-    GyroRange gyroRange;
-    ODR accel_odr;
-    ODR gyro_odr;
+    lsm6ds33::AccelRange accelRange;
+    lsm6ds33::AccelAAFreq accelAAFreq;
+    lsm6ds33::GyroRange gyroRange;
+    lsm6ds33::ODR accel_odr;
+    lsm6ds33::ODR gyro_odr;
 };
 LSM6DS33(int busID, int lsm6ID, lsm6Settings settings);
 ```
@@ -35,7 +35,13 @@ bool updateSettings(lsm6Settings settings);
 ```c++
 LSM6DS33 lsm6(1, 0); // Use lower lsm6 address
 lsm6.powerOn();
-lsm6Settings settings = { _4g, _400hz, _500dps,  odr_1660Hz, odr_1660Hz }; // The default setting
+lsm6Settings settings = {
+    lsm6ds33::_4g,
+    lsm6ds33::_400hz,
+    lsm6ds33::_500dps,
+    lsm6ds33::odr_1660Hz,
+    lsm6ds33::odr_1660Hz
+}; // The default settings
 lsm6.updateSettings(settings);
 
 lsm6.printValues();

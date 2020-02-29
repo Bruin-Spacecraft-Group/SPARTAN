@@ -61,8 +61,7 @@ namespace spartan {
             BUFFER_SIZE       = 14
         };
 
-        enum regAddr
-        {
+        enum regAddr {
             POWER_OFF         = 0x00,
             HIGH_ADDRESS      = 0x6B,
             LOW_ADDRESS       = 0x6A,

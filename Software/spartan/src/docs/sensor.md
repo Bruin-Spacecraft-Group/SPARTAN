@@ -20,8 +20,7 @@ virtual const char * name() const {
 virtual int powerOn() = 0;
 virtual int powerOff() = 0;
 // Update sensor data buffer
-virtual bool poll() = 0; 
-virtual bool pollData(DataPacket * & dp) = 0;
+virtual int poll(DataPacket * & dp) = 0;
 ```
 
 3. Debugging & printing
