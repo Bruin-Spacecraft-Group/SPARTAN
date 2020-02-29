@@ -1,2 +1,5 @@
+# IDE files
+.vscode/
+
 # CMake build directory
 _build/

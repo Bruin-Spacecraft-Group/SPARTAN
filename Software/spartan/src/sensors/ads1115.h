@@ -1,7 +1,12 @@
 #ifndef ADS1115_H_INCLUDED
 #define ADS1115_H_INCLUDED
 
-// #include <mraa/i2c.hpp>
+#ifdef __linux__
+#include <mraa/i2c.hpp>
+#else
+#include <mock/i2c.h>
+#endif
+
 #include <stdint.h>
 #include <sensors/sensor.h>
 
