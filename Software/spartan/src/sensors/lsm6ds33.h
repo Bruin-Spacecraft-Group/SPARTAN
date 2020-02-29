@@ -153,11 +153,11 @@ namespace spartan {
         // IMU settings
         // Change defaults here
         struct lsm6Settings {
-            lsm6ds33::AccelRange accelRange = _4g;
-            lsm6ds33::AccelAAFreq accelAAFreq = _400hz;
-            lsm6ds33::GyroRange gyroRange = _500dps;
-            lsm6ds33::ODR accel_odr = odr_1660Hz;
-            lsm6ds33::ODR gyro_odr = odr_1660Hz;
+            lsm6ds33::AccelRange accelRange = lsm6ds33::_4g;
+            lsm6ds33::AccelAAFreq accelAAFreq = lsm6ds33::_400hz;
+            lsm6ds33::GyroRange gyroRange = lsm6ds33::_500dps;
+            lsm6ds33::ODR accel_odr = lsm6ds33::odr_1660Hz;
+            lsm6ds33::ODR gyro_odr = lsm6ds33::odr_1660Hz;
         } m_settings;
 
         offsets m_offsets = {0, {.x=0, .y=0, .z=0}, {.x=0, .y=0, .z=0}};
