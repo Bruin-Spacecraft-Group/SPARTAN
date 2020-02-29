@@ -1,6 +1,14 @@
 add_library(
     spartanflightlib
 
+    ./src/mock/types.h
+    ./src/mock/i2c.h
+    ./src/mock/i2c.cpp
+    ./src/mock/spi.h
+    ./src/mock/spi.cpp
+    ./src/mock/uart.h
+    ./src/mock/uart.cpp
+
     ./src/data/mdp.h
     ./src/data/datapacket.h
     ./src/data/datapacket.cpp
