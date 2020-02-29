@@ -1,7 +1,12 @@
 #ifndef ADS1115_H_INCLUDED
 #define ADS1115_H_INCLUDED
 
+#ifdef __linux__
 #include <mraa/i2c.hpp>
+#else
+#include <mock/i2c.h>
+#endif
+
 #include <stdint.h>
 #include <sensors/sensor.h>
 
@@ -11,7 +16,7 @@ namespace spartan
     public:
         ADS1115(int bus, uint8_t address);
         virtual bool pollData(spartan::DataPacket &dp);
-        virtual void printValues() const;
+        virtual int printValues() const;
     };
 } // namespace spartan
 

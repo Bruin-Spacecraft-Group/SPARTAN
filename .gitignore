@@ -1,5 +1,14 @@
-# IDE files
+# Editor configurations
 .vscode/
+.idea/
+.idea/workspace.xml
 
 # CMake build directory
 _build/
+
+# OS X files
+*/.DS_Store
+.DS_Store
+
+# Miscellanea
+.docs
