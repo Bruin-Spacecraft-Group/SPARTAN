@@ -15,10 +15,6 @@ void spartan::Sensor::printEscapedValues(bool normalize) const {
 }
 
 // Generic function implementation for the sensor class
-unsigned long spartan::Sensor::getTime() const {
-    return (unsigned long) std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::steady_clock::now().time_since_epoch()).count();
-}
 int spartan::Sensor::getBusID() const { return m_busID; }
 int spartan::Sensor::getStatus() const { return m_status; }
 int spartan::Sensor::getInstance() const { return m_instance; }

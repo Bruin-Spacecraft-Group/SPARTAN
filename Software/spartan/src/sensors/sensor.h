@@ -1,7 +1,6 @@
 #ifndef SENSOR_H_INCLUDED
 #define SENSOR_H_INCLUDED
 
-#include <chrono>
 #include <iostream>
 
 #include <data/datapacket.h>
@@ -30,9 +29,6 @@ namespace spartan {
         // Debug options
         virtual int printValues() const = 0;
         void printEscapedValues(bool normalize) const;
-
-        // Standard getter for timestamp
-        unsigned long getTime() const;
 
         int getBusID() const;
         int getInstance() const;
