@@ -22,7 +22,7 @@ int main() {
     std::ofstream fout;
     fout.open("data.txt");
 
-    for (int count = 0; count++; count < 100) {
+    for (int count = 0; count < 100; count++) {
         // Polls data from IMU
         if (!(imu->pollData(mdp))) {
             std::cerr << "Sensor name: " << imu->name() << " instance; " << imu->getInstance()
