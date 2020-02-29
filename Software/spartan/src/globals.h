@@ -2,7 +2,7 @@
 
 #define GLOBALS_H
 
-//I2C bus ID
+// I2C bus ID
 #define I2C_BUS 0;
 
 //pin mapping to MRAA numbers for Raspberry Pi Model 2 and B+ (https://iotdk.intel.com/docs/master/mraa/rasppi.html)
@@ -48,7 +48,7 @@
 #define MRAA_39 39  //P1-39, GND
 #define MRAA_40 40  //P1-40, SPI SCL1
 
-//arbritary mapping for function implementations in sensors.h and more
+// arbritary mapping for function implementations in sensors.h and more
 const int ACCEL = 1;
 const int GYRO = 2;
 const int TEMP = 3;
@@ -56,22 +56,30 @@ const int BARO = 4;
 const int CURRENT = 5;
 const int MAG = 6;
 
-//status constants (as currently used in systems.h)
+// status constants (as currently used in systems.h)
 const int DISCONNECTED = 0;
-const int IDLE = 1; //maybe this as a general status for being mission ready before launch? (this would be right after turn-on)
+// maybe this as a general status for being mission ready before launch? (this would be right after turn-on)
+const int IDLE = 1;
 const int READY_TO_RECIEVE = 2;
 const int READY_TO_SEND = 3;
 
-//return codes (success and error types)
-enum result_type
-{
-	RESULT_SUCCESS, RESULT_FALSE, ERROR_ADDR, ERROR_POWER, ERROR_DATAFORMAT, ERROR_READ, ERROR_POLL, ERROR_INVALID_STATUS
+// return codes (success and error types)
+enum result_type {
+	RESULT_SUCCESS,
+	RESULT_FALSE,
+	ERROR_ADDR,
+	ERROR_POWER,
+	ERROR_DATAFORMAT,
+	ERROR_READ,
+	ERROR_POLL,
+	ERROR_INVALID_STATUS
 };
 
-//sensor status types
-enum sensor_status_type
-{
-	STATUS_IDLE, STATUS_OFF, STATUS_ERROR
+// sensor status types
+enum sensor_status_type {
+	STATUS_IDLE,
+	STATUS_OFF,
+	STATUS_ERROR
 };
 
 #endif

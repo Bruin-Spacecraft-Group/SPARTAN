@@ -5,18 +5,18 @@
 spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID, spartan::LSM6DS33::lsm6Settings settings)
     : Sensor(busID, lsm6ID), m_settings(settings), m_i2c(busID, true) { // raw=true, disable pinmapper for board
     if (lsm6ID)
-        lsm6Address = HIGH_ADDRESS;
+        lsm6Address = lsm6ds33::HIGH_ADDRESS;
     else
-        lsm6Address = LOW_ADDRESS;
+        lsm6Address = lsm6ds33::LOW_ADDRESS;
     setMultipliers();
 }
 
 spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID)
     : Sensor(busID, lsm6ID), m_i2c(busID, true) {
     if (lsm6ID)
-        lsm6Address = HIGH_ADDRESS;
+        lsm6Address = lsm6ds33::HIGH_ADDRESS;
     else
-        lsm6Address = LOW_ADDRESS;
+        lsm6Address = lsm6ds33::LOW_ADDRESS;
     setMultipliers();
 }
 
@@ -54,18 +54,18 @@ bool spartan::LSM6DS33::writeReg(uint8_t* buffer, unsigned short size) {
 
 void spartan::LSM6DS33::setMultipliers() {
     switch (m_settings.accelRange) {
-        case _2g: _accel_multiplier = accel_multiplier[0]; break;
-        case _4g: _accel_multiplier = accel_multiplier[1]; break;
-        case _8g: _accel_multiplier = accel_multiplier[2]; break;
-        case _16g: _accel_multiplier = accel_multiplier[3]; break;
+        case lsm6ds33::_2g: _accel_multiplier = accel_multiplier[0]; break;
+        case lsm6ds33::_4g: _accel_multiplier = accel_multiplier[1]; break;
+        case lsm6ds33::_8g: _accel_multiplier = accel_multiplier[2]; break;
+        case lsm6ds33::_16g: _accel_multiplier = accel_multiplier[3]; break;
     }
 
     switch (m_settings.gyroRange) {
-        case _125dps: _gyro_multiplier = gyro_multiplier[0]; break;
-        case _250dps: _gyro_multiplier = gyro_multiplier[1]; break;
-        case _500dps: _gyro_multiplier = gyro_multiplier[2]; break;
-        case _1000dps: _gyro_multiplier = gyro_multiplier[3]; break;
-        case _2000dps: _gyro_multiplier = gyro_multiplier[3]; break;
+        case lsm6ds33::_125dps: _gyro_multiplier = gyro_multiplier[0]; break;
+        case lsm6ds33::_250dps: _gyro_multiplier = gyro_multiplier[1]; break;
+        case lsm6ds33::_500dps: _gyro_multiplier = gyro_multiplier[2]; break;
+        case lsm6ds33::_1000dps: _gyro_multiplier = gyro_multiplier[3]; break;
+        case lsm6ds33::_2000dps: _gyro_multiplier = gyro_multiplier[3]; break;
     }
 }
 
@@ -74,13 +74,13 @@ bool spartan::LSM6DS33::updateSettings() {
     setMultipliers();
 
     // Accelerometer settings
-    m_buffer[0] = CTRL1_XL;
+    m_buffer[0] = lsm6ds33::CTRL1_XL;
     m_buffer[1] = (m_settings.accel_odr << 4) | m_settings.accelRange | m_settings.accelAAFreq;
 
     if (!writeReg(m_buffer, 2))
         return false;
 
-    m_buffer[0] = CTRL2_G;
+    m_buffer[0] = lsm6ds33::CTRL2_G;
     m_buffer[1] = (m_settings.gyro_odr << 4) | m_settings.gyroRange;
 
     if (!writeReg(m_buffer, 2))
@@ -112,7 +112,7 @@ int spartan::LSM6DS33::powerOn() {
     }
 
     // CTRL3_C has default 1 on IF_INC page 49 in datasheet
-    m_buffer[0] = CTRL3_C;
+    m_buffer[0] = lsm6ds33::CTRL3_C;
     m_buffer[1] = 0x04;
     if (!writeReg(m_buffer, 2)) {
         std::cerr << "Unable to write GYRO_POWER_ON to LSM6DS33." << std::endl;
@@ -140,8 +140,8 @@ int spartan::LSM6DS33::powerOff() {
     }
 
     //send "Power Off" command for accelerometer
-    m_buffer[0] = CTRL1_XL;
-    m_buffer[1] = POWER_OFF;
+    m_buffer[0] = lsm6ds33::CTRL1_XL;
+    m_buffer[1] = lsm6ds33::POWER_OFF;
 
     if (!writeReg(m_buffer, 2)) {
         std::cerr << "Unable to write POWER_OFF to LSM6DS33's Accelerometer." << std::endl;
@@ -149,8 +149,8 @@ int spartan::LSM6DS33::powerOff() {
     }
 
     //send "Power Off" command for gyroscope
-    m_buffer[0] = CTRL2_G;
-    m_buffer[1] = POWER_OFF;
+    m_buffer[0] = lsm6ds33::CTRL2_G;
+    m_buffer[1] = lsm6ds33::POWER_OFF;
 
     if (!writeReg(m_buffer, 2)) {
         std::cerr << "Unable to write POWER_OFF to LSM6DS33's Gyroscope." << std::endl;
@@ -178,7 +178,7 @@ bool spartan::LSM6DS33::update() {
     }
 
     // read temp,x,y,z (14 bytes) into buffer
-    if (m_i2c.readBytesReg(OUT_TEMP_L, m_buffer, BUFFER_SIZE) == -1) {
+    if (m_i2c.readBytesReg(lsm6ds33::OUT_TEMP_L, m_buffer, lsm6ds33::BUFFER_SIZE) == -1) {
         std::cerr << "Unable to read data bytes starting from LSM6DS33_OUT_TEMP_L." << std::endl;
         return false;
     }
@@ -209,7 +209,7 @@ int spartan::LSM6DS33::hasNewData() {
         std::cerr << "Unable to set I2C address." << std::endl;
         return ERROR_ADDR;
     }
-    if (m_i2c.readBytesReg(STATUS_REG,m_buffer,1) == -1)
+    if (m_i2c.readBytesReg(lsm6ds33::STATUS_REG,m_buffer,1) == -1)
         return ERROR_READ;
 
     uint8_t temp = 0;

@@ -17,7 +17,7 @@ int main() {
     spartan::IMUDataPacket *imuPacket = new spartan::IMUDataPacket(0);
 
     imu->powerOn();
-    imu->poll();
+    imu->update();
     imu->printValues();
     std::cout << "DIVIDER" << std::endl;
 
@@ -28,7 +28,7 @@ int main() {
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
         // Polls data from IMU
-        if (!(imu->pollData(mdp))) {
+        if (!(imu->poll(mdp))) {
             std::cerr << "Sensor name: " << imu->name() << " instance; " << imu->getInstance()
                 << " poll data error!" << std::endl;
         }
