@@ -1,5 +1,5 @@
 add_library(
-    spartanflightlib
+    mraamocklib
 
     ./src/mock/types.h
     ./src/mock/i2c.h
@@ -8,6 +8,10 @@ add_library(
     ./src/mock/spi.cpp
     ./src/mock/uart.h
     ./src/mock/uart.cpp
+)
+
+add_library(
+    spartanflightlib
 
     ./src/data/mdp.h
     ./src/data/datapacket.h
@@ -23,8 +27,4 @@ add_library(
     ./src/globals.h
 )
 
-if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-    target_include_directories(spartanflightlib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src" "/usr/local/include")
-else()
-    target_include_directories(spartanflightlib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
-endif()
+target_include_directories(spartanflightlib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")

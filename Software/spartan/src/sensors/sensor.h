@@ -3,7 +3,6 @@
 
 #include <chrono>
 #include <iostream>
-#include <mraa/i2c.hpp>
 
 #include <data/datapacket.h>
 #include <data/mdp.h>

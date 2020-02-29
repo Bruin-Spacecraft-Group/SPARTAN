@@ -3,10 +3,11 @@ project(SPARTAN_Flight_Software)
 
 set (CMAKE_CXX_STANDARD 17)
 
-set (mraa_INCLUDE_DIRS "/usr/local/include/mraa")
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-    set (mraa_LIBRARIES "/usr/local/lib/libmraa.a" "/usr/local/lib/libjson-c.a")
+    set (mraa_INCLUDE_DIRS "")
+    set (mraa_LIBRARIES mraamocklib)
 else()
+    set (mraa_INCLUDE_DIRS "/usr/local/include/mraa")
     set (mraa_LIBRARIES "/usr/local/lib/libmraa.so")
 endif()
 
