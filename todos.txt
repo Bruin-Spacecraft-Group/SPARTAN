@@ -26,6 +26,7 @@ Harrison Cassar, 4/30/19
 -Look into self-test feature for LSM6DS33 talked about on page 51/78 of datasheet for CTRL5_C register
 -Look into "wake-up" feature for LSM6DS33 (well for any sensor really) for each of the accel and gyro outputs (potential for "not reading data at high rate until hitting X g's")
 
+
 =============================================DONE:=============================================
 
 -Remove all sensor's separation between "raw" and "processed" data in array data members (remove both)
