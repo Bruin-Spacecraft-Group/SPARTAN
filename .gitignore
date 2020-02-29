@@ -1,15 +1,14 @@
 # Editor configurations
+.vscode/
+.idea/
+.idea/workspace.xml
 
 # CMake build directory
 _build/
-.idea/
-.vscode/
 
-src/sensors/.DS_Store
+# OS X files
+*/.DS_Store
 .DS_Store
 
-.DS_Store
-
+# Miscellanea
 .docs
-.idea/workspace.xml
-
