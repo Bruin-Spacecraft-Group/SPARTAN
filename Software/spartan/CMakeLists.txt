@@ -26,7 +26,6 @@ add_library(
     ./src/sensors/mtk3339.cpp
     ./src/sensors/lsm6ds33.h
     ./src/sensors/lsm6ds33.cpp
-    ./src/constants.h
     ./src/globals.h
 )
 
