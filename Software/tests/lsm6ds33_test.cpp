@@ -1,6 +1,7 @@
 #include <array>
 #include <iostream>
 #include <fstream>
+#include <unistd.h>
 
 #include <data/datapacket.h>
 #include <sensors/ads1115.h>
@@ -23,6 +24,8 @@ int main() {
     fout.open("data.txt");
 
     for (int count = 0; count < 100; count++) {
+        sleep(1);
+
         // Polls data from IMU
         if (!(imu->pollData(mdp))) {
             std::cerr << "Sensor name: " << imu->name() << " instance; " << imu->getInstance()
