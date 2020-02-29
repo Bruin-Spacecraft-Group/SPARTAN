@@ -120,7 +120,7 @@ int spartan::LSM6DS33::powerOn() {
     }
 
     //run first update of sensor
-    if (poll() == false) {
+    if (update() == false) {
         std::cerr << "Unable to initial poll LSM6DS33." << std::endl;
         return ERROR_POLL;
     }
@@ -163,7 +163,7 @@ int spartan::LSM6DS33::powerOff() {
 
 // Polling functions
 
-bool spartan::LSM6DS33::poll() {
+bool spartan::LSM6DS33::update() {
     if (m_status == STATUS_OFF)
         return ERROR_INVALID_STATUS;
 
@@ -247,9 +247,9 @@ void spartan::LSM6DS33::printRawValues() {
 
 // Override sensor base class functions
 
-bool spartan::LSM6DS33::pollData(MasterDataPacket &dp) {
-    if (!poll())
-        return false;
+int spartan::LSM6DS33::poll(MasterDataPacket &dp) {
+    if (!update())
+        return RESULT_FALSE;
     dp.temp = (float) ((m_temp / 16) + m_offsets._temp_offset);
     dp.accel_x = (float) ((m_accel.x*_accel_multiplier) + m_offsets._accel_offsets.x);
     dp.accel_y = (float) ((m_accel.y*_accel_multiplier) + m_offsets._accel_offsets.y);
@@ -257,7 +257,7 @@ bool spartan::LSM6DS33::pollData(MasterDataPacket &dp) {
     dp.gyro_x = (float) ((m_gyro.x*_gyro_multiplier) + m_offsets._gyro_offsets.x);
     dp.gyro_y = (float) ((m_gyro.y*_gyro_multiplier) + m_offsets._gyro_offsets.y);
     dp.gyro_z = (float) ((m_gyro.z*_gyro_multiplier) + m_offsets._gyro_offsets.z);
-    return true;
+    return RESULT_SUCCESS;
 }
 
 int spartan::LSM6DS33::printValues() const {

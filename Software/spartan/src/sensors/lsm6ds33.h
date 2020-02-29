@@ -85,21 +85,18 @@ namespace spartan {
 
         uint8_t lsm6Address;
 
-        LSM6DS33(	int busID, 
-                    int lsm6ID,		//  Either 0 or 1 (can only connect 2 lsm6ds33 modules)
-                    lsm6Settings settings
-                );
-        LSM6DS33(	int busID, 
-                    int lsm6ID		//  Either 0 or 1 (can only connect 2 lsm6ds33 modules)
-                );
+        // Note: busID can be either 0 or 1 (can only connect 2 lsm6ds33 modules)
+        LSM6DS33(int busID, int lsm6ID, lsm6Settings settings);
+        LSM6DS33(int busID, int lsm6ID);
 
         virtual int powerOn();
         virtual int powerOff();
 
+        virtual int poll(MasterDataPacket &dp);
         // returns RESULT_FALSE if no new data, RESULT_SUCCESS if member data was updated with latest reading,
         // ERROR in the case of an error
-        virtual bool poll();
         int hasNewData();
+        virtual bool update();
 
         bool writeReg(uint8_t* buffer, unsigned short size);
 
@@ -122,7 +119,6 @@ namespace spartan {
         const float gyro_multiplier[5] = {4.375, 8.75, 17.5, 35, 70};
         float _gyro_multiplier;
 
-        virtual bool pollData(MasterDataPacket &dp);
         virtual int printValues() const;
         virtual const char * name() const;
 
