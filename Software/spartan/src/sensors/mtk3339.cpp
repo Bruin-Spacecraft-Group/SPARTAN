@@ -1,34 +1,5 @@
-/**************************************************************************/
-/*!
-  @file Adafruit_GPS.cpp
-
-  @mainpage Adafruit Ultimate GPS Breakout
-
-  @section intro Introduction
-
-  This is the Adafruit GPS library - the ultimate GPS library
-  for the ultimate GPS module!
-
-  Tested and works great with the Adafruit Ultimate GPS module
-  using MTK33x9 chipset
-  ------> http://www.adafruit.com/products/746
-
-  Adafruit invests time and resources providing this open source code,
-  please support Adafruit and open-source hardware by purchasing
-  products from Adafruit!
-
-  @section author Author
-
-  Written by Limor Fried/Ladyada for Adafruit Industries.
-
-  @section license License
-
-  BSD license, check license.txt for more information
-  All text above must be included in any redistribution
-*/
-/**************************************************************************/
-
-#include <Adafruit_GPS.h>
+#include <iostream>
+#include "mtk3339.h"
 
 static boolean strStartsWith(const char *str, const char *prefix);
 
@@ -921,18 +892,6 @@ boolean Adafruit_GPS::waitForSentence(const char *wait4me, uint8_t max,
 
 /**************************************************************************/
 /*!
-    @brief Start the LOCUS logger
-    @return True on success, false if it failed
-*/
-/**************************************************************************/
-boolean Adafruit_GPS::LOCUS_StartLogger(void) {
-  sendCommand(PMTK_LOCUS_STARTLOG);
-  recvdflag = false;
-  return waitForSentence(PMTK_LOCUS_STARTSTOPACK);
-}
-
-/**************************************************************************/
-/*!
     @brief Stop the LOCUS logger
     @return True on success, false if it failed
 */
@@ -941,58 +900,6 @@ boolean Adafruit_GPS::LOCUS_StopLogger(void) {
   sendCommand(PMTK_LOCUS_STOPLOG);
   recvdflag = false;
   return waitForSentence(PMTK_LOCUS_STARTSTOPACK);
-}
-
-/**************************************************************************/
-/*!
-    @brief Read the logger status
-    @return True if we read the data, false if there was no response
-*/
-/**************************************************************************/
-boolean Adafruit_GPS::LOCUS_ReadStatus(void) {
-  sendCommand(PMTK_LOCUS_QUERY_STATUS);
-
-  if (!waitForSentence("$PMTKLOG"))
-    return false;
-
-  char *response = lastNMEA();
-  uint16_t parsed[10];
-  uint8_t i;
-
-  for (i = 0; i < 10; i++)
-    parsed[i] = -1;
-
-  response = strchr(response, ',');
-  for (i = 0; i < 10; i++) {
-    if (!response || (response[0] == 0) || (response[0] == '*'))
-      break;
-    response++;
-    parsed[i] = 0;
-    while ((response[0] != ',') && (response[0] != '*') && (response[0] != 0)) {
-      parsed[i] *= 10;
-      char c = response[0];
-      if (isDigit(c))
-        parsed[i] += c - '0';
-      else
-        parsed[i] = c;
-      response++;
-    }
-  }
-  LOCUS_serial = parsed[0];
-  LOCUS_type = parsed[1];
-  if (isAlpha(parsed[2])) {
-    parsed[2] = parsed[2] - 'a' + 10;
-  }
-  LOCUS_mode = parsed[2];
-  LOCUS_config = parsed[3];
-  LOCUS_interval = parsed[4];
-  LOCUS_distance = parsed[5];
-  LOCUS_speed = parsed[6];
-  LOCUS_status = !parsed[7];
-  LOCUS_records = parsed[8];
-  LOCUS_percent = parsed[9];
-
-  return true;
 }
 
 /**************************************************************************/
@@ -1046,7 +953,6 @@ static boolean strStartsWith(const char *str, const char *prefix) {
   return true;
 }
 
-#ifdef NMEA_EXTENSIONS
 /**************************************************************************/
 /*!
     @brief Fakes time of receipt of a sentence. Use between build() and parse()
@@ -1216,17 +1122,6 @@ char *Adafruit_GPS::build(char *nmea, const char *thisSource,
           nmea); // Add Carriage Return and Line Feed to comply with NMEA-183
   return nmea;   // return pointer to finished product
 }
-
-#endif // NMEA_EXTENSIONS
-
-
-// based on some example I copied off the internet
-// https://gist.github.com/elimpnick/8313815ac387e6757f751dc8960f03d7
-
-#include <iostream>
-#include <libgpsmm.h>
-
-#include "mtk3339.h"
 
 spartan::MTK3339::MTK3339() : m_gps("localhost", DEFAULT_GPSD_PORT) {}
 

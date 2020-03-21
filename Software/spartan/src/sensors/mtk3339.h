@@ -1,42 +1,12 @@
 #ifndef MTK3339_H_INCLUDED
 #define MTK3339_H_INCLUDED
 
-/**************************************************************************/
-/*!
-  @file Adafruit_GPS.h
+#include <sensors/sensor.h>
 
-  This is the Adafruit GPS library - the ultimate GPS library
-  for the ultimate GPS module!
-
-  Tested and works great with the Adafruit Ultimate GPS module
-  using MTK33x9 chipset
-      ------> http://www.adafruit.com/products/746
-  Pick one up today at the Adafruit electronics shop
-  and help support open source hardware & software! -ada
-
-  Adafruit invests time and resources providing this open source code,
-  please support Adafruit and open-source hardware by purchasing
-  products from Adafruit!
-
-  Written by Limor Fried/Ladyada  for Adafruit Industries.
-  BSD license, check license.txt for more information
-  All text above must be included in any redistribution
-*/
-/**************************************************************************/
-
-// Fllybob added lines 34,35 and 40,41 to add 100mHz logging capability
-
-#ifndef _ADAFRUIT_GPS_H
-#define _ADAFRUIT_GPS_H
+namespace spartan
+{
 
 /**************************************************************************/
-/**
- Comment out the definition of NMEA_EXTENSIONS to make the library use as
- little memory as possible for GPS functionality only. The ARDUINO_ARCH_AVR
- test should leave it out of any compilations for the UNO and similar. */
-#ifndef ARDUINO_ARCH_AVR
-#define NMEA_EXTENSIONS ///< if defined will include more NMEA sentences
-#endif
 
 #define USE_SW_SERIAL ///< comment this out if you don't want to include
                       ///< software serial in the library
@@ -119,15 +89,9 @@
 // checksum calculator such as the awesome
 // http://www.hhhh.org/wiml/proj/nmeaxor.html
 
-#define PMTK_LOCUS_STARTLOG "$PMTK185,0*22" ///< Start logging data
 #define PMTK_LOCUS_STOPLOG "$PMTK185,1*23"  ///< Stop logging data
 #define PMTK_LOCUS_STARTSTOPACK                                                \
   "$PMTK001,185,3*3C" ///< Acknowledge the start or stop command
-#define PMTK_LOCUS_QUERY_STATUS "$PMTK183*38"  ///< Query the logging status
-#define PMTK_LOCUS_ERASE_FLASH "$PMTK184,1*22" ///< Erase the log flash data
-#define LOCUS_OVERLAP                                                          \
-  0 ///< If flash is full, log will overwrite old data with new logs
-#define LOCUS_FULLSTOP 1 ///< If flash is full, logging will stop
 
 #define PMTK_ENABLE_SBAS                                                       \
   "$PMTK313,1*2E" ///< Enable search for SBAS satellite (only works with 1Hz
@@ -164,7 +128,8 @@ typedef enum {
 /*!
     @brief  The GPS class
 */
-class Adafruit_GPS : public Print {
+
+class MTK3339 : public Sensor {
 public:
   bool begin(uint32_t baud_or_i2caddr);
 
@@ -254,22 +219,8 @@ public:
 
   boolean waitForSentence(const char *wait, uint8_t max = MAXWAITSENTENCE,
                           boolean usingInterrupts = false);
-  boolean LOCUS_StartLogger(void);
   boolean LOCUS_StopLogger(void);
-  boolean LOCUS_ReadStatus(void);
 
-  uint16_t LOCUS_serial;  ///< Log serial number
-  uint16_t LOCUS_records; ///< Log number of data record
-  uint8_t LOCUS_type;     ///< Log type, 0: Overlap, 1: FullStop
-  uint8_t LOCUS_mode;     ///< Logging mode, 0x08 interval logger
-  uint8_t LOCUS_config;   ///< Contents of configuration
-  uint8_t LOCUS_interval; ///< Interval setting
-  uint8_t LOCUS_distance; ///< Distance setting
-  uint8_t LOCUS_speed;    ///< Speed setting
-  uint8_t LOCUS_status;   ///< 0: Logging, 1: Stop logging
-  uint8_t LOCUS_percent;  ///< Log life used percentage
-
-#ifdef NMEA_EXTENSIONS
   // NMEA additional public functions
   char *build(char *nmea, const char *thisSource, const char *thisSentence,
               char ref = 'R');
@@ -280,7 +231,6 @@ public:
   int txtTot = 0;        ///< total TXT sentences in group
   int txtID = 0;         ///< id of the text message
   int txtN = 0;          ///< the TXT sentence number
-#endif                   // NMEA_EXTENSIONS
 
 private:
   const char *tokenOnList(char *token, const char **list);
@@ -341,14 +291,6 @@ private:
 };
 /**************************************************************************/
 
-#endif
-
-#include <sensors/sensor.h>
-#include <libgpsmm.h>
-
-namespace spartan
-{
-    class MTK3339 : public Sensor {
     public:
         MTK3339();
         bool pollData(DataPacket &dp);
