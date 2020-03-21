@@ -6,28 +6,11 @@
 namespace spartan
 {
 
-/**************************************************************************/
-
-#define USE_SW_SERIAL ///< comment this out if you don't want to include
-                      ///< software serial in the library
-#define GPS_DEFAULT_I2C_ADDR                                                   \
-  0x10 ///< The default address for I2C transport of GPS data
-#define GPS_MAX_I2C_TRANSFER                                                   \
-  32 ///< The max number of bytes we'll try to read at once
-#define GPS_MAX_SPI_TRANSFER                                                   \
-  100                     ///< The max number of bytes we'll try to read at once
 #define MAXLINELENGTH 120 ///< how long are max NMEA lines to parse?
 #define NMEA_MAX_SENTENCE_ID                                                   \
   20 ///< maximum length of a sentence ID name, including terminating 0
 #define NMEA_MAX_SOURCE_ID                                                     \
   3 ///< maximum length of a source ID name, including terminating 0
-
-#include "Arduino.h"
-#if (defined(__AVR__) || defined(ESP8266)) && defined(USE_SW_SERIAL)
-#include <SoftwareSerial.h>
-#endif
-#include <SPI.h>
-#include <Wire.h>
 
 /**************************************************************************/
 /**
@@ -132,13 +115,6 @@ typedef enum {
 class MTK3339 : public Sensor {
 public:
   bool begin(uint32_t baud_or_i2caddr);
-
-#if (defined(__AVR__) || defined(ESP8266)) && defined(USE_SW_SERIAL)
-  Adafruit_GPS(SoftwareSerial *ser); // Constructor when using SoftwareSerial
-#endif
-  Adafruit_GPS(HardwareSerial *ser); // Constructor when using HardwareSerial
-  Adafruit_GPS(TwoWire *theWire);    // Constructor when using I2C
-  Adafruit_GPS(SPIClass *theSPI, int8_t cspin); // Constructor when using SPI
 
   char *lastNMEA(void);
   boolean newNMEAreceived();
@@ -264,12 +240,6 @@ private:
   boolean paused;
 
   uint8_t parseResponse(char *response);
-#if (defined(__AVR__) || defined(ESP8266)) && defined(USE_SW_SERIAL)
-  SoftwareSerial *gpsSwSerial;
-#endif
-  HardwareSerial *gpsHwSerial;
-  TwoWire *gpsI2C;
-  SPIClass *gpsSPI;
   int8_t gpsSPI_cs = -1;
   SPISettings gpsSPI_settings =
       SPISettings(1000000, MSBFIRST, SPI_MODE0); // default
@@ -288,7 +258,6 @@ private:
   volatile char *lastline;        ///< Pointer to previous line buffer
   volatile boolean recvdflag;     ///< Received flag
   volatile boolean inStandbyMode; ///< In standby flag
-};
 /**************************************************************************/
 
     public:
@@ -296,7 +265,6 @@ private:
         bool pollData(DataPacket &dp);
         void printValues() const;
     private:
-        gpsmm m_gps;
         double m_lat, m_lng, m_alt;
     };
 } // namespace spartan

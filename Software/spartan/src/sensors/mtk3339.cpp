@@ -176,7 +176,6 @@ boolean Adafruit_GPS::parse(char *nmea) {
     }
   }
 
-#ifdef NMEA_EXTENSIONS // Sentences not required for basic GPS functionality
   else if (!strcmp(thisSentence, "TXT")) { //*******************************TXT
     if (!isEmpty(p))
       txtTot = atoi(p);
@@ -190,7 +189,6 @@ boolean Adafruit_GPS::parse(char *nmea) {
     if (!isEmpty(p))
       parseStr(txtTXT, p, 61); // copy the text to NMEA TXT max of 61 characters
   }
-#endif // NMEA_EXTENSIONS
 
   // we dont parse the remaining, yet!
   else
