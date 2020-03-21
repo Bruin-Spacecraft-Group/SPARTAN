@@ -117,7 +117,7 @@ public:
   bool begin(uint32_t baud_or_i2caddr);
 
   char *lastNMEA(void);
-  boolean newNMEAreceived();
+  bool newNMEAreceived();
   void common_init(void);
 
   void sendCommand(const char *);
@@ -130,15 +130,15 @@ public:
   size_t write(uint8_t);
   size_t available(void);
 
-  boolean check(char *nmea);
-  boolean parse(char *);
+  bool check(char *nmea);
+  bool parse(char *);
   void addChecksum(char *buff);
   float secondsSinceFix();
   float secondsSinceTime();
   float secondsSinceDate();
 
-  boolean wakeup(void);
-  boolean standby(void);
+  bool wakeup(void);
+  bool standby(void);
 
   int thisCheck = 0; ///< the results of the check on the current sentence
   char thisSource[NMEA_MAX_SOURCE_ID] = {
@@ -188,14 +188,14 @@ public:
   char lat = 'X'; ///< N/S
   char lon = 'X'; ///< E/W
   char mag = 'X'; ///< Magnetic variation direction
-  boolean fix;    ///< Have a fix?
+  bool fix;    ///< Have a fix?
   uint8_t fixquality;    ///< Fix quality (0, 1, 2 = Invalid, GPS, DGPS)
   uint8_t fixquality_3d; ///< 3D fix quality (1, 3, 3 = Nofix, 2D fix, 3D fix)
   uint8_t satellites;    ///< Number of satellites in use
 
-  boolean waitForSentence(const char *wait, uint8_t max = MAXWAITSENTENCE,
+  bool waitForSentence(const char *wait, uint8_t max = MAXWAITSENTENCE,
                           boolean usingInterrupts = false);
-  boolean LOCUS_StopLogger(void);
+  bool LOCUS_StopLogger(void);
 
   // NMEA additional public functions
   char *build(char *nmea, const char *thisSource, const char *thisSentence,
@@ -214,10 +214,10 @@ private:
   bool isEmpty(char *pStart);
   void parseTime(char *);
   void parseLat(char *);
-  boolean parseLatDir(char *);
+  bool parseLatDir(char *);
   void parseLon(char *);
-  boolean parseLonDir(char *);
-  boolean parseFix(char *);
+  bool parseLonDir(char *);
+  bool parseFix(char *);
   // used by check() for validity tests, room for future expansion
   const char *sources[5] = {"II", "WI", "GP", "GN",
                             "ZZZ"}; ///< valid source ids
@@ -237,16 +237,9 @@ private:
       2000000000L; ///< millis() when last full sentence received
   uint32_t sentTime = 2000000000L; ///< millis() when first character of last
                                    ///< full sentence received
-  boolean paused;
+  bool paused;
 
   uint8_t parseResponse(char *response);
-  int8_t gpsSPI_cs = -1;
-  SPISettings gpsSPI_settings =
-      SPISettings(1000000, MSBFIRST, SPI_MODE0); // default
-  char _spibuffer[GPS_MAX_SPI_TRANSFER]; // for when we write data, we need to
-                                         // read it too!
-  uint8_t _i2caddr;
-  char _i2cbuffer[GPS_MAX_I2C_TRANSFER];
   int8_t _buff_max = -1, _buff_idx = 0;
   char last_char = 0;
 
@@ -256,8 +249,8 @@ private:
   volatile uint8_t lineidx = 0;   ///< our index into filling the current line
   volatile char *currentline;     ///< Pointer to current line buffer
   volatile char *lastline;        ///< Pointer to previous line buffer
-  volatile boolean recvdflag;     ///< Received flag
-  volatile boolean inStandbyMode; ///< In standby flag
+  volatile bool recvdflag;     ///< Received flag
+  volatile bool inStandbyMode; ///< In standby flag
 /**************************************************************************/
 
     public:

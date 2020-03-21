@@ -1,7 +1,7 @@
 #include <iostream>
 #include "mtk3339.h"
 
-static boolean strStartsWith(const char *str, const char *prefix);
+static bool strStartsWith(const char *str, const char *prefix);
 
 /**************************************************************************/
 /*!
@@ -11,7 +11,7 @@ static boolean strStartsWith(const char *str, const char *prefix);
    data
 */
 /**************************************************************************/
-boolean Adafruit_GPS::parse(char *nmea) {
+bool Adafruit_GPS::parse(char *nmea) {
   // do checksum check
   if (!check(nmea))
     return false;
