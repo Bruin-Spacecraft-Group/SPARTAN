@@ -80,7 +80,7 @@ namespace spartan
             NMEA_HAS_SENTENCE = 20,   // has a recognized sentence ID
             NMEA_HAS_SENTENCE_P = 40  // has a recognized parseable sentence ID
         };
-    }; // namespace mtk3339
+    } // namespace mtk3339
 
     class MTK3339 : public Sensor {
     public:

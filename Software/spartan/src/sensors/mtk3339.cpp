@@ -11,7 +11,7 @@ static bool strStartsWith(const char *str, const char *prefix);
    data
 */
 /**************************************************************************/
-bool Adafruit_GPS::parse(char *nmea) {
+bool spartan::MTK3339::parse(char *nmea) {
   // do checksum check
   if (!check(nmea))
     return false;
@@ -210,7 +210,7 @@ bool Adafruit_GPS::parse(char *nmea) {
     @return True if well formed, false if it has problems
 */
 /**************************************************************************/
-boolean Adafruit_GPS::check(char *nmea) {
+bool spartan::MTK3339::check(char *nmea) {
   thisCheck = 0; // new check
   if (*nmea != '$')
     return false; // doesn't start with $
@@ -269,7 +269,7 @@ boolean Adafruit_GPS::check(char *nmea) {
     @return Pointer to the found token, or NULL if it fails
 */
 /**************************************************************************/
-const char *Adafruit_GPS::tokenOnList(char *token, const char **list) {
+const char *spartan::MTK3339::tokenOnList(char *token, const char **list) {
   int i = 0; // index in the list
   while (strncmp(list[i], "ZZ", 2) &&
          i < 1000) { // stop at terminator and don't crash without it
@@ -291,7 +291,7 @@ const char *Adafruit_GPS::tokenOnList(char *token, const char **list) {
     @return Pointer to the string buffer
 */
 /**************************************************************************/
-char *Adafruit_GPS::parseStr(char *buff, char *p, int n) {
+char *spartan::MTK3339::parseStr(char *buff, char *p, int n) {
   char *e = strchr(p, ',');
   int len = 0;
   if (e) {
@@ -321,7 +321,7 @@ char *Adafruit_GPS::parseStr(char *buff, char *p, int n) {
     @return true if empty field, false if something there
 */
 /**************************************************************************/
-bool Adafruit_GPS::isEmpty(char *pStart) {
+bool spartan::MTK3339::isEmpty(char *pStart) {
   if (',' != *pStart && '*' != *pStart && pStart != NULL)
     return false;
   else
@@ -339,7 +339,7 @@ bool Adafruit_GPS::isEmpty(char *pStart) {
     @return none
 */
 /**************************************************************************/
-void Adafruit_GPS::addChecksum(char *buff) {
+void spartan::MTK3339::addChecksum(char *buff) {
   char cs = 0;
   int i = 1;
   while (buff[i]) {
@@ -355,7 +355,7 @@ void Adafruit_GPS::addChecksum(char *buff) {
     @param p Pointer to the location of the token in the NMEA string
 */
 /**************************************************************************/
-void Adafruit_GPS::parseTime(char *p) {
+void spartan::MTK3339::parseTime(char *p) {
   // get time
   uint32_t time = atol(p);
   hour = time / 10000;
@@ -373,7 +373,7 @@ void Adafruit_GPS::parseTime(char *p) {
     @param p Pointer to the location of the token in the NMEA string
 */
 /**************************************************************************/
-void Adafruit_GPS::parseLat(char *p) {
+void spartan::MTK3339::parseLat(char *p) {
   int32_t degree;
   long minutes;
   char degreebuff[10];
@@ -401,7 +401,7 @@ void Adafruit_GPS::parseLat(char *p) {
     @return True if we parsed it, false if it has invalid data
 */
 /**************************************************************************/
-boolean Adafruit_GPS::parseLatDir(char *p) {
+bool spartan::MTK3339::parseLatDir(char *p) {
   if (p[0] == 'S') {
     lat = 'S';
     latitudeDegrees *= -1.0;
@@ -422,7 +422,7 @@ boolean Adafruit_GPS::parseLatDir(char *p) {
     @param p Pointer to the location of the token in the NMEA string
 */
 /**************************************************************************/
-void Adafruit_GPS::parseLon(char *p) {
+void spartan::MTK3339::parseLon(char *p) {
   int32_t degree;
   long minutes;
   char degreebuff[10];
@@ -450,7 +450,7 @@ void Adafruit_GPS::parseLon(char *p) {
     @return True if we parsed it, false if it has invalid data
 */
 /**************************************************************************/
-boolean Adafruit_GPS::parseLonDir(char *p) {
+bool spartan::MTK3339::parseLonDir(char *p) {
   if (!isEmpty(p)) {
     if (p[0] == 'W') {
       lon = 'W';
@@ -474,7 +474,7 @@ boolean Adafruit_GPS::parseLonDir(char *p) {
     @return True if we parsed it, false if it has invalid data
 */
 /**************************************************************************/
-boolean Adafruit_GPS::parseFix(char *p) {
+bool spartan::MTK3339::parseFix(char *p) {
   if (p[0] == 'A') {
     fix = true;
     lastFix = sentTime;
@@ -492,7 +492,7 @@ boolean Adafruit_GPS::parseFix(char *p) {
     @return float value in seconds since last fix.
 */
 /**************************************************************************/
-float Adafruit_GPS::secondsSinceFix() { return (millis() - lastFix) / 1000.; }
+float spartan::MTK3339::secondsSinceFix() { return (millis() - lastFix) / 1000.; }
 
 /**************************************************************************/
 /*!
@@ -501,7 +501,7 @@ float Adafruit_GPS::secondsSinceFix() { return (millis() - lastFix) / 1000.; }
     @return float value in seconds since last GPS time.
 */
 /**************************************************************************/
-float Adafruit_GPS::secondsSinceTime() { return (millis() - lastTime) / 1000.; }
+float spartan::MTK3339::secondsSinceTime() { return (millis() - lastTime) / 1000.; }
 
 /**************************************************************************/
 /*!
@@ -510,7 +510,7 @@ float Adafruit_GPS::secondsSinceTime() { return (millis() - lastTime) / 1000.; }
     @return float value in seconds since last GPS date.
 */
 /**************************************************************************/
-float Adafruit_GPS::secondsSinceDate() { return (millis() - lastDate) / 1000.; }
+float spartan::MTK3339::secondsSinceDate() { return (millis() - lastDate) / 1000.; }
 
 /**************************************************************************/
 /*!
@@ -519,23 +519,10 @@ float Adafruit_GPS::secondsSinceDate() { return (millis() - lastDate) / 1000.; }
     @return Bytes available, 0 if none
 */
 /**************************************************************************/
-size_t Adafruit_GPS::available(void) {
+size_t spartan::MTK3339::available(void) {
   if (paused)
     return 0;
-
-#if (defined(__AVR__) || defined(ESP8266)) && defined(USE_SW_SERIAL)
-  if (gpsSwSerial) {
-    return gpsSwSerial->available();
-  }
-#endif
-  if (gpsHwSerial) {
-    return gpsHwSerial->available();
-  }
-  if (gpsI2C || gpsSPI) {
-    return 1; // I2C/SPI doesnt have 'availability' so always has a byte at
-              // least to read!
-  }
-  return 0;
+  return gpsHwSerial->available();
 }
 
 /**************************************************************************/
@@ -546,38 +533,8 @@ size_t Adafruit_GPS::available(void) {
     @return Bytes written - 1 on success, 0 on failure
 */
 /**************************************************************************/
-size_t Adafruit_GPS::write(uint8_t c) {
-#if (defined(__AVR__) || defined(ESP8266)) && defined(USE_SW_SERIAL)
-  if (gpsSwSerial) {
-    return gpsSwSerial->write(c);
-  }
-#endif
-  if (gpsHwSerial) {
-    return gpsHwSerial->write(c);
-  }
-  if (gpsI2C) {
-    gpsI2C->beginTransmission(_i2caddr);
-    if (gpsI2C->write(c) != 1) {
-      return 0;
-    }
-    if (gpsI2C->endTransmission(true) == 0) {
-      return 1;
-    }
-  }
-  if (gpsSPI) {
-    gpsSPI->beginTransaction(gpsSPI_settings);
-    if (gpsSPI_cs >= 0) {
-      digitalWrite(gpsSPI_cs, LOW);
-    }
-    c = gpsSPI->transfer(c);
-    if (gpsSPI_cs >= 0) {
-      digitalWrite(gpsSPI_cs, HIGH);
-    }
-    gpsSPI->endTransaction();
-    return 1;
-  }
-
-  return 0;
+size_t spartan::MTK3339::write(uint8_t c) {
+  return gpsHwSerial->write(c);
 }
 
 /**************************************************************************/
@@ -586,7 +543,7 @@ size_t Adafruit_GPS::write(uint8_t c) {
     @return The character that we received, or 0 if nothing was available
 */
 /**************************************************************************/
-char Adafruit_GPS::read(void) {
+char spartan::MTK3339::read(void) {
   static uint32_t firstChar = 0; // first character received in current sentence
   uint32_t tStart = millis();    // as close as we can get to time char was sent
   char c = 0;
@@ -594,65 +551,10 @@ char Adafruit_GPS::read(void) {
   if (paused)
     return c;
 
-#if (defined(__AVR__) || defined(ESP8266)) && defined(USE_SW_SERIAL)
-  if (gpsSwSerial) {
-    if (!gpsSwSerial->available())
-      return c;
-    c = gpsSwSerial->read();
-  }
-#endif
-  if (gpsHwSerial) {
     if (!gpsHwSerial->available())
       return c;
     c = gpsHwSerial->read();
-  }
-  if (gpsI2C) {
-    if (_buff_idx <= _buff_max) {
-      c = _i2cbuffer[_buff_idx];
-      _buff_idx++;
-    } else {
-      // refill the buffer!
-      if (gpsI2C->requestFrom(0x10, GPS_MAX_I2C_TRANSFER, true) ==
-          GPS_MAX_I2C_TRANSFER) {
-        // got data!
-        _buff_max = 0;
-        char curr_char = 0;
-        for (int i = 0; i < GPS_MAX_I2C_TRANSFER; i++) {
-          curr_char = gpsI2C->read();
-          if ((curr_char == 0x0A) && (last_char != 0x0D)) {
-            // skip duplicate 0x0A's - but keep as part of a CRLF
-            continue;
-          }
-          last_char = curr_char;
-          _i2cbuffer[_buff_max] = curr_char;
-          _buff_max++;
-        }
-        _buff_max--; // back up to the last valid slot
-        if ((_buff_max == 0) && (_i2cbuffer[0] == 0x0A)) {
-          _buff_max = -1; // ahh there was nothing to read after all
-        }
-        _buff_idx = 0;
-      }
-      return c;
-    }
-  }
 
-  if (gpsSPI) {
-    do {
-      gpsSPI->beginTransaction(gpsSPI_settings);
-      if (gpsSPI_cs >= 0) {
-        digitalWrite(gpsSPI_cs, LOW);
-      }
-      c = gpsSPI->transfer(0xFF);
-      if (gpsSPI_cs >= 0) {
-        digitalWrite(gpsSPI_cs, HIGH);
-      }
-      gpsSPI->endTransaction();
-      // skip duplicate 0x0A's - but keep as part of a CRLF
-    } while (((c == 0x0A) && (last_char != 0x0D)) ||
-             (!isprint(c) && !isspace(c)));
-    last_char = c;
-  }
   // Serial.print(c);
 
   currentline[lineidx++] = c;
@@ -689,50 +591,13 @@ char Adafruit_GPS::read(void) {
 
 /**************************************************************************/
 /*!
-    @brief Constructor when using SoftwareSerial
-    @param ser Pointer to SoftwareSerial device
-*/
-/**************************************************************************/
-#if (defined(__AVR__) || defined(ESP8266)) && defined(USE_SW_SERIAL)
-Adafruit_GPS::Adafruit_GPS(SoftwareSerial *ser) {
-  common_init();     // Set everything to common state, then...
-  gpsSwSerial = ser; // ...override gpsSwSerial with value passed.
-}
-#endif
-
-/**************************************************************************/
-/*!
     @brief Constructor when using HardwareSerial
     @param ser Pointer to a HardwareSerial object
 */
 /**************************************************************************/
-Adafruit_GPS::Adafruit_GPS(HardwareSerial *ser) {
+spartan::MTK3339::MTK3339(HardwareSerial *ser) {
   common_init();     // Set everything to common state, then...
   gpsHwSerial = ser; // ...override gpsHwSerial with value passed.
-}
-
-/**************************************************************************/
-/*!
-    @brief Constructor when using I2C
-    @param theWire Pointer to an I2C TwoWire object
-*/
-/**************************************************************************/
-Adafruit_GPS::Adafruit_GPS(TwoWire *theWire) {
-  common_init();    // Set everything to common state, then...
-  gpsI2C = theWire; // ...override gpsI2C
-}
-
-/**************************************************************************/
-/*!
-    @brief Constructor when using SPI
-    @param theSPI Pointer to an SPI device object
-    @param cspin The pin connected to the GPS CS, can be -1 if unused
-*/
-/**************************************************************************/
-Adafruit_GPS::Adafruit_GPS(SPIClass *theSPI, int8_t cspin) {
-  common_init();   // Set everything to common state, then...
-  gpsSPI = theSPI; // ...override gpsSPI
-  gpsSPI_cs = cspin;
 }
 
 /**************************************************************************/
@@ -740,13 +605,8 @@ Adafruit_GPS::Adafruit_GPS(SPIClass *theSPI, int8_t cspin) {
     @brief Initialization code used by all constructor types
 */
 /**************************************************************************/
-void Adafruit_GPS::common_init(void) {
-#if (defined(__AVR__) || defined(ESP8266)) && defined(USE_SW_SERIAL)
-  gpsSwSerial = NULL; // Set both to NULL, then override correct
-#endif
+void spartan::MTK3339::common_init(void) {
   gpsHwSerial = NULL; // port pointer in corresponding constructor
-  gpsI2C = NULL;
-  gpsSPI = NULL;
   recvdflag = false;
   paused = false;
   lineidx = 0;
@@ -769,34 +629,9 @@ void Adafruit_GPS::common_init(void) {
     @returns True on successful hardware init, False on failure
 */
 /**************************************************************************/
-bool Adafruit_GPS::begin(uint32_t baud_or_i2caddr) {
-#if (defined(__AVR__) || defined(ESP8266)) && defined(USE_SW_SERIAL)
-  if (gpsSwSerial) {
-    gpsSwSerial->begin(baud_or_i2caddr);
-  }
-#endif
-  if (gpsHwSerial) {
+bool spartan::MTK3339::begin(uint32_t baud_or_i2caddr) {
+
     gpsHwSerial->begin(baud_or_i2caddr);
-  }
-  if (gpsI2C) {
-    gpsI2C->begin();
-    if (baud_or_i2caddr > 0x7F) {
-      _i2caddr = GPS_DEFAULT_I2C_ADDR;
-    } else {
-      _i2caddr = baud_or_i2caddr;
-    }
-    // A basic scanner, see if it ACK's
-    gpsI2C->beginTransmission(_i2caddr);
-    return (gpsI2C->endTransmission() == 0);
-  }
-  if (gpsSPI) {
-    gpsSPI->begin();
-    gpsSPI_settings = SPISettings(baud_or_i2caddr, MSBFIRST, SPI_MODE0);
-    if (gpsSPI_cs >= 0) {
-      pinMode(gpsSPI_cs, OUTPUT);
-      digitalWrite(gpsSPI_cs, HIGH);
-    }
-  }
 
   delay(10);
   return true;
@@ -808,7 +643,7 @@ bool Adafruit_GPS::begin(uint32_t baud_or_i2caddr) {
     @param str Pointer to a string holding the command to send
 */
 /**************************************************************************/
-void Adafruit_GPS::sendCommand(const char *str) { println(str); }
+void spartan::MTK3339::sendCommand(const char *str) { println(str); }
 
 /**************************************************************************/
 /*!
@@ -816,7 +651,7 @@ void Adafruit_GPS::sendCommand(const char *str) { println(str); }
     @return True if received, false if not
 */
 /**************************************************************************/
-boolean Adafruit_GPS::newNMEAreceived(void) { return recvdflag; }
+bool spartan::MTK3339::newNMEAreceived(void) { return recvdflag; }
 
 /**************************************************************************/
 /*!
@@ -824,7 +659,7 @@ boolean Adafruit_GPS::newNMEAreceived(void) { return recvdflag; }
     @param p True = pause, false = unpause
 */
 /**************************************************************************/
-void Adafruit_GPS::pause(boolean p) { paused = p; }
+void spartan::MTK3339::pause(bool p) { paused = p; }
 
 /**************************************************************************/
 /*!
@@ -832,7 +667,7 @@ void Adafruit_GPS::pause(boolean p) { paused = p; }
     @return Pointer to the last line string
 */
 /**************************************************************************/
-char *Adafruit_GPS::lastNMEA(void) {
+char *spartan::MTK3339::lastNMEA(void) {
   recvdflag = false;
   return (char *)lastline;
 }
@@ -1119,38 +954,4 @@ char *Adafruit_GPS::build(char *nmea, const char *thisSource,
   sprintf(nmea, "%s\r\n",
           nmea); // Add Carriage Return and Line Feed to comply with NMEA-183
   return nmea;   // return pointer to finished product
-}
-
-spartan::MTK3339::MTK3339() : m_gps("localhost", DEFAULT_GPSD_PORT) {}
-
-bool spartan::MTK3339::pollData(DataPacket &dp) {
-    if (m_gps.stream(WATCH_ENABLE | WATCH_JSON) == NULL) {
-        std::cerr << "No GPSD running" << std::endl;
-        return false;
-    }
-    struct gps_data_t *gpsd_data = m_gps.read();
-
-    if (gpsd_data == NULL) {
-        std::cerr << "GPSD read error" << std::endl;
-        return false;
-    }
-    if (gpsd_data->fix.mode < MODE_2D) {
-        std::cerr << "No GPS fix" << std::endl;
-        return false;
-    }
-
-    dp.latitude = m_lat = gpsd_data->fix.latitude;
-    dp.longitude = m_lng = gpsd_data->fix.longitude;
-    if (gpsd_data->fix.mode >= MODE_3D) {
-        dp.gps_altitude = m_alt = gpsd_data->fix.altitude;
-    } else {
-        dp.gps_altitude = m_alt = -6.371e6; // R_EARTH
-    }
-    return true;
-}
-
-void spartan::MTK3339::printValues() const {
-    std::cout << "Latitude: " << m_lat << std::endl;
-    std::cout << "Longitude: " << m_lng << std::endl;
-    std::cout << "Altitude: " << m_alt << std::endl;
 }
