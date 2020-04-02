@@ -3,6 +3,12 @@
 
 #include <string>
 
+#ifdef __linux__
+#include <mraa/uart.hpp>
+#else
+#include <mock/uart.h>
+#endif
+
 #include <sensors/sensor.h>
 
 namespace spartan
@@ -84,7 +90,17 @@ namespace spartan
 
     class MTK3339 : public Sensor {
     public:
+        MTK3339(int busID, int instance);
 
+        virtual const char * name() const;
+        virtual void printSensorInfo();
+
+        virtual int powerOn();
+        virtual int powerOff();
+        virtual int poll(MasterDataPacket &dp);
+
+        virtual int printValues() const;
+        virtual int getStatus() const;
     private:
         bool begin(uint32_t baud_or_i2caddr);
 
@@ -111,6 +127,19 @@ namespace spartan
 
         bool wakeup(void);
         bool standby(void);
+
+        bool waitForSentence(const char *wait, uint8_t max = mtk3339::MAXWAITSENTENCE, bool usingInterrupts = false);
+        bool LOCUS_StopLogger(void);
+
+        const char *tokenOnList(char *token, const char **list);
+        char *parseStr(char *buff, char *p, int n);
+        bool isEmpty(char *pStart);
+        void parseTime(char *);
+        void parseLat(char *);
+        bool parseLatDir(char *);
+        void parseLon(char *);
+        bool parseLonDir(char *);
+        bool parseFix(char *);
 
         // the results of the check on the current sentence
         int thisCheck = 0;
@@ -151,18 +180,6 @@ namespace spartan
         uint8_t fixquality_3d;  // 3D fix quality (1, 3, 3 = Nofix, 2D fix, 3D fix)
         uint8_t satellites;     // Number of satellites in use
 
-        bool waitForSentence(const char *wait, uint8_t max = mtk3339::MAXWAITSENTENCE, bool usingInterrupts = false);
-        bool LOCUS_StopLogger(void);
-
-        const char *tokenOnList(char *token, const char **list);
-        char *parseStr(char *buff, char *p, int n);
-        bool isEmpty(char *pStart);
-        void parseTime(char *);
-        void parseLat(char *);
-        bool parseLatDir(char *);
-        void parseLon(char *);
-        bool parseLonDir(char *);
-        bool parseFix(char *);
         // used by check() for validity tests, room for future expansion
         const char *sources[5] = {"II", "WI", "GP", "GN", "ZZZ"};  // valid source ids
         const char *sentences_parsed[5] = {"GGA", "GLL", "GSA", "RMC", "ZZZ"};  // parseable sentence ids
@@ -190,6 +207,9 @@ namespace spartan
         volatile char *lastline;       // Pointer to previous line buffer
         volatile bool recvdflag;       // Received flag
         volatile bool inStandbyMode;   // In standby flag
+
+        // Hardware interface wrapper
+        mraa::Uart m_uart;
     }; // class MTK3339
 } // namespace spartan
 

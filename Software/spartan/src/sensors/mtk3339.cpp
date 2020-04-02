@@ -1,4 +1,7 @@
 #include <iostream>
+#include <chrono>
+
+#include <utils/utils.h>
 #include "mtk3339.h"
 
 static bool strStartsWith(const char *str, const char *prefix);
@@ -172,7 +175,7 @@ bool spartan::MTK3339::parse(char *nmea) {
     // Record the successful parsing of where the last data came from and when
     strcpy(lastSource, thisSource);
     strcpy(lastSentence, thisSentence);
-    lastUpdate = millis();
+    lastUpdate = spartan::getTimeMillis();
     return true;
 }
 
@@ -394,25 +397,22 @@ bool spartan::MTK3339::parseFix(char *p) {
     return true;
 }
 
-// Time in seconds since the last position fix was obtained. Will fail by rolling over to zero
-// after one millis() cycle, about 6-1/2 weeks.
+// Time in seconds since the last position fix was obtained.
 // @return float value in seconds since last fix.
 float spartan::MTK3339::secondsSinceFix() {
-    return (millis() - lastFix) / 1000;
+    return (spartan::getTimeMillis() - lastFix) / 1000.;
 }
 
-// Time in seconds since the last GPS time was obtained. Will fail by rolling over to zero after
-// one millis() cycle, about 6-1/2 weeks.
+// Time in seconds since the last GPS time was obtained.
 // @return float value in seconds since last GPS time.
 float spartan::MTK3339::secondsSinceTime() {
-    return (millis() - lastTime) / 1000.;
+    return (spartan::getTimeMillis() - lastTime) / 1000.;
 }
 
-// Time in seconds since the last GPS date was obtained. Will fail by rolling over to zero after
-// one millis() cycle, about 6-1/2 weeks.
+// Time in seconds since the last GPS date was obtained.
 // @return float value in seconds since last GPS date.
 float spartan::MTK3339::secondsSinceDate() {
-    return (millis() - lastDate) / 1000.;
+    return (spartan::getTimeMillis() - lastDate) / 1000.;
 }
 
 // How many bytes are available to read - part of 'Print'-class functionality
@@ -434,7 +434,7 @@ size_t spartan::MTK3339::write(uint8_t c) {
 // @return The character that we received, or 0 if nothing was available
 char spartan::MTK3339::read(void) {
     static uint32_t firstChar = 0; // first character received in current sentence
-    uint32_t tStart = millis();    // as close as we can get to time char was sent
+    uint32_t tStart = spartan::getTimeMillis();    // as close as we can get to time char was sent
     char c = 0;
 
     if (paused)
@@ -463,7 +463,7 @@ char spartan::MTK3339::read(void) {
         // Serial.println("----");
         lineidx = 0;
         recvdflag = true;
-        recvdTime = millis(); // time we got the end of the string
+        recvdTime = spartan::getTimeMillis(); // time we got the end of the string
         sentTime = firstChar;
         firstChar = 0; // there are no characters yet
         return c;      // wait until next character to set time
@@ -608,8 +608,8 @@ bool spartan::MTK3339::wakeup(void) {
 // @return True if str starts with prefix, false otherwise
 static bool strStartsWith(const char *str, const char *prefix) {
     while (*prefix) {
-    if (*prefix++ != *str++)
-        return false;
+        if (*prefix++ != *str++)
+            return false;
     }
     return true;
 }
