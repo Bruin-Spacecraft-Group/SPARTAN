@@ -159,16 +159,6 @@ namespace spartan
         bool waitForSentence(const char *wait, uint8_t max = mtk3339::MAXWAITSENTENCE, bool usingInterrupts = false);
         bool LOCUS_StopLogger(void);
 
-        // NMEA additional public functions
-        char *build(char *nmea, const char *thisSource, const char *thisSentence, char ref = 'R');
-        void resetSentTime();
-
-        // NMEA additional public variables
-        char txtTXT[63] = {0}; ///< text content from most recent TXT sentence
-        int txtTot = 0;        ///< total TXT sentences in group
-        int txtID = 0;         ///< id of the text message
-        int txtN = 0;          ///< the TXT sentence number
-
     private:
         const char *tokenOnList(char *token, const char **list);
         char *parseStr(char *buff, char *p, int n);

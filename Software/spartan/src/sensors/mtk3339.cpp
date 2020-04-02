@@ -146,7 +146,7 @@ bool spartan::MTK3339::parse(char *nmea) {
         }
         // skip 12 Satellite PDNs without interpreting them
         for (int i = 0; i < 12; i++)
-        p = strchr(p, ',') + 1;
+            p = strchr(p, ',') + 1;
 
         // parse out PDOP
         p = strchr(p, ',') + 1;
@@ -164,19 +164,6 @@ bool spartan::MTK3339::parse(char *nmea) {
         if (!isEmpty(p)) {
             VDOP = atof(p);
         }
-
-    } else if (!strcmp(thisSentence, "TXT")) { //*******************************TXT
-        if (!isEmpty(p))
-            txtTot = atoi(p);
-        p = strchr(p, ',') + 1;
-        if (!isEmpty(p))
-            txtN = atoi(p);
-        p = strchr(p, ',') + 1;
-        if (!isEmpty(p))
-            txtID = atoi(p);
-        p = strchr(p, ',') + 1;
-        if (!isEmpty(p))
-            parseStr(txtTXT, p, 61); // copy the text to NMEA TXT max of 61 characters
 
     } else {
         // we dont parse the remaining, yet!
