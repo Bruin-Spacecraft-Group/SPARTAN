@@ -13,8 +13,7 @@ bool spartan::MTK3339::parse(char *nmea) {
     // passed the check, so there's a valid source in thisSource and a valid sentence in thisSentence
 
     // look for a few common sentences
-    char *p = nmea; // Pointer to move through the sentence -- good parsers are
-    // non-destructive
+    char *p = nmea; // Pointer to move through the sentence -- good parsers are non-destructive
     p = strchr(p, ',') + 1; // Skip to the character after the next comma, then check sentence.
 
     if (!strcmp(thisSentence, "GGA")) {
@@ -331,9 +330,6 @@ void spartan::MTK3339::parseLat(char *p) {
         degreebuff[6] = '\0';
         long minutes = 50 * atol(degreebuff) / 3;
         latitude_fixed = degree + minutes;
-        latitude = degree / 100000 + minutes * 0.000006F;
-        latitudeDegrees = (latitude - 100 * int(latitude / 100)) / 60.0;
-        latitudeDegrees += int(latitude / 100);
     }
 }
 
@@ -342,14 +338,8 @@ void spartan::MTK3339::parseLat(char *p) {
 // @return True if we parsed it, false if it has invalid data
 bool spartan::MTK3339::parseLatDir(char *p) {
     if (p[0] == 'S') {
-        lat = 'S';
-        latitudeDegrees *= -1.0;
         latitude_fixed *= -1;
-    } else if (p[0] == 'N') {
-        lat = 'N';
-    } else if (p[0] == ',') {
-        lat = 0;
-    } else {
+    } else if (p[0] != 'N' && p[0] != ',') {
         return false;
     }
     return true;
@@ -372,9 +362,6 @@ void spartan::MTK3339::parseLon(char *p) {
         degreebuff[6] = '\0';
         minutes = 50 * atol(degreebuff) / 3;
         longitude_fixed = degree + minutes;
-        longitude = degree / 100000 + minutes * 0.000006F;
-        longitudeDegrees = (longitude - 100 * int(longitude / 100)) / 60.0;
-        longitudeDegrees += int(longitude / 100);
     }
 }
 
@@ -384,14 +371,8 @@ void spartan::MTK3339::parseLon(char *p) {
 bool spartan::MTK3339::parseLonDir(char *p) {
     if (!isEmpty(p)) {
         if (p[0] == 'W') {
-            lon = 'W';
-            longitudeDegrees *= -1.0;
             longitude_fixed *= -1;
-        } else if (p[0] == 'E') {
-            lon = 'E';
-        } else if (p[0] == ',') {
-            lon = 0;
-        } else {
+        } else if (p[0] != 'E' && p[0] != ',') {
             return false;
         }
     }
@@ -510,10 +491,9 @@ void spartan::MTK3339::common_init(void) {
     lastline = line2;
 
     hour = minute = seconds = year = month = day = fixquality = fixquality_3d = satellites = 0;  // uint8_t
-    lat = lon = mag = 0; // char
     fix = false;         // boolean
     milliseconds = 0;    // uint16_t
-    latitude = longitude = geoidheight = altitude = speed = angle = magvariation = HDOP = VDOP = PDOP = 0.0; // float
+    geoidheight = altitude = speed = angle = magvariation = HDOP = VDOP = PDOP = 0.0; // float
 }
 
 // Start the HW or SW serial port
@@ -574,8 +554,8 @@ uint8_t spartan::MTK3339::parseHex(char c) {
 bool spartan::MTK3339::waitForSentence(const char *wait4me, uint8_t max, bool usingInterrupts) {
     uint8_t i = 0;
     while (i < max) {
-    if (!usingInterrupts)
-        read();
+        if (!usingInterrupts)
+            read();
 
         if (newNMEAreceived()) {
             char *nmea = lastNMEA();

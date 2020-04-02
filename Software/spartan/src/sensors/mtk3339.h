@@ -84,6 +84,8 @@ namespace spartan
 
     class MTK3339 : public Sensor {
     public:
+
+    private:
         bool begin(uint32_t baud_or_i2caddr);
 
         char *lastNMEA(void);
@@ -129,17 +131,12 @@ namespace spartan
         uint8_t month;          // GMT month
         uint8_t day;            // GMT day
 
-        float latitude;   // Floating point latitude value in degrees/minutes as received from the GPS (DDMM.MMMM)
-        float longitude;  // Floating point longitude value in degrees/minutes as received from the GPS (DDDMM.MMMM)
-
         // Fixed point latitude and longitude value with degrees stored in units of 1/100000 degrees,
         // and minutes stored in units of 1/100000 degrees.  See pull #13 for more details:
         // https://github.com/adafruit/Adafruit-GPS-Library/pull/13
         int32_t latitude_fixed;   // Fixed point latitude in decimal degrees
         int32_t longitude_fixed;  // Fixed point longitude in decimal degrees
 
-        float latitudeDegrees;   // Latitude in decimal degrees
-        float longitudeDegrees;  // Longitude in decimal degrees
         float geoidheight;       // Diff between geoid height and WGS84 height
         float altitude;          // Altitude in meters above MSL
         float speed;             // Current speed over ground in knots
@@ -148,9 +145,7 @@ namespace spartan
         float HDOP;  // Horizontal Dilution of Precision - relative accuracy of horizontal position
         float VDOP;  // Vertical Dilution of Precision - relative accuracy of vertical position
         float PDOP;  // Position Dilution of Precision - single number encompassing both kinds of DOP
-        char lat = 'X';  // N/S
-        char lon = 'X';  // E/W
-        char mag = 'X';  // Magnetic variation direction
+
         bool fix;  // Have a fix?
         uint8_t fixquality;     // Fix quality (0, 1, 2 = Invalid, GPS, DGPS)
         uint8_t fixquality_3d;  // 3D fix quality (1, 3, 3 = Nofix, 2D fix, 3D fix)
@@ -159,7 +154,6 @@ namespace spartan
         bool waitForSentence(const char *wait, uint8_t max = mtk3339::MAXWAITSENTENCE, bool usingInterrupts = false);
         bool LOCUS_StopLogger(void);
 
-    private:
         const char *tokenOnList(char *token, const char **list);
         char *parseStr(char *buff, char *p, int n);
         bool isEmpty(char *pStart);
