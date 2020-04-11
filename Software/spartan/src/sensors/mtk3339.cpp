@@ -260,17 +260,17 @@ char *spartan::MTK3339::parseStr(char *buff, char *p, int n) {
     char *e = strchr(p, ',');
     int len = 0;
     if (e) {
-        len = min(e - p, n - 1);
+        len = std::min((int)(e - p), n - 1);
         strncpy(buff, p, len); // copy up to the comma
         buff[len] = 0;
     } else {
         e = strchr(p, '*');
         if (e) {
-            len = min(e - p, n - 1);
+            len = std::min((int)(e - p), n - 1);
             strncpy(buff, p, len); // or up to the *
             buff[e - p] = 0;
         } else {
-            len = min((int)strlen(p), n - 1);
+            len = std::min((int)strlen(p), n - 1);
             strncpy(buff, p, len); // or to the end or max capacity
         }
     }
@@ -415,21 +415,6 @@ float spartan::MTK3339::secondsSinceDate() {
     return (spartan::getTimeMillis() - lastDate) / 1000.;
 }
 
-// How many bytes are available to read - part of 'Print'-class functionality
-// @return Bytes available, 0 if none
-size_t spartan::MTK3339::available(void) {
-    if (paused)
-        return 0;
-    return gpsHwSerial->available();
-}
-
-// Write a byte to the underlying transport - part of 'Print'-class functionality
-// @param c A single byte to send
-// @return Bytes written - 1 on success, 0 on failure
-size_t spartan::MTK3339::write(uint8_t c) {
-    return gpsHwSerial->write(c);
-}
-
 // Read one character from the GPS device
 // @return The character that we received, or 0 if nothing was available
 char spartan::MTK3339::read(void) {
@@ -439,9 +424,9 @@ char spartan::MTK3339::read(void) {
 
     if (paused)
         return c;
-    if (!gpsHwSerial->available())
+    if (!m_uart.dataAvailable())
         return c;
-    c = gpsHwSerial->read();
+    m_uart.read(&c, 1);
 
     // Serial.print(c);
 
@@ -474,16 +459,9 @@ char spartan::MTK3339::read(void) {
     return c;
 }
 
-// Constructor when using HardwareSerial
-// @param ser Pointer to a HardwareSerial object
-spartan::MTK3339::MTK3339(HardwareSerial *ser) {
-    common_init();     // Set everything to common state, then...
-    gpsHwSerial = ser; // ...override gpsHwSerial with value passed.
-}
-
 // Initialization code used by all constructor types
-void spartan::MTK3339::common_init(void) {
-    gpsHwSerial = NULL; // port pointer in corresponding constructor
+spartan::MTK3339::MTK3339(int busID, int instance)
+    : Sensor(busID, instance), m_uart(busID) {
     recvdflag = false;
     paused = false;
     lineidx = 0;
@@ -500,15 +478,15 @@ void spartan::MTK3339::common_init(void) {
 // @param baud_or_i2caddr Baud rate if using serial, I2C address if using I2C
 // @returns True on successful hardware init, False on failure
 bool spartan::MTK3339::begin(uint32_t baud_or_i2caddr) {
-    gpsHwSerial->begin(baud_or_i2caddr);
-    delay(10);
+    m_uart.setBaudRate(baud_or_i2caddr);
+    // delay(10);
     return true;
 }
 
 // Send a command to the GPS device
 // @param str Pointer to a string holding the command to send
-void spartan::MTK3339::sendCommand(const char *str) {
-    println(str);
+void spartan::MTK3339::sendCommand(const std::string &str) {
+    m_uart.write(str.c_str, str.length);
 }
 
 // Check to see if a new NMEA line has been received
@@ -551,7 +529,7 @@ uint8_t spartan::MTK3339::parseHex(char c) {
 // @param max How long to wait, default is MAXWAITSENTENCE
 // @param usingInterrupts True if using interrupts to read from the GPS (default is false)
 // @return True if we got what we wanted, false otherwise
-bool spartan::MTK3339::waitForSentence(const char *wait4me, uint8_t max, bool usingInterrupts) {
+bool spartan::MTK3339::waitForSentence(const std::string &wait4me, uint8_t max, bool usingInterrupts) {
     uint8_t i = 0;
     while (i < max) {
         if (!usingInterrupts)
@@ -560,7 +538,7 @@ bool spartan::MTK3339::waitForSentence(const char *wait4me, uint8_t max, bool us
         if (newNMEAreceived()) {
             char *nmea = lastNMEA();
             i++;
-            if (strStartsWith(nmea, wait4me))
+            if (spartan::strStartsWith(nmea, wait4me))
                 return true;
         }
     }
@@ -569,7 +547,7 @@ bool spartan::MTK3339::waitForSentence(const char *wait4me, uint8_t max, bool us
 
 // Stop the LOCUS logger
 // @return True on success, false if it failed
-bool spartan::MTK3339::LOCUS_StopLogger(void) {
+bool spartan::MTK3339::LOCUS_StopLogger() {
     sendCommand(spartan::mtk3339::PMTK_LOCUS_STOPLOG);
     recvdflag = false;
     return waitForSentence(spartan::mtk3339::PMTK_LOCUS_STARTSTOPACK);
@@ -577,7 +555,7 @@ bool spartan::MTK3339::LOCUS_StopLogger(void) {
 
 // Standby Mode Switches
 // @return False if already in standby, true if it entered standby
-bool spartan::MTK3339::standby(void) {
+bool spartan::MTK3339::standby() {
     if (inStandbyMode) {
         return false; // Returns false if already in standby mode, so that you do
         // not wake it up by sending commands to GPS
@@ -600,16 +578,4 @@ bool spartan::MTK3339::wakeup(void) {
     } else {
         return false; // Returns false if not in standby mode, nothing to wakeup
     }
-}
-
-// Checks whether a string starts with a specified prefix
-// @param str Pointer to a string
-// @param prefix Pointer to the prefix
-// @return True if str starts with prefix, false otherwise
-static bool strStartsWith(const char *str, const char *prefix) {
-    while (*prefix) {
-        if (*prefix++ != *str++)
-            return false;
-    }
-    return true;
 }

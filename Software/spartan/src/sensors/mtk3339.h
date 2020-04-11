@@ -104,20 +104,15 @@ namespace spartan
     private:
         bool begin(uint32_t baud_or_i2caddr);
 
-        char *lastNMEA(void);
+        char *lastNMEA();
         bool newNMEAreceived();
-        void common_init(void);
+        void common_init();
 
-        void sendCommand(const char *);
-
+        void sendCommand(const std::string &str);
+        char read();
         void pause(bool b);
 
         uint8_t parseHex(char c);
-
-        char read(void);
-        size_t write(uint8_t);
-        size_t available(void);
-
         bool check(char *nmea);
         bool parse(char *);
         void addChecksum(char *buff);
@@ -125,10 +120,11 @@ namespace spartan
         float secondsSinceTime();
         float secondsSinceDate();
 
-        bool wakeup(void);
-        bool standby(void);
+        bool wakeup();
+        bool standby();
 
-        bool waitForSentence(const char *wait, uint8_t max = mtk3339::MAXWAITSENTENCE, bool usingInterrupts = false);
+        bool waitForSentence(const std::string &wait, uint8_t max = mtk3339::MAXWAITSENTENCE,
+                             bool usingInterrupts = false);
         bool LOCUS_StopLogger(void);
 
         const char *tokenOnList(char *token, const char **list);
