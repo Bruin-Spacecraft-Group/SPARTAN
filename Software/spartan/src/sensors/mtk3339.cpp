@@ -4,7 +4,38 @@
 #include <utils/utils.h>
 #include "mtk3339.h"
 
-static bool strStartsWith(const char *str, const char *prefix);
+const char *spartan::MTK3339::name() const {
+    return "MTK3339";
+}
+
+void spartan::MTK3339::printSensorInfo() {
+    std::cout << "======================================" << std::endl;
+    std::cout << "Type: MTK3339" << std::endl;
+    std::cout << "Number: " << getInstance() << std::endl;
+    std::cout << "Status:     " << getStatus() << std::endl;
+    std::cout << "UART BusID: " << getBusID() << std::endl;
+    std::cout << "======================================" << std::endl;
+}
+
+int spartan::MTK3339::powerOn() {
+    // TODO
+}
+
+int spartan::MTK3339::powerOff() {
+    // TODO
+}
+
+int spartan::MTK3339::poll(spartan::MasterDataPacket &mdp) {
+    // TODO
+}
+
+int spartan::MTK3339::printValues() const {
+    // TODO
+}
+
+int spartan::MTK3339::getStatus() const {
+    // TODO
+}
 
 // Parse a NMEA string
 // @param nmea Pointer to the NMEA string

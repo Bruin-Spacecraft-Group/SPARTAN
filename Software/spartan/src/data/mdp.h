@@ -14,8 +14,8 @@ namespace spartan {
         float temp;
         float pressure;
         float baro_altitude;
-        float latitude;
-        float longitude;
+        long latitude;
+        long longitude;
         float gps_altitude;
 
         float voltage_AVN;

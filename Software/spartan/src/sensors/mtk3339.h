@@ -106,7 +106,6 @@ namespace spartan
 
         char *lastNMEA();
         bool newNMEAreceived();
-        void common_init();
 
         void sendCommand(const std::string &str);
         char read();
