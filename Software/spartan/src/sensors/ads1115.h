@@ -17,6 +17,9 @@ namespace spartan
         ADS1115(int bus, uint8_t address);
         virtual bool pollData(spartan::DataPacket &dp);
         virtual int printValues() const;
+    private:
+        mraa::I2c m_i2c;
+        float m_readings[4];
     };
 } // namespace spartan
 
