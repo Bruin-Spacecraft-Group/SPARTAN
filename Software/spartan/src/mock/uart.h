@@ -6,8 +6,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace mraa
-{
+namespace mraa {
     /**
      * @brief API to UART (enabling only)
      *
@@ -15,8 +14,7 @@ namespace mraa
      *
      * @snippet uart.cpp Interesting
      */
-    class Uart
-    {
+    class Uart {
     public:
         /**
          * Uart Constructor, takes a pin number which will map directly to the
@@ -45,7 +43,7 @@ namespace mraa
         /**
          * Uart destructor
          */
-        ~Uart();
+        virtual ~Uart();
 
         /**
          * Get string with tty device path within Linux
@@ -53,7 +51,7 @@ namespace mraa
          *
          * @return char pointer of device path
          */
-        std::string getDevicePath();
+        virtual std::string getDevicePath();
 
         /**
          * Read bytes from the device into char* buffer
@@ -62,7 +60,7 @@ namespace mraa
          * @param length maximum size of buffer
          * @return numbers of bytes read
          */
-        int read(char* data, int length);
+        virtual int read(char* data, int length);
 
         /**
          * Write bytes in char* buffer to a device
@@ -71,7 +69,7 @@ namespace mraa
          * @param length maximum size of buffer
          * @return the number of bytes written, or -1 if an error occurred
          */
-        int write(const char* data, int length);
+        virtual int write(const char* data, int length);
 
         /**
          * Read bytes from the device into a String object
@@ -80,7 +78,7 @@ namespace mraa
          * @throws std::bad_alloc If there is no space left for read.
          * @return string of data
          */
-        std::string readStr(int length);
+        virtual std::string readStr(int length);
 
         /**
          * Write bytes in String object to a device
@@ -88,7 +86,7 @@ namespace mraa
          * @param data string to write
          * @return the number of bytes written, or -1 if an error occurred
          */
-        int writeStr(std::string data);
+        virtual int writeStr(std::string data);
 
         /**
          * Check to see if data is available on the device for reading
@@ -96,7 +94,7 @@ namespace mraa
          * @param millis number of milliseconds to wait, or 0 to return immediately
          * @return true if there is data available to read, false otherwise
          */
-        bool dataAvailable(unsigned int millis = 0);
+        virtual bool dataAvailable(unsigned int millis = 0);
 
         /**
          * Flush the outbound data.

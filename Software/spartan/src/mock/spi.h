@@ -5,8 +5,7 @@
 #include <stdexcept>
 #include <new>
 
-namespace mraa
-{
+namespace mraa {
     /**
     * @brief API to Serial Peripheral Interface
     *
@@ -14,8 +13,7 @@ namespace mraa
     *
     * @snippet spi.cpp Interesting
     */
-    class Spi
-    {
+    class Spi {
     public:
         /**
          * Initialise SPI object using the board mapping to set muxes
@@ -43,7 +41,7 @@ namespace mraa
         /**
          * Closes spi bus
          */
-        ~Spi();
+        virtual ~Spi();
 
         /**
          * Set the SPI device mode. see spidev0-3
@@ -67,7 +65,7 @@ namespace mraa
          * @param data the byte to send
          * @return data received on the miso line or -1 in case of error
          */
-        int writeByte(uint8_t data);
+        virtual int writeByte(uint8_t data);
 
         /**
          * Write single byte to the SPI device
@@ -75,7 +73,7 @@ namespace mraa
          * @param data the byte to send
          * @return data received on the miso line or -1 in case of error
          */
-        int writeWord(uint16_t data);
+        virtual int writeWord(uint16_t data);
 
         /**
          * Write buffer of bytes to SPI device The pointer return has to be
@@ -86,7 +84,7 @@ namespace mraa
          * @param length size of buffer to send
          * @return uint8_t* data received on the miso line. Same length as passed in
          */
-        uint8_t* write(uint8_t* txBuf, int length);
+        virtual uint8_t* write(uint8_t* txBuf, int length);
 
 #ifndef SWIG
         /**
@@ -98,7 +96,7 @@ namespace mraa
          * @param length size of buffer (in bytes) to send
          * @return uint8_t* data received on the miso line. Same length as passed in
          */
-        uint16_t* writeWord(uint16_t* txBuf, int length);
+        virtual uint16_t* writeWord(uint16_t* txBuf, int length);
 #endif
 
 #ifndef SWIG
@@ -111,7 +109,7 @@ namespace mraa
          * @param length size of buffer to send
          * @return Result of operation
          */
-        Result transfer(uint8_t* txBuf, uint8_t* rxBuf, int length);
+        virtual Result transfer(uint8_t* txBuf, uint8_t* rxBuf, int length);
 
         /**
          * Transfer data to and from SPI device Receive pointer may be null if
@@ -122,7 +120,7 @@ namespace mraa
          * @param length size of buffer to send
          * @return Result of operation
          */
-        Result transfer_word(uint16_t* txBuf, uint16_t* rxBuf, int length);
+        virtual Result transfer_word(uint16_t* txBuf, uint16_t* rxBuf, int length);
 #endif
 
         /**

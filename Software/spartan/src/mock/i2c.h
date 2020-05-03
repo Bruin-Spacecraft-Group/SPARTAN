@@ -4,10 +4,8 @@
 #include "types.h"
 #include <stdexcept>
 
-namespace mraa
-{
-    class I2c
-    {
+namespace mraa {
+    class I2c {
     public:
         /**
          * Instantiates an i2c bus. Multiple instances of the same bus can
@@ -31,7 +29,7 @@ namespace mraa
          * be usable by anyone else or communicates this disconnect to any
          * slaves.
          */
-        ~I2c();
+        virtual ~I2c();
 
         /**
          * Sets the i2c Frequency for communication. Your board may not support
@@ -58,7 +56,7 @@ namespace mraa
          * @throws std::invalid_argument in case of error
          * @return char read from the bus
          */
-        uint8_t readByte();
+        virtual uint8_t readByte();
 
         /**
          * Read length bytes from the bus into *data pointer
@@ -67,7 +65,7 @@ namespace mraa
          * @param length Size of read in bytes to make
          * @return length of read, should match length
          */
-        int read(uint8_t* data, int length);
+        virtual int read(uint8_t* data, int length);
 
         /**
          * Read byte from an i2c register
@@ -77,7 +75,7 @@ namespace mraa
          * @throws std::invalid_argument in case of error
          * @return char read from register
          */
-        uint8_t readReg(uint8_t reg);
+        virtual uint8_t readReg(uint8_t reg);
 
         /**
          * Read word from an i2c register
@@ -87,7 +85,7 @@ namespace mraa
          * @throws std::invalid_argument in case of error
          * @return char read from register
          */
-        uint16_t readWordReg(uint8_t reg);
+        virtual uint16_t readWordReg(uint8_t reg);
 
         /**
          * Read length bytes from the bus into *data pointer starting from
@@ -98,7 +96,7 @@ namespace mraa
          * @param length max number of bytes to read
          * @return length passed to the function or -1
          */
-        int readBytesReg(uint8_t reg, uint8_t* data, int length);
+        virtual int readBytesReg(uint8_t reg, uint8_t* data, int length);
 
         /**
          * Write a byte on the bus
@@ -106,7 +104,7 @@ namespace mraa
          * @param data The byte to send on the bus
          * @return Result of operation
          */
-        Result writeByte(uint8_t data);
+        virtual Result writeByte(uint8_t data);
 
         /**
          * Write length bytes to the bus, the first byte in the array is the
@@ -116,7 +114,7 @@ namespace mraa
          * @param length Size of buffer to send
          * @return Result of operation
          */
-        Result write(const uint8_t* data, int length);
+        virtual Result write(const uint8_t* data, int length);
 
         /**
          * Write a byte to an i2c register
@@ -125,7 +123,7 @@ namespace mraa
          * @param data Value to write to register
          * @return Result of operation
          */
-        Result writeReg(uint8_t reg, uint8_t data);
+        virtual Result writeReg(uint8_t reg, uint8_t data);
 
         /**
          * Write a word to an i2c register
@@ -134,7 +132,7 @@ namespace mraa
          * @param data Value to write to register
          * @return Result of operation
          */
-        Result writeWordReg(uint8_t reg, uint16_t data);
+        virtual Result writeWordReg(uint8_t reg, uint16_t data);
     };
 } // namespace mraa
 

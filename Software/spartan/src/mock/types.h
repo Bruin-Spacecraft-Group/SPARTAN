@@ -1,7 +1,6 @@
 // Note: doesn't represent all types from <mraa/types.hpp>, only selected
 
-namespace mraa 
-{
+namespace mraa  {
     /**
      * MRAA return codes
      */
