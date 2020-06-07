@@ -87,6 +87,7 @@ namespace spartan {
     };
 
     const int NUM_accel_x;
+    const int NUM_accel_y;
 
 }
 
