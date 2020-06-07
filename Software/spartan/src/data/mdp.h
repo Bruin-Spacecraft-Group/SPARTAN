@@ -4,7 +4,8 @@
 namespace spartan {
     struct MasterDataPacket {
         unsigned long timestamp;
-
+        float accel_xArray[NUM_accel_x];
+        
         float accel_x;
         float accel_y;
         float accel_z;

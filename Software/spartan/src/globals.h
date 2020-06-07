@@ -85,6 +85,9 @@ namespace spartan {
         STATUS_OFF,
         STATUS_ERROR
     };
+
+    const int NUM_accel_x;
+
 }
 
 #endif
