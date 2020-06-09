@@ -88,6 +88,28 @@ namespace spartan {
 
     const int NUM_accel_x;
     const int NUM_accel_y;
+    const int NUM_accel_z;
+    const int NUM_gyro_x;
+    const int NUM_gyro_y;
+    const int NUM_gyro_z;
+    const int NUM_temp;
+    const int NUM_pressure;
+    const int NUM_baro_altitude;
+    const int NUM_latitude;
+    const int NUM_longitude;
+    const int NUM_gps_altitude;
+    const int NUM_voltage_AVN;
+    const int NUM_IMU1_current;
+    const int NUM_IMU2_current;
+    const int NUM_IMU3_current;
+    const int NUM_GPS_current;
+    const int NUM_altimeter_current;
+    const int NUM_FC_voltage;
+    const int NUM_FC_current;
+    const int NUM_radio_voltage;
+    const int NUM_radio_current;
+    const int payload_voltage;
+    const int NUM_payload_current;
     // comment 
 
 }
