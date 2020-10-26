@@ -10,6 +10,7 @@
 
 #define DEBUG true
 
+
 int main() {
     std::array<spartan::DataPacket*, 1> dataPackets;
     std::array<spartan::Sensor*, 1> sensors;
