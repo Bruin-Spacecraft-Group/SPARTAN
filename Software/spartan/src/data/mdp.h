@@ -1,6 +1,8 @@
 #ifndef MDP_H_INCLUDED
 #define MDP_H_INCLUDED
 
+#include <string>
+
 namespace spartan {
     struct MasterDataPacket {
         unsigned long timestamp;
@@ -32,16 +34,19 @@ namespace spartan {
         float payload_current;
     };
 
-    /* Deprecated. See generic structure in `datapacket.h`.
     class PacketType {
     public:
+        virtual int getSize() const = 0;
         virtual void populate(const MasterDataPacket &dp) = 0;
+        virtual std::string format() const = 0;
     protected:
         unsigned long m_timestamp;
     };
 
     class IMUDataPacket : public PacketType {
     public:
+        virtual int getSize() const;
+        virtual std::string format() const;
         virtual void populate(const MasterDataPacket &dp);
     private:
         float m_accel_x;
@@ -55,6 +60,7 @@ namespace spartan {
 
     class AltimeterDataPacket : public PacketType {
     public:
+        virtual int getSize() const;
         virtual void populate(const MasterDataPacket &dp);
     private:
         float m_pressure;
@@ -63,6 +69,7 @@ namespace spartan {
 
     class GPSDataPacket : public PacketType {
     public:
+        virtual int getSize() const;
         virtual void populate(const MasterDataPacket &dp);
     private:
         float m_latitude;
@@ -72,6 +79,7 @@ namespace spartan {
 
     class AVNHealthPacket : public PacketType {
     public:
+        virtual int getSize() const;
         virtual void populate(const MasterDataPacket &dp);
     private:
         float m_voltage_AVN;
@@ -84,6 +92,7 @@ namespace spartan {
 
     class FCHealthPacket : public PacketType {
     public:
+        virtual int getSize() const;
         virtual void populate(const MasterDataPacket &dp);
     private:
         float m_FC_voltage;
@@ -92,6 +101,7 @@ namespace spartan {
 
     class RadioHealthPacket : public PacketType {
     public:
+        virtual int getSize() const;
         virtual void populate(const MasterDataPacket &dp);
     private:
         float m_radio_voltage;
@@ -100,6 +110,7 @@ namespace spartan {
 
     class PayloadHealthPacket : public PacketType {
     public:
+        virtual int getSize() const;
         virtual void populate(const MasterDataPacket &dp);
     private:
         float m_payload_voltage;
@@ -107,7 +118,6 @@ namespace spartan {
     };
 
     class PayloadDataPacket {};
-     */
 } // namespace spartan
 
 #endif // MDP_H_INCLUDED
