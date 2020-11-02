@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include <data/mdp.h>
-#include <data/mdp.h>
 #include <globals.h>
 
 namespace spartan {

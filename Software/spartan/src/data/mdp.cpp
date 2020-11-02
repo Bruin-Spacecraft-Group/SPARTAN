@@ -9,10 +9,10 @@ int spartan::IMUDataPacket::getSize() const { return 7; }
 std::string spartan::IMUDataPacket::format() const { 
     return "\ttimestamp: " + std::to_string(m_timestamp)
            + "\n\taccel_y: " + std::to_string(m_accel_y) 
-           + "\n\taccel_z: " + std::to_string(m_accel_y) 
-           + "\n\tgyro_x: " + std::to_string(m_accel_y) 
-           + "\n\tgyro_y: " + std::to_string(m_accel_y) 
-           + "\n\tgyro_z: " + std::to_string(m_accel_y) 
+           + "\n\taccel_z: " + std::to_string(m_accel_z) 
+           + "\n\tgyro_x: " + std::to_string(m_gyro_x) 
+           + "\n\tgyro_y: " + std::to_string(m_gyro_y) 
+           + "\n\tgyro_z: " + std::to_string(m_gyro_z) 
            + "\n\ttemperature: " + std::to_string(m_temp);
 };
 
