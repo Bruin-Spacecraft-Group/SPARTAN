@@ -5,6 +5,7 @@
 #include <thread>
 
 #include <data/mdp.h>
+#include <data/datapacket.h>
 #include <sensors/ads1115.h>
 #include <sensors/lsm6ds33.h>
 
@@ -30,13 +31,13 @@ int main() {
 
     // TODO: flight loop
     for (int count  = 0; count < 100; count++) {
-        for (int i = 0; i < sensors.size(); ++i) {
+        for (int i = 0; i < sensors.size(); i++) {
             if (sensors[i]->poll(mdp) != spartan::RESULT_SUCCESS) {
                 std::cerr << "Sensor name: " << sensors[i]->name() << " instance; " << sensors[i]->getInstance()
                     << " poll data error!" << std::endl;
             }
         }
-        for (int i = 0; i < dataPackets.size(); ++i) {
+        for (int i = 0; i < dataPackets.size(); i++) {
             dataPackets[i]->populate(mdp);
             if (DEBUG) {
                 std::cout << "Packet size " << dataPackets[i]->getSize() << std::endl;
