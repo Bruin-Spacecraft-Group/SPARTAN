@@ -3,7 +3,8 @@ project(SPARTAN_Flight_Software)
 
 set (CMAKE_CXX_STANDARD 20)
 
-if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+# TODO: When Apple releases an ARM Macbook, fix this again
+if (${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "x86_64")
     set (mraa_INCLUDE_DIRS "")
     set (mraa_LIBRARIES mraamocklib)
 else()

@@ -6,7 +6,8 @@
 #include <cstdlib>
 #include <chrono>
 
-#ifdef __linux__
+// TODO: When Apple releases an ARM Macbook, fix this again
+#ifndef __x86_64__
 #include <mraa/i2c.hpp>
 #else
 #include <mock/i2c.h>
