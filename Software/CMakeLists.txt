@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(SPARTAN_Flight_Software)
 
-set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD 20)
 
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
     set (mraa_INCLUDE_DIRS "")

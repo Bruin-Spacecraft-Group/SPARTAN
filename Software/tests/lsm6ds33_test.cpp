@@ -4,7 +4,7 @@
 #include <fstream>
 #include <thread>
 
-#include <data/datapacket.h>
+#include <data/mdp.h>
 #include <sensors/ads1115.h>
 #include <sensors/lsm6ds33.h>
 
@@ -13,8 +13,8 @@ int main() {
     spartan::LSM6DS33 *imu = new spartan::LSM6DS33(1, 0);
 
     // Initialize DataPackets
-    spartan::MasterDataPacket mdp;
-    spartan::IMUDataPacket *imuPacket = new spartan::IMUDataPacket(0);
+    // spartan::MasterDataPacket mdp;
+    // spartan::IMUDataPacket *imuPacket = new spartan::IMUDataPacket();
 
     imu->powerOn();
     imu->update();
@@ -28,16 +28,16 @@ int main() {
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
         // Polls data from IMU
-        if (imu->poll(mdp) != spartan::RESULT_SUCCESS) {
-            std::cerr << "Sensor name: " << imu->name() << " instance; " << imu->getInstance()
-                << " poll data error!" << std::endl;
-        }
-        imuPacket->populate(mdp);
-        std::cout << "Packet size " << imuPacket->getSize() << std::endl;
+        // if (imu->poll(mdp) != spartan::RESULT_SUCCESS) {
+        //     std::cerr << "Sensor name: " << imu->name() << " instance; " << imu->getInstance()
+        //         << " poll data error!" << std::endl;
+        // }
+        // imuPacket->populate(mdp);
+        // std::cout << "Packet size " << imuPacket->getSize() << std::endl;
 
-        fout << *imuPacket;
-        std::cout << *imuPacket << std::endl;
-        std::cout << "DIVIDER" << std::endl;
+        // fout << *imuPacket;
+        // std::cout << *imuPacket << std::endl;
+        // std::cout << "DIVIDER" << std::endl;
     }
     fout.close();
 }

@@ -1,52 +1,97 @@
 #ifndef DATAPACKET_H_INCLUDED
 #define DATAPACKET_H_INCLUDED
 
-#include <fstream>
+#include <string>
 #include <data/mdp.h>
 
 namespace spartan {
-    // Protocol (abstract base class) to which all datapackets conform to
-    /*
-     * Pattern of output
-     * 1. Timestamp
-     * 2. Data packet array size
-     * 3. dp.data[0]
-     * ...
-     */
-    class DataPacket {
+    class PacketType {
     public:
-        DataPacket(unsigned long timestamp);
-
-        virtual void populate(const MasterDataPacket & dp) = 0;
-
-        // Each sensor packet would implement this to vary data array size
         virtual int getSize() const = 0;
-
-        // Read and write PacketType data through file stream
-        friend std::ostream &operator<<(std::ostream &out, const DataPacket &dp);
-        friend std::istream &operator>>(std::istream &in, DataPacket &dp);
-
+        virtual void populate(const MasterDataPacket &dp) = 0;
+        virtual std::string format() const = 0;
     protected:
         unsigned long m_timestamp;
-        float *m_data;
-    }; // class DataPacket
+    };
 
-    /* (timestamp, 
-     *  [0: accel.x, 1: .y, 2: .z,
-     *  3: gyro.x, 4: .y, 5: .z,
-     *  6: temp] )
-     */
-    class IMUDataPacket : public DataPacket {
+    class IMUDataPacket : public PacketType {
     public:
-        IMUDataPacket(unsigned long timestamp);
-        IMUDataPacket(unsigned long timestamp, MasterDataPacket &dp);
-        ~IMUDataPacket();
-
+        virtual int getSize() const;
+        virtual std::string format() const;
         virtual void populate(const MasterDataPacket &dp);
+    private:
+        float m_accel_x;
+        float m_accel_y;
+        float m_accel_z;
+        float m_gyro_x;
+        float m_gyro_y;
+        float m_gyro_z;
+        float m_temp;
+    };
 
-        // Size of data array
-        int getSize() const;
-    }; // class IMUDataPacket
+    class AltimeterDataPacket : public PacketType {
+    public:
+        virtual int getSize() const;
+        virtual void populate(const MasterDataPacket &dp);
+    private:
+        float m_pressure;
+        float m_baro_altitude;
+    };
+
+    class GPSDataPacket : public PacketType {
+    public:
+        virtual int getSize() const;
+        virtual void populate(const MasterDataPacket &dp);
+    private:
+        float m_latitude;
+        float m_longitude;
+        float m_gps_altitude;
+    };
+
+    class AVNHealthPacket : public PacketType {
+    public:
+        virtual int getSize() const;
+        virtual void populate(const MasterDataPacket &dp);
+    private:
+        float m_voltage_AVN;
+        float m_IMU1_current;
+        float m_IMU2_current;
+        float m_IMU3_current;
+        float m_GPS_current;
+        float m_altimeter_current;
+    };
+
+    class FCHealthPacket : public PacketType {
+    public:
+        virtual int getSize() const;
+        virtual void populate(const MasterDataPacket &dp);
+    private:
+        float m_FC_voltage;
+        float m_FC_current;
+    };
+
+    class RadioHealthPacket : public PacketType {
+    public:
+        virtual int getSize() const;
+        virtual void populate(const MasterDataPacket &dp);
+    private:
+        float m_radio_voltage;
+        float m_radio_current;
+    };
+
+    class PayloadHealthPacket : public PacketType {
+    public:
+        virtual int getSize() const;
+        virtual void populate(const MasterDataPacket &dp);
+    private:
+        float m_payload_voltage;
+        float m_payload_current;
+    };
+
+    class PayloadDataPacket {};
+
 } // namespace spartan
 
 #endif // DATAPACKET_H_INCLUDED
+
+
