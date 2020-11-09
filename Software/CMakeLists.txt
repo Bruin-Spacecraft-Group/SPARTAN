@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(SPARTAN_Flight_Software)
 
-set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD 20)
 
 # TODO: When Apple releases an ARM Macbook, fix this again
 if (${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "x86_64")
