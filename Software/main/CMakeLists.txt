@@ -1,11 +1,9 @@
 # include_directories(/home/pi/mraa)
 
-include_directories(${mraa_INCLUDE_DIRS})
-
 add_executable(flight_software main.cpp)
 
-find_library(MRAA_LIB mraa)
+# find_library(MRAA_LIB mraa)
+# target_include_directories(flight_software PUBLIC ${mraa_INCLUDE_DIRS} "${CMAKE_CURRENT_SOURCE_DIR}/src")
+# target_link_libraries(flight_software PUBLIC ${mraa_LIBRARIES} spartanflightlib)
 
-target_link_libraries(flight_software ${mraa_LIBRARIES} spartanflightlib)
-
-#target_link_libraries(flight_software PRIVATE spartanflightlib)
+target_link_libraries(flight_software PUBLIC spartanflightlib)
