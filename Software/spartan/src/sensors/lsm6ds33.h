@@ -7,7 +7,7 @@
 #include <chrono>
 
 // TODO: When Apple releases an ARM Macbook, fix this again
-#ifndef __x86_64__
+#if !defined(__x86_64__) && !defined(_WIN32)
 #include <mraa/i2c.hpp>
 #else
 #include <mock/i2c.h>
