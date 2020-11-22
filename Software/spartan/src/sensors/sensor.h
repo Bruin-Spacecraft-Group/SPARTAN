@@ -20,6 +20,8 @@ namespace spartan {
         // Standard sensor implementation
         virtual int powerOn() = 0;
         virtual int powerOff() = 0;
+		virtual long last_polled() = 0; 
+		virtual unsigned long poll_correct_frequency(); 
         virtual int poll(MasterDataPacket &dp) = 0;
 
         // Debug options
@@ -29,6 +31,7 @@ namespace spartan {
         // Data getters
         int getBusID() const;
         int getInstance() const;
+		const long frequency = 1000; 
         // Return status (operate with interfaced constants described in globals.h)
         virtual int getStatus() const;
 
@@ -40,3 +43,4 @@ namespace spartan {
 } // namespace spartan
 
 #endif // SENSOR_H_INCLUDED
+
