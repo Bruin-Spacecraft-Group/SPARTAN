@@ -1,8 +1,13 @@
 #include "sensor.h"
-
+#include "utilis.h"
 // Constructor
 spartan::Sensor::Sensor(int busID, int instance)
     : m_busID(busID), m_status(STATUS_OFF), m_instance(instance) {}
+unsigned long spartan::Sensor::poll_correct_frequency() {
+	if (getTimeMillis() > last_polled + frequency) {
+		last_polled = getTimeMillis(); 
+	}
+}
 
 // Debug output
 void spartan::Sensor::printEscapedValues(bool normalize) const {
