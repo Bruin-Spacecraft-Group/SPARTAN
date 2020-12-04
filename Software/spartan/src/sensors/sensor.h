@@ -11,7 +11,7 @@ namespace spartan {
     public:
         // Constructor that takes in pin number that sensor is connected to; this pin number would be used for all
         // member functions
-        Sensor(int busID, int instance);
+        Sensor(int busID, int instance, int pollingFrequency);
 
         // Identification, standard max length is 15 characters
         virtual const char * name() const = 0;
@@ -21,7 +21,7 @@ namespace spartan {
         virtual int powerOn() = 0;
         virtual int powerOff() = 0;
         virtual int poll(MasterDataPacket &dp) = 0;
-
+        
         // Debug options
         virtual int printValues() const = 0;
         void printEscapedValues(bool normalize) const;
@@ -35,7 +35,8 @@ namespace spartan {
     protected:
         int m_status;
         int m_busID;
-        int m_instance; // support for multiple sensors of same type
+        int m_instance; 
+        int m_pollingFrequency; // support for multiple sensors of same type
     };
 } // namespace spartan
 

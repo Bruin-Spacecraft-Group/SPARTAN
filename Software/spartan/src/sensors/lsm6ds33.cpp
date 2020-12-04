@@ -2,8 +2,8 @@
 
 // Constructors
 
-spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID, spartan::LSM6DS33::lsm6Settings settings)
-    : Sensor(busID, lsm6ID), m_settings(settings), m_i2c(busID, true) { // raw=true, disable pinmapper for board
+spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID, int pollingFrequency, spartan::LSM6DS33::lsm6Settings settings)
+    : Sensor(busID, lsm6ID, pollingFrequency), m_settings(settings), m_i2c(busID, true) { // raw=true, disable pinmapper for board
     if (lsm6ID)
         lsm6Address = lsm6ds33::HIGH_ADDRESS;
     else
@@ -11,8 +11,8 @@ spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID, spartan::LSM6DS33::lsm6Settin
     setMultipliers();
 }
 
-spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID)
-    : Sensor(busID, lsm6ID), m_i2c(busID, true) {
+spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID, int pollingFrequency)
+    : Sensor(busID, lsm6ID, pollingFrequency), m_i2c(busID, true) {
     if (lsm6ID)
         lsm6Address = lsm6ds33::HIGH_ADDRESS;
     else
