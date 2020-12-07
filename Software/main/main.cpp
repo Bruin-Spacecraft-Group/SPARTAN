@@ -13,10 +13,11 @@
 
 int main() {
     std::array<spartan::PacketType*, 1> dataPackets;
-    std::array<spartan::Sensor*, 1> sensors;
+    std::array<spartan::Sensor*, 2> sensors;
 
     // TODO: Initialize Sensors
     sensors[0] = new spartan::LSM6DS33(1, 0);
+    sensors[1] = new spartan::ADS1115(1, 1);
 
     // TODO: Initialize DataPackets
     spartan::MasterDataPacket mdp;
