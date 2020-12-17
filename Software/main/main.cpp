@@ -22,8 +22,7 @@ int main() {
     // TODO: Initialize DataPackets
     spartan::MasterDataPacket mdp;
     dataPackets[0] = new spartan::IMUDataPacket;
-    // std::cout << sensors.size();
-    // std::cout << dataPackets.size();
+
     // Initialization of sensors
     for (int i = 0; i < sensors.size(); i++) {
 	    sensors[i]->powerOn();
