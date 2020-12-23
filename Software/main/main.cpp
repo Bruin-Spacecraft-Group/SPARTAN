@@ -8,6 +8,7 @@
 #include <data/datapacket.h>
 #include <sensors/ads1115.h>
 #include <sensors/lsm6ds33.h>
+#include <utils/utils.h>
 
 #define DEBUG true
 
@@ -32,6 +33,7 @@ int main() {
     // TODO: flight loop
     for (int count  = 0; count < 100; count++) {
         for (int i = 0; i < sensors.size(); i++) {
+            mdp.timestamp = spartan::getTimeMillis();
             if (sensors[i]->poll(mdp) != spartan::RESULT_SUCCESS) {
                 std::cerr << "Sensor name: " << sensors[i]->name() << " instance; " << sensors[i]->getInstance()
                     << " poll data error!" << std::endl;

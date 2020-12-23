@@ -24,6 +24,9 @@ add_library(
     ./src/sensors/lsm6ds33.h
     ./src/sensors/lsm6ds33.cpp
     ./src/globals.h
+
+    ./src/utils/utils.h
+    ./src/utils/utils.cpp
 )
 
 target_include_directories(spartanflightlib PUBLIC ${mraa_INCLUDE_DIRS} "${CMAKE_CURRENT_SOURCE_DIR}/src")
