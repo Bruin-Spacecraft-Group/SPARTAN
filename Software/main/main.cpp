@@ -17,7 +17,7 @@ int main() {
     std::array<spartan::Sensor*, 1> sensors;
 
     // TODO: Initialize Sensors
-    sensors[0] = new spartan::LSM6DS33(1, 0);
+    sensors[0] = new spartan::LSM6DS33(1, 0, 1000);
 
     // TODO: Initialize DataPackets
     spartan::MasterDataPacket mdp;

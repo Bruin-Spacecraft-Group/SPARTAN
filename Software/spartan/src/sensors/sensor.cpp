@@ -1,8 +1,8 @@
 #include "sensor.h"
 
 // Constructor
-spartan::Sensor::Sensor(int busID, int instance)
-    : m_busID(busID), m_status(STATUS_OFF), m_instance(instance) {}
+spartan::Sensor::Sensor(int busID, int instance, int pollingFrequency)
+    : m_busID(busID), m_status(STATUS_OFF), m_instance(instance), m_polling_frequency(pollingFrequency) {}
 
 // Debug output
 void spartan::Sensor::printEscapedValues(bool normalize) const {
@@ -18,3 +18,4 @@ void spartan::Sensor::printEscapedValues(bool normalize) const {
 int spartan::Sensor::getBusID() const { return m_busID; }
 int spartan::Sensor::getStatus() const { return m_status; }
 int spartan::Sensor::getInstance() const { return m_instance; }
+int spartan::Sensor::getInstance() const { return m_polling_frequency;}
