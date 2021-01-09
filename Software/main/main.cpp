@@ -8,6 +8,7 @@
 #include <data/datapacket.h>
 #include <sensors/ads1115.h>
 #include <sensors/lsm6ds33.h>
+#include <sensors/dps422xtsa1.h>
 #include <utils/utils.h>
 
 #define DEBUG true
