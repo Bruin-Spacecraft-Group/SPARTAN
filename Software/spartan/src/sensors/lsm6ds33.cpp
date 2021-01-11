@@ -247,7 +247,7 @@ void spartan::LSM6DS33::printRawValues() {
 
 // Override sensor base class functions
 
-int spartan::LSM6DS33::poll(MasterDataPacket &dp) {
+int spartan::LSM6DS33::pollData(MasterDataPacket &dp) {
     if (!update())
         return RESULT_FALSE;
     dp.temp = (float) ((m_temp / 16) + m_offsets._temp_offset);
