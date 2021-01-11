@@ -20,7 +20,7 @@ namespace spartan {
         // Standard sensor implementation
         virtual int powerOn() = 0;
         virtual int powerOff() = 0;
-        virtual int poll(MasterDataPacket &dp) = 0;
+        virtual int pollData(MasterDataPacket &dp) = 0;
 
         // Debug options
         virtual int printValues() const = 0;

@@ -34,7 +34,7 @@ int main() {
     for (int count  = 0; count < 100; count++) {
         for (int i = 0; i < sensors.size(); i++) {
             mdp.timestamp = spartan::getTimeMillis();
-            if (sensors[i]->poll(mdp) != spartan::RESULT_SUCCESS) {
+            if (sensors[i]->pollData(mdp) != spartan::RESULT_SUCCESS) {
                 std::cerr << "Sensor name: " << sensors[i]->name() << " instance; " << sensors[i]->getInstance()
                     << " poll data error!" << std::endl;
             }

@@ -171,7 +171,7 @@ namespace spartan {
         virtual int powerOn();
         virtual int powerOff();
 
-        virtual int poll(MasterDataPacket &dp);
+        virtual int pollData(MasterDataPacket &dp);
         // returns RESULT_FALSE if no new data, RESULT_SUCCESS if member data was updated with latest reading,
         // ERROR in the case of an error
         int hasNewData();
@@ -184,7 +184,7 @@ namespace spartan {
         bool updateSettings(lsm6Settings settings);
 
         //virtual bool longPoll() { return false; /*dummy*/}
-        // call poll() over a longer period of time, averaging out the values (maybe allow time input functionality, or
+        // call pollData() over a longer period of time, averaging out the values (maybe allow time input functionality, or
         // just do poll 10 times and average out the values, storing result into rawAccel array)
         // "poll","read","get"; reads raw data from sensor and returns it; maybe into a file? or an input stream? or a
         // member variable of the class/struct? and then preprocess function can pull from that?
