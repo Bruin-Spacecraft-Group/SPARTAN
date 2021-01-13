@@ -16,6 +16,6 @@ int spartan::ADS1115::powerOn() { return 0; }
 
 int spartan::ADS1115::powerOff() { return 0; }
 
-int spartan::ADS1115::poll(MasterDataPacket &dp) { return 0; }
+int spartan::ADS1115::pollData(MasterDataPacket &dp) { return 0; }
 
 int spartan::ADS1115::printValues() const {}

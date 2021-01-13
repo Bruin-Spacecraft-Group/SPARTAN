@@ -22,7 +22,7 @@ namespace spartan
 
         virtual int powerOn();
         virtual int powerOff();
-        virtual int poll(MasterDataPacket &dp);
+        virtual int pollData(MasterDataPacket &dp);
 
         virtual int printValues() const;
 
