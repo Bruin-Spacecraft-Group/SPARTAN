@@ -13,22 +13,24 @@
 
 namespace spartan
 {
-    class DPS422XTSA1 : public Sensor {
-    public:
-        DPS422XTSA1(int bus, uint8_t address);
+    class DPS422XTSA1 : 
+        public Sensor
+        {
+            public:
+                DPS422XTSA1(int bus, uint8_t address);
 
-        virtual const char* name() const;
-        virtual void printSensorInfo();
+                virtual const char* name() const;
+                virtual void printSensorInfo();
 
-        virtual int powerOn();
-        virtual int powerOff();
-        virtual int poll(MasterDataPacket& dp);
+                virtual int powerOn();
+                virtual int powerOff();
+                virtual int poll(MasterDataPacket& dp);
 
-        virtual int printValues() const;
+                virtual int printValues() const;
 
-    private:
-        mraa::I2c m_i2c;
-};
+            private:
+                mraa::I2c m_i2c;
+        };
 } // namespace spartan
 
 #endif // DPS422XTSA1_H_INCLUDED

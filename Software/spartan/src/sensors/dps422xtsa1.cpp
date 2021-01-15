@@ -1,6 +1,7 @@
 #include "dps422xtsa1.h"
 
-spartan::DPS422XTSA1::DPS422XTSA1(int bus, uint8_t address)
+spartan::DPS422XTSA1::DPS422XTSA1(int bus, uint8_t address) 
+	: Sensor(bus, address), m_i2c(bus, true)
 {
 	// Implementation
 }
@@ -8,7 +9,8 @@ spartan::DPS422XTSA1::DPS422XTSA1(int bus, uint8_t address)
 const char* spartan::DPS422XTSA1::name() const
 {
 	// Implementation
-	return '';
+	const char* sensor_name = "DPS422XTSA1";
+	return sensor_name;
 }
 void spartan::DPS422XTSA1::printSensorInfo()
 {
@@ -26,13 +28,14 @@ int spartan::DPS422XTSA1::powerOff()
 	return 0;
 }
 
-bool spartan::DPS422XTSA1::pollData(spartan::DataPacket &dp)
+int spartan::DPS422XTSA1::poll(spartan::MasterDataPacket &dp)
 {
 	// Implementation
 	return 0;
 }
 
-void spartan::DPS422XTSA1::printValues() const
+int spartan::DPS422XTSA1::printValues() const
 {
 	// Implementation
+	return 0;
 }
