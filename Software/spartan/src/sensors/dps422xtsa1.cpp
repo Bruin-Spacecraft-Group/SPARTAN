@@ -28,7 +28,7 @@ int spartan::DPS422XTSA1::powerOff()
 	return 0;
 }
 
-int spartan::DPS422XTSA1::poll(spartan::MasterDataPacket &dp)
+int spartan::DPS422XTSA1::pollData(spartan::MasterDataPacket &dp)
 {
 	// Implementation
 	return 0;
