@@ -8,16 +8,18 @@
 #include <data/datapacket.h>
 #include <sensors/ads1115.h>
 #include <sensors/lsm6ds33.h>
+#include <sensors/dps422xtsa1.h>
 #include <utils/utils.h>
 
 #define DEBUG true
 
 int main() {
     std::array<spartan::PacketType*, 1> dataPackets;
-    std::array<spartan::Sensor*, 1> sensors;
+    std::array<spartan::Sensor*, 2> sensors;
 
     // TODO: Initialize Sensors
     sensors[0] = new spartan::LSM6DS33(1, 0);
+    sensors[1] = new spartan::DPS422XTSA1(1, 1);
 
     // TODO: Initialize DataPackets
     spartan::MasterDataPacket mdp;
