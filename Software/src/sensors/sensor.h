@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include <data/mdp.h>
+#include <datapacket/mdp.h>
 #include <globals.h>
 
 namespace spartan {

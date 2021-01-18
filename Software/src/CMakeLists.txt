@@ -1,33 +1,33 @@
 add_library(
-    mraamocklib
-
-    ./src/mock/types.h
-    ./src/mock/i2c.h
-    ./src/mock/i2c.cpp
-    ./src/mock/spi.h
-    ./src/mock/spi.cpp
-    ./src/mock/uart.h
-    ./src/mock/uart.cpp
-)
-
-add_library(
     spartanflightlib
 
-    ./src/data/mdp.h
-    ./src/data/datapacket.h
-    ./src/data/datapacket.cpp
-    ./src/sensors/sensor.h
-    ./src/sensors/sensor.cpp
+    datapacket/datapacket.cpp
+    sensors/sensor.cpp
 
-    ./src/sensors/ads1115.h
-    ./src/sensors/ads1115.cpp
-    ./src/sensors/lsm6ds33.h
-    ./src/sensors/lsm6ds33.cpp
-    ./src/globals.h
+    sensors/ads1115.cpp
+    sensors/lsm6ds33.cpp
 
-    ./src/utils/utils.h
-    ./src/utils/utils.cpp
+    utils/utils.cpp
 )
 
-target_include_directories(spartanflightlib PUBLIC ${mraa_INCLUDE_DIRS} "${CMAKE_CURRENT_SOURCE_DIR}/src")
-target_link_libraries(spartanflightlib PUBLIC ${mraa_LIBRARIES})
+target_include_directories(
+    spartanflightlib
+
+    PUBLIC
+    ${mraa_INCLUDE_DIRS} 
+    ${CMAKE_CURRENT_SOURCE_DIR} # covers `globals.h`
+    ${CMAKE_SOURCE_DIR} # covers `mock/*`
+
+    datapacket  # covers `mdp.h`, `datapacket.h`
+    sensors  # covers `sensor.h`, sensor-specific headers
+    utils  # covers `utils.h`
+
+)
+
+# link with either MRAA .so or `mraamocklib` located in `mock` directory (depending on what system we're building on)
+target_link_libraries(
+    spartanflightlib
+
+    PUBLIC
+    ${mraa_LIBRARIES}
+)

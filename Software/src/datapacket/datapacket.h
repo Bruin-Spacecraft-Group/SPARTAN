@@ -2,7 +2,7 @@
 #define DATAPACKET_H_INCLUDED
 
 #include <string>
-#include <data/mdp.h>
+#include <datapacket/mdp.h>
 
 namespace spartan {
     class PacketType {
