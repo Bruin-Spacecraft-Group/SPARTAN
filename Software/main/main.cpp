@@ -4,8 +4,8 @@
 #include <iostream>
 #include <thread>
 
-#include <data/mdp.h>
-#include <data/datapacket.h>
+#include <datapacket/mdp.h>
+#include <datapacket/datapacket.h>
 #include <sensors/ads1115.h>
 #include <sensors/lsm6ds33.h>
 #include <utils/utils.h>

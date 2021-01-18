@@ -13,6 +13,7 @@ else()
     set (mraa_LIBRARIES "/usr/local/lib/libmraa.so")
 endif()
 
-add_subdirectory(spartan)
+add_subdirectory(mock)
+add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(main)

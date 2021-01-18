@@ -92,7 +92,7 @@ To build the SPARTAN FSW, run the following shell script:
 
 ## High-level Overview of Code Base
 
-**TODO: This will be completed once Issue #11 and #12 are closed and completed. This should include a reference to the main documentation directories for Software, Structures, Electronics, Management, etc.**
+**TODO: This will be completed once Issue #11 and #12 are closed and completed. Refer to the `SPARTAN Software Architecture` https://docs.google.com/document/d/1g_4Ltz6UaWXYKXc5a7wMcE85elGKah6o92g3qZhnzHk/edit# when making this section (this document is outdated with regards to the updates made to address Issue #11, but it still has relevant sections). As Issue #52 mentions, perhaps this section should refer to a document located in the `docs` subdirectory that is an updated version of the `SPARTAN Software Architecture` document linked previously. This should include a reference to the main documentation directories for Software, Structures, Electronics, Management, etc.**
 
 ## Making Changes
 
