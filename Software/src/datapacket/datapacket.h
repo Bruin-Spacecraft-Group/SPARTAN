@@ -2,24 +2,33 @@
 #define DATAPACKET_H_INCLUDED
 
 #include <string>
-#include <datapacket/mdp.h>
+
+#include "sensors/sensor.h"
+#include "sensors/lsm6ds33.h"
 
 namespace spartan {
     class PacketType {
     public:
         virtual int getSize() const = 0;
-        virtual void populate(const MasterDataPacket &dp) = 0;
+        virtual void update() = 0;
         virtual std::string format() const = 0;
+
+        void setTimestamp(unsigned long timestamp);
+
     protected:
         unsigned long m_timestamp;
     };
 
     class IMUDataPacket : public PacketType {
     public:
-        virtual int getSize() const;
-        virtual std::string format() const;
-        virtual void populate(const MasterDataPacket &dp);
+        explicit IMUDataPacket(Sensor *lsm6ds33);
+
+        int getSize() const override;
+        std::string format() const override;
+        void update() override;
     private:
+        LSM6DS33 *m_lsm6ds33;
+
         float m_accel_x;
         float m_accel_y;
         float m_accel_z;
@@ -32,7 +41,6 @@ namespace spartan {
     class AltimeterDataPacket : public PacketType {
     public:
         virtual int getSize() const;
-        virtual void populate(const MasterDataPacket &dp);
     private:
         float m_pressure;
         float m_baro_altitude;
@@ -41,7 +49,6 @@ namespace spartan {
     class GPSDataPacket : public PacketType {
     public:
         virtual int getSize() const;
-        virtual void populate(const MasterDataPacket &dp);
     private:
         float m_latitude;
         float m_longitude;
@@ -51,7 +58,6 @@ namespace spartan {
     class AVNHealthPacket : public PacketType {
     public:
         virtual int getSize() const;
-        virtual void populate(const MasterDataPacket &dp);
     private:
         float m_voltage_AVN;
         float m_IMU1_current;
@@ -64,7 +70,6 @@ namespace spartan {
     class FCHealthPacket : public PacketType {
     public:
         virtual int getSize() const;
-        virtual void populate(const MasterDataPacket &dp);
     private:
         float m_FC_voltage;
         float m_FC_current;
@@ -73,7 +78,6 @@ namespace spartan {
     class RadioHealthPacket : public PacketType {
     public:
         virtual int getSize() const;
-        virtual void populate(const MasterDataPacket &dp);
     private:
         float m_radio_voltage;
         float m_radio_current;
@@ -82,7 +86,6 @@ namespace spartan {
     class PayloadHealthPacket : public PacketType {
     public:
         virtual int getSize() const;
-        virtual void populate(const MasterDataPacket &dp);
     private:
         float m_payload_voltage;
         float m_payload_current;

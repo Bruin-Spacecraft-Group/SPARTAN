@@ -5,6 +5,7 @@
 
 # CMake build directory
 _build/
+cmake-build-debug/
 
 # OS X files
 */.DS_Store

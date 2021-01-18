@@ -1,9 +1,10 @@
 #include "lsm6ds33.h"
+#include "utils/utils.h"
 
 // Constructors
 
 spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID, spartan::LSM6DS33::lsm6Settings settings)
-    : Sensor(busID, lsm6ID), m_settings(settings), m_i2c(busID, true) { // raw=true, disable pinmapper for board
+    : Sensor(busID, lsm6ID, 7), m_settings(settings), m_i2c(busID, true) { // raw=true, disable pinmapper for board
     if (lsm6ID)
         lsm6Address = lsm6ds33::HIGH_ADDRESS;
     else
@@ -12,7 +13,7 @@ spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID, spartan::LSM6DS33::lsm6Settin
 }
 
 spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID)
-    : Sensor(busID, lsm6ID), m_i2c(busID, true) {
+    : Sensor(busID, lsm6ID, 7), m_i2c(busID, true) {
     if (lsm6ID)
         lsm6Address = lsm6ds33::HIGH_ADDRESS;
     else
@@ -247,16 +248,22 @@ void spartan::LSM6DS33::printRawValues() {
 
 // Override sensor base class functions
 
-int spartan::LSM6DS33::pollData(MasterDataPacket &dp) {
+int spartan::LSM6DS33::pollData() {
     if (!update())
         return RESULT_FALSE;
-    dp.temp = (float) ((m_temp / 16) + m_offsets._temp_offset);
-    dp.accel_x = (float) ((m_accel.x*_accel_multiplier) + m_offsets._accel_offsets.x);
-    dp.accel_y = (float) ((m_accel.y*_accel_multiplier) + m_offsets._accel_offsets.y);
-    dp.accel_z = (float) ((m_accel.z*_accel_multiplier) + m_offsets._accel_offsets.z);
-    dp.gyro_x = (float) ((m_gyro.x*_gyro_multiplier) + m_offsets._gyro_offsets.x);
-    dp.gyro_y = (float) ((m_gyro.y*_gyro_multiplier) + m_offsets._gyro_offsets.y);
-    dp.gyro_z = (float) ((m_gyro.z*_gyro_multiplier) + m_offsets._gyro_offsets.z);
+
+    // Set timestamp
+    setTimestamp(spartan::getTimeMillis());
+
+    // Populate m_data
+    m_data[0] = (float) ((m_temp / 16.0) + m_offsets._temp_offset);
+    m_data[1] = (float) ((m_accel.x * _accel_multiplier) + m_offsets._accel_offsets.x);
+    m_data[2] = (float) ((m_accel.y * _accel_multiplier) + m_offsets._accel_offsets.y);
+    m_data[3] = (float) ((m_accel.z * _accel_multiplier) + m_offsets._accel_offsets.z);
+    m_data[4] = (float) ((m_gyro.x * _gyro_multiplier) + m_offsets._gyro_offsets.x);
+    m_data[5] = (float) ((m_gyro.y * _gyro_multiplier) + m_offsets._gyro_offsets.y);
+    m_data[6] = (float) ((m_gyro.z * _gyro_multiplier) + m_offsets._gyro_offsets.z);
+
     return RESULT_SUCCESS;
 }
 

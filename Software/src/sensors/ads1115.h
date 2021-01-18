@@ -16,7 +16,7 @@ namespace spartan
     class ADS1115 : public Sensor {
     public:
         ADS1115(int bus, uint8_t address);
-        virtual int pollData(spartan::MasterDataPacket &dp);
+        virtual int pollData();
         virtual int printValues() const;
     };
 } // namespace spartan

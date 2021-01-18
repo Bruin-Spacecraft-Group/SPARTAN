@@ -4,7 +4,6 @@
 #include <iostream>
 #include <thread>
 
-#include <datapacket/mdp.h>
 #include <datapacket/datapacket.h>
 #include <sensors/ads1115.h>
 #include <sensors/lsm6ds33.h>
@@ -20,8 +19,7 @@ int main() {
     sensors[0] = new spartan::LSM6DS33(1, 0);
 
     // TODO: Initialize DataPackets
-    spartan::MasterDataPacket mdp;
-    dataPackets[0] = new spartan::IMUDataPacket;
+    dataPackets[0] = new spartan::IMUDataPacket(sensors[0]);
 
     // Initialization of sensors
     for (int i = 0; i < sensors.size(); i++) {
@@ -32,20 +30,18 @@ int main() {
 
     // TODO: flight loop
     for (int count  = 0; count < 100; count++) {
-        for (int i = 0; i < sensors.size(); i++) {
-            mdp.timestamp = spartan::getTimeMillis();
-            if (sensors[i]->pollData(mdp) != spartan::RESULT_SUCCESS) {
-                std::cerr << "Sensor name: " << sensors[i]->name() << " instance; " << sensors[i]->getInstance()
-                    << " poll data error!" << std::endl;
+        for (auto &sensor: sensors) {
+            if (sensor->pollData() != spartan::RESULT_SUCCESS) {
+                sensor->printPollingError();
             }
         }
-        for (int i = 0; i < dataPackets.size(); i++) {
-            dataPackets[i]->populate(mdp);
+        for (auto & dataPacket : dataPackets) {
+            dataPacket->update();
             if (DEBUG) {
-                std::cout << "Packet size " << dataPackets[i]->getSize() << std::endl;
-                std::cout << dataPackets[i]->format() << std::endl;
+                std::cout << "Packet size " << dataPacket->getSize() << std::endl;
+                std::cout << dataPacket->format() << std::endl;
             }
-            fout << dataPackets[i]->format();
+            fout << dataPacket->format();
         }
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
