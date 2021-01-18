@@ -29,8 +29,8 @@ cmake --build .
 ```
 
 # Sensor documentations
-* [Sensor Abstract class requirements](spartan/src/docs/sensor.md) *(Must Read!)*
-* [LSM6DS33](spartan/src/docs/lsm6.md)
+* [Sensor Abstract class requirements](docs/sensor.md) *(Must Read!)*
+* [LSM6DS33](docs/lsm6.md)
 
 # Data packet documentation
-* [Data packet structure and implementation examples](spartan/src/docs/dp.md)
+* [Data packet structure and implementation examples](docs/dp.md)
