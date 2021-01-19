@@ -26,26 +26,30 @@ bool spartan::LSM6DS33::writeReg(uint8_t* buffer, unsigned short size) {
     mraa::Result msg = m_i2c.write(buffer, size);
 
     // Error handling
-    if (msg == mraa::SUCCESS)
-        return true;
-    else if (msg == mraa::ERROR_INVALID_PARAMETER)
-        std::cerr << "Invalid parameter." << std::endl;
-    else if (msg == mraa::ERROR_INVALID_HANDLE)
-        std::cerr << "ERROR_INVALID_HANDLE" << std::endl;
-    else if (msg == mraa::ERROR_NO_RESOURCES)
-        std::cerr << "ERROR_NO_RESOURCES" << std::endl;
-    else if (msg == mraa::ERROR_INVALID_RESOURCE)
-        std::cerr << "ERROR_INVALID_RESOURCE" << std::endl;
-    else if (msg == mraa::ERROR_INVALID_QUEUE_TYPE)
-        std::cerr << "ERROR_INVALID_QUEUE_TYPE" << std::endl;
-    else if (msg == mraa::ERROR_NO_DATA_AVAILABLE)
-        std::cerr << "ERROR_NO_DATA_AVAILABLE" << std::endl;
-    else if (msg == mraa::ERROR_INVALID_PLATFORM)
-        std::cerr << "ERROR_INVALID_PLATFORM" << std::endl;
-    else if (msg == mraa::ERROR_PLATFORM_NOT_INITIALISED)
-        std::cerr << "ERROR_PLATFORM_NOT_INITIALISED" << std::endl;
-    else if (msg == mraa::ERROR_UNSPECIFIED)
-        std::cerr << "ERROR_UNSPECIFIED" << std::endl;
+    
+    switch (msg) {
+    case mraa::SUCCESS:
+        return true; break;
+    case mraa::ERROR_INVALID_PARAMETER:
+        std::cerr << "Invalid parameter." << std::endl; break;
+    case mraa::ERROR_INVALID_HANDLE:
+        std::cerr << "ERROR_INVALID_HANDLE" << std::endl; break;
+    case mraa::ERROR_NO_RESOURCES:
+        std::cerr << "ERROR_NO_RESOURCES" << std::endl; break;
+    case mraa::ERROR_INVALID_RESOURCE:
+        std::cerr << "ERROR_INVALID_RESOURCE" << std::endl; break;
+    case mraa::ERROR_INVALID_QUEUE_TYPE:
+        std::cerr << "ERROR_INVALID_QUEUE_TYPE" << std::endl; break;
+    case mraa::ERROR_NO_DATA_AVAILABLE:
+        std::cerr << "ERROR_NO_DATA_AVAILABLE" << std::endl; break;
+    case mraa::ERROR_INVALID_PLATFORM:
+        std::cerr << "ERROR_INVALID_PLATFORM" << std::endl; break;
+    case mraa::ERROR_PLATFORM_NOT_INITIALISED:
+        std::cerr << "ERROR_PLATFORM_NOT_INITIALISED" << std::endl; break;
+    case mraa::ERROR_UNSPECIFIED:
+        std::cerr << "ERROR_UNSPECIFIED" << std::endl; break;
+    default: break;
+    }   
 
     return false;
 }
