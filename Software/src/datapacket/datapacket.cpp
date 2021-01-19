@@ -6,18 +6,29 @@ void spartan::PacketType::setTimestamp(unsigned long timestamp) {
     m_timestamp = timestamp;
 }
 
+unsigned long spartan::PacketType::getTimestamp() const {
+    return m_timestamp;
+}
+
 spartan::IMUDataPacket::IMUDataPacket(Sensor *lsm6ds33)
     : m_lsm6ds33(dynamic_cast<spartan::LSM6DS33*>(lsm6ds33)) {}
 
 int spartan::IMUDataPacket::getSize() const { return 7; }
 
 void spartan::IMUDataPacket::update() {
-    float *data = m_lsm6ds33->getData();
+    unsigned long timestamp = m_lsm6ds33->getTimestamp();
 
-    // Set timestamp
-    setTimestamp(m_lsm6ds33->getTimestamp());
+    if (timestamp == getTimestamp()) {
+        // pollData() failed; sensor data has not changed, so no need to update data
+        // TODO: Return error?
+        return;
+    }
+
+    // pollData() succeeded; set timestamp
+    setTimestamp(timestamp);
 
     // Populate data fields
+    float *data = m_lsm6ds33->getData();
     m_temp = data[0];
     m_accel_x = data[1];
     m_accel_y = data[2];

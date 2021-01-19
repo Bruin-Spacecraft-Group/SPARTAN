@@ -14,6 +14,7 @@ namespace spartan {
         virtual std::string format() const = 0;
 
         void setTimestamp(unsigned long timestamp);
+        unsigned long getTimestamp() const;
 
     protected:
         unsigned long m_timestamp;
@@ -26,9 +27,9 @@ namespace spartan {
         int getSize() const override;
         std::string format() const override;
         void update() override;
+
     private:
         LSM6DS33 *m_lsm6ds33;
-
         float m_accel_x;
         float m_accel_y;
         float m_accel_z;

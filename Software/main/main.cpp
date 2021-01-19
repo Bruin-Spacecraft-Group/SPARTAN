@@ -12,8 +12,8 @@
 #define DEBUG true
 
 int main() {
-    std::array<spartan::PacketType*, 1> dataPackets;
-    std::array<spartan::Sensor*, 1> sensors;
+    std::array<spartan::PacketType*, 1> dataPackets{};
+    std::array<spartan::Sensor*, 1> sensors{};
 
     // TODO: Initialize Sensors
     sensors[0] = new spartan::LSM6DS33(1, 0);
@@ -21,10 +21,11 @@ int main() {
     // TODO: Initialize DataPackets
     dataPackets[0] = new spartan::IMUDataPacket(sensors[0]);
 
-    // Initialization of sensors
-    for (int i = 0; i < sensors.size(); i++) {
-	    sensors[i]->powerOn();
+    // Initialize sensors
+    for (auto &sensor: sensors) {
+	    sensor->powerOn();
     }
+
     std::ofstream fout;
     fout.open("data.txt");
 
@@ -35,17 +36,21 @@ int main() {
                 sensor->printPollingError();
             }
         }
-        for (auto & dataPacket : dataPackets) {
+
+        for (auto &dataPacket : dataPackets) {
             dataPacket->update();
+
             if (DEBUG) {
                 std::cout << "Packet size " << dataPacket->getSize() << std::endl;
                 std::cout << dataPacket->format() << std::endl;
             }
+
             fout << dataPacket->format();
         }
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
+
     fout.close();
 
     // TODO: Send to comms (write to SD card and send to radio)
