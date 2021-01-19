@@ -33,8 +33,8 @@ namespace spartan {
         virtual int getStatus() const;
 
     protected:
-        int m_status;
         int m_busID;
+        int m_status;
         int m_instance; // support for multiple sensors of same type
     };
 } // namespace spartan

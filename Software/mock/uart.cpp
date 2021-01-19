@@ -2,9 +2,18 @@
 
 // Constructors/destructors
 
-mraa::Uart::Uart(int uart) {}
-mraa::Uart::Uart(std::string path) {}
-mraa::Uart::Uart(void* uart_context) {}
+mraa::Uart::Uart(int uart) {
+    (void) uart;
+}
+
+mraa::Uart::Uart(std::string path) {
+    (void) path;
+}
+
+mraa::Uart::Uart(void* uart_context) {
+    (void) uart_context;
+}
+
 mraa::Uart::~Uart() {}
 
 // UART interface settings
@@ -16,10 +25,15 @@ std::string mraa::Uart::getDevicePath() {
 // Read/write functions
 
 int mraa::Uart::read(char* data, int length) {
+    (void) data;
+    (void) length;
+
     return std::rand();
 }
 
 int mraa::Uart::write(const char* data, int length) {
+    (void) data;
+
     return length;
 }
 
@@ -45,6 +59,8 @@ int mraa::Uart::writeStr(std::string data) {
 // Miscellaneous data functions
 
 bool mraa::Uart::dataAvailable(unsigned int millis) {
+    (void) millis;
+
     return true;
 }
 
@@ -53,25 +69,42 @@ mraa::Result mraa::Uart::flush() {
 }
 
 mraa::Result mraa::Uart::sendBreak(int duration) {
+    (void) duration;
+
     return mraa::SUCCESS;
 }
 
 mraa::Result mraa::Uart::setBaudRate(unsigned int baud) {
+    (void) baud;
+
     return mraa::SUCCESS;
 }
 
 mraa::Result mraa::Uart::setMode(int bytesize, UartParity parity, int stopbits) {
+    (void) bytesize;
+    (void) parity;
+    (void) stopbits;
+
     return mraa::SUCCESS;
 }
 
 mraa::Result mraa::Uart::setFlowcontrol(bool xonxoff, bool rtscts) {
+    (void) xonxoff;
+    (void) rtscts;
+
     return mraa::SUCCESS;
 }
 
 mraa::Result mraa::Uart::setTimeout(int read, int write, int interchar) {
+    (void) read;
+    (void) write;
+    (void) interchar;
+
     return mraa::SUCCESS;
 }
 
 mraa::Result mraa::Uart::setNonBlocking(bool nonblock) {
+    (void) nonblock;
+
     return mraa::SUCCESS;
 }

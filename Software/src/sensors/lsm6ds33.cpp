@@ -163,9 +163,10 @@ int spartan::LSM6DS33::powerOff() {
 
 // Polling functions
 
+// TODO(harrisoncassar): Update this `update` function to utilize `ERROR_*` enums defined in `globals.h`
 bool spartan::LSM6DS33::update() {
     if (m_status == STATUS_OFF)
-        return ERROR_INVALID_STATUS;
+        return false; // Should be returning ERROR_INVALID_STATUS
 
     if (hasNewData() == RESULT_FALSE)
         //std::cerr << "No new data" << std::endl;
