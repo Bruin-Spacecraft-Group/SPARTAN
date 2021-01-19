@@ -168,10 +168,10 @@ namespace spartan {
         LSM6DS33(int busID, int lsm6ID, lsm6Settings settings);
         LSM6DS33(int busID, int lsm6ID);
 
-        virtual int powerOn();
-        virtual int powerOff();
+        int powerOn() override;
+        int powerOff() override;
 
-        virtual int pollData(MasterDataPacket &dp);
+        int pollData(MasterDataPacket &dp) override;
         // returns RESULT_FALSE if no new data, RESULT_SUCCESS if member data was updated with latest reading,
         // ERROR in the case of an error
         int hasNewData();
@@ -190,7 +190,7 @@ namespace spartan {
         // member variable of the class/struct? and then preprocess function can pull from that?
         // rawData type is a placeholder for now; will return raw sensor data
 
-        virtual void printSensorInfo();
+        void printSensorInfo() override;
         void printRawValues();
 
         const float accel_multiplier[4] = {0.061, 0.122, 0.244, 0.488};
@@ -198,8 +198,8 @@ namespace spartan {
         const float gyro_multiplier[5] = {4.375, 8.75, 17.5, 35, 70};
         float _gyro_multiplier;
 
-        virtual int printValues() const;
-        virtual const char * name() const;
+        int printValues() const override;
+        const char * name() const override;
 
     private:
         short m_temp;

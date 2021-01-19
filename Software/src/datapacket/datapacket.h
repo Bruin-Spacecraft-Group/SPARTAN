@@ -16,9 +16,9 @@ namespace spartan {
 
     class IMUDataPacket : public PacketType {
     public:
-        virtual int getSize() const;
-        virtual std::string format() const;
-        virtual void populate(const MasterDataPacket &dp);
+        int getSize() const override;
+        std::string format() const override;
+        void populate(const MasterDataPacket &dp) override;
     private:
         float m_accel_x;
         float m_accel_y;
@@ -31,8 +31,8 @@ namespace spartan {
 
     class AltimeterDataPacket : public PacketType {
     public:
-        virtual int getSize() const;
-        virtual void populate(const MasterDataPacket &dp);
+        int getSize() const override;
+        void populate(const MasterDataPacket &dp) override;
     private:
         float m_pressure;
         float m_baro_altitude;
@@ -40,8 +40,8 @@ namespace spartan {
 
     class GPSDataPacket : public PacketType {
     public:
-        virtual int getSize() const;
-        virtual void populate(const MasterDataPacket &dp);
+        int getSize() const override;
+        void populate(const MasterDataPacket &dp) override;
     private:
         float m_latitude;
         float m_longitude;
@@ -50,8 +50,8 @@ namespace spartan {
 
     class AVNHealthPacket : public PacketType {
     public:
-        virtual int getSize() const;
-        virtual void populate(const MasterDataPacket &dp);
+        int getSize() const override;
+        void populate(const MasterDataPacket &dp) override;
     private:
         float m_voltage_AVN;
         float m_IMU1_current;
@@ -63,8 +63,8 @@ namespace spartan {
 
     class FCHealthPacket : public PacketType {
     public:
-        virtual int getSize() const;
-        virtual void populate(const MasterDataPacket &dp);
+        int getSize() const override;
+        void populate(const MasterDataPacket &dp) override;
     private:
         float m_FC_voltage;
         float m_FC_current;
@@ -72,8 +72,8 @@ namespace spartan {
 
     class RadioHealthPacket : public PacketType {
     public:
-        virtual int getSize() const;
-        virtual void populate(const MasterDataPacket &dp);
+        int getSize() const override;
+        void populate(const MasterDataPacket &dp) override;
     private:
         float m_radio_voltage;
         float m_radio_current;
@@ -81,8 +81,8 @@ namespace spartan {
 
     class PayloadHealthPacket : public PacketType {
     public:
-        virtual int getSize() const;
-        virtual void populate(const MasterDataPacket &dp);
+        int getSize() const override;
+        void populate(const MasterDataPacket &dp) override;
     private:
         float m_payload_voltage;
         float m_payload_current;
