@@ -22,4 +22,4 @@ test: standard-build
 clean:
 	rm -rf $(BUILD_DIRECTORY)
 
-.PHONY: build clean
+.PHONY: default standard-build build run lint test clean
