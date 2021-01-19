@@ -82,13 +82,11 @@ The SPARTAN sensor driver library builds itself primarily on Intel's [MRAA libra
 
 ## Building
 
-To build the SPARTAN FSW, run the following shell script:
+To build the SPARTAN FSW, run the `make` command with either the `default` target or no target as follows:
 
 ```shell
-./build.sh
+make
 ```
-
-**TODO: Will be better implemented. We should add more dedicated Makefile that invokes CMake, with targets for: build (default), test, Valgrind/gdb, etc.**
 
 ## High-level Overview of Code Base
 
