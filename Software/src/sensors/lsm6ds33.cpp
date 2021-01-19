@@ -28,27 +28,37 @@ bool spartan::LSM6DS33::writeReg(uint8_t* buffer, unsigned short size) {
     // Error handling
     
     switch (msg) {
-    case mraa::SUCCESS:
-        return true; break;
-    case mraa::ERROR_INVALID_PARAMETER:
-        std::cerr << "Invalid parameter." << std::endl; break;
-    case mraa::ERROR_INVALID_HANDLE:
-        std::cerr << "ERROR_INVALID_HANDLE" << std::endl; break;
-    case mraa::ERROR_NO_RESOURCES:
-        std::cerr << "ERROR_NO_RESOURCES" << std::endl; break;
-    case mraa::ERROR_INVALID_RESOURCE:
-        std::cerr << "ERROR_INVALID_RESOURCE" << std::endl; break;
-    case mraa::ERROR_INVALID_QUEUE_TYPE:
-        std::cerr << "ERROR_INVALID_QUEUE_TYPE" << std::endl; break;
-    case mraa::ERROR_NO_DATA_AVAILABLE:
-        std::cerr << "ERROR_NO_DATA_AVAILABLE" << std::endl; break;
-    case mraa::ERROR_INVALID_PLATFORM:
-        std::cerr << "ERROR_INVALID_PLATFORM" << std::endl; break;
-    case mraa::ERROR_PLATFORM_NOT_INITIALISED:
-        std::cerr << "ERROR_PLATFORM_NOT_INITIALISED" << std::endl; break;
-    case mraa::ERROR_UNSPECIFIED:
-        std::cerr << "ERROR_UNSPECIFIED" << std::endl; break;
-    default: break;
+        case mraa::SUCCESS:
+            return true;
+        case mraa::ERROR_INVALID_PARAMETER:
+            std::cerr << "Invalid parameter." << std::endl; 
+            break;
+        case mraa::ERROR_INVALID_HANDLE:
+            std::cerr << "ERROR_INVALID_HANDLE" << std::endl; 
+            break;
+        case mraa::ERROR_NO_RESOURCES:
+            std::cerr << "ERROR_NO_RESOURCES" << std::endl; 
+            break;
+        case mraa::ERROR_INVALID_RESOURCE:
+            std::cerr << "ERROR_INVALID_RESOURCE" << std::endl; 
+            break;
+        case mraa::ERROR_INVALID_QUEUE_TYPE:
+            std::cerr << "ERROR_INVALID_QUEUE_TYPE" << std::endl; 
+            break;
+        case mraa::ERROR_NO_DATA_AVAILABLE:
+            std::cerr << "ERROR_NO_DATA_AVAILABLE" << std::endl; 
+            break;
+        case mraa::ERROR_INVALID_PLATFORM:
+            std::cerr << "ERROR_INVALID_PLATFORM" << std::endl; 
+            break;
+        case mraa::ERROR_PLATFORM_NOT_INITIALISED:
+            std::cerr << "ERROR_PLATFORM_NOT_INITIALISED" << std::endl; 
+            break;
+        case mraa::ERROR_UNSPECIFIED:
+            std::cerr << "ERROR_UNSPECIFIED" << std::endl; 
+            break;
+        default: 
+            break;
     }   
 
     return false;
@@ -58,18 +68,36 @@ bool spartan::LSM6DS33::writeReg(uint8_t* buffer, unsigned short size) {
 
 void spartan::LSM6DS33::setMultipliers() {
     switch (m_settings.accelRange) {
-        case lsm6ds33::_2g: _accel_multiplier = accel_multiplier[0]; break;
-        case lsm6ds33::_4g: _accel_multiplier = accel_multiplier[1]; break;
-        case lsm6ds33::_8g: _accel_multiplier = accel_multiplier[2]; break;
-        case lsm6ds33::_16g: _accel_multiplier = accel_multiplier[3]; break;
+        case lsm6ds33::_2g: 
+            _accel_multiplier = accel_multiplier[0]; 
+            break;
+        case lsm6ds33::_4g: 
+            _accel_multiplier = accel_multiplier[1]; 
+            break;
+        case lsm6ds33::_8g: 
+            _accel_multiplier = accel_multiplier[2]; 
+            break;
+        case lsm6ds33::_16g: 
+            _accel_multiplier = accel_multiplier[3]; 
+            break;
     }
 
     switch (m_settings.gyroRange) {
-        case lsm6ds33::_125dps: _gyro_multiplier = gyro_multiplier[0]; break;
-        case lsm6ds33::_250dps: _gyro_multiplier = gyro_multiplier[1]; break;
-        case lsm6ds33::_500dps: _gyro_multiplier = gyro_multiplier[2]; break;
-        case lsm6ds33::_1000dps: _gyro_multiplier = gyro_multiplier[3]; break;
-        case lsm6ds33::_2000dps: _gyro_multiplier = gyro_multiplier[3]; break;
+        case lsm6ds33::_125dps: 
+            _gyro_multiplier = gyro_multiplier[0]; 
+            break;
+        case lsm6ds33::_250dps: 
+            _gyro_multiplier = gyro_multiplier[1]; 
+            break;
+        case lsm6ds33::_500dps: 
+            _gyro_multiplier = gyro_multiplier[2]; 
+            break;
+        case lsm6ds33::_1000dps: 
+            _gyro_multiplier = gyro_multiplier[3]; 
+            break;
+        case lsm6ds33::_2000dps: 
+            _gyro_multiplier = gyro_multiplier[3]; 
+            break;
     }
 }
 
