@@ -21,7 +21,7 @@ namespace spartan {
         virtual int powerOn() = 0;
         virtual int powerOff() = 0;
         virtual int poll(MasterDataPacket &dp) = 0;
-        
+
         // Debug options
         virtual int printValues() const = 0;
         void printEscapedValues(bool normalize) const;

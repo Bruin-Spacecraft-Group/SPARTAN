@@ -11,7 +11,6 @@
 #else
 #include <mock/i2c.h>
 #endif
-
 #include <sensors/sensor.h>
 #include <globals.h>
 
@@ -165,7 +164,7 @@ namespace spartan {
 
         // Note: busID can be either 0 or 1 (can only connect 2 lsm6ds33 modules)
         LSM6DS33(int busID, int lsm6ID, int polling_frequency, lsm6Settings settings);
-        LSM6DS33(int busID, int lsm6IDm, int polling_frequency);
+        LSM6DS33(int busID, int lsm6ID, int polling_frequency);
 
         virtual int powerOn();
         virtual int powerOff();
