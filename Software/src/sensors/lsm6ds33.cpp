@@ -152,7 +152,7 @@ int spartan::LSM6DS33::powerOn() {
     }
 
     //run first update of sensor
-    if (update() == false) {
+    if (update() != RESULT_SUCCESS) {
         std::cerr << "Unable to initial poll LSM6DS33." << std::endl;
         return ERROR_POLL;
     }
@@ -200,9 +200,10 @@ int spartan::LSM6DS33::update() {
     if (m_status == STATUS_OFF)
         return ERROR_INVALID_STATUS; // Should be returning ERROR_INVALID_STATUS
 
-    if (hasNewData() == RESULT_FALSE)
-        //std::cerr << "No new data" << std::endl;
-        return ERROR_NO_NEW_DATA;
+    if (hasNewData() == RESULT_FALSE) {
+        std::cerr << "No new data" << std::endl;
+        return RESULT_FALSE;
+    }
 
     // set I2C address
     if (m_i2c.address(lsm6Address) != mraa::SUCCESS) {
@@ -229,7 +230,7 @@ int spartan::LSM6DS33::update() {
     m_accel.y = ((m_buffer[11] << 8) | m_buffer[10]);
     m_accel.z = ((m_buffer[13] << 8) | m_buffer[12]);
 
-    return true;
+    return RESULT_SUCCESS;
 }
 
 int spartan::LSM6DS33::hasNewData() {
@@ -281,7 +282,7 @@ void spartan::LSM6DS33::printRawValues() {
 // Override sensor base class functions
 
 int spartan::LSM6DS33::pollData(MasterDataPacket &dp) {
-    if (!update())
+    if (update() != RESULT_SUCCESS)
         return RESULT_FALSE;
     dp.temp = (float) ((m_temp / 16) + m_offsets._temp_offset);
     dp.accel_x = (float) ((m_accel.x*_accel_multiplier) + m_offsets._accel_offsets.x);
