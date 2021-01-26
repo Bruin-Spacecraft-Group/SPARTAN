@@ -76,7 +76,8 @@ namespace spartan {
         ERROR_DATAFORMAT,
         ERROR_READ,
         ERROR_POLL,
-        ERROR_INVALID_STATUS
+        ERROR_INVALID_STATUS,
+        ERROR_NO_NEW_DATA
     };
 
     // sensor status types

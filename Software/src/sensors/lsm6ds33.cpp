@@ -196,24 +196,24 @@ int spartan::LSM6DS33::powerOff() {
 // Polling functions
 
 // TODO(harrisoncassar): Update this `update` function to utilize `ERROR_*` enums defined in `globals.h`
-bool spartan::LSM6DS33::update() {
+int spartan::LSM6DS33::update() {
     if (m_status == STATUS_OFF)
-        return false; // Should be returning ERROR_INVALID_STATUS
+        return ERROR_INVALID_STATUS; // Should be returning ERROR_INVALID_STATUS
 
     if (hasNewData() == RESULT_FALSE)
         //std::cerr << "No new data" << std::endl;
-        return false;
+        return ERROR_NO_NEW_DATA;
 
     // set I2C address
     if (m_i2c.address(lsm6Address) != mraa::SUCCESS) {
         std::cerr << "Unable to set I2C address." << std::endl;
-        return false;
+        return ERROR_ADDR;
     }
 
     // read temp,x,y,z (14 bytes) into buffer
     if (m_i2c.readBytesReg(lsm6ds33::OUT_TEMP_L, m_buffer, lsm6ds33::BUFFER_SIZE) == -1) {
         std::cerr << "Unable to read data bytes starting from LSM6DS33_OUT_TEMP_L." << std::endl;
-        return false;
+        return ERROR_READ;
     }
 
     //record rawacceleration values using data reads for x,y,z respectively
