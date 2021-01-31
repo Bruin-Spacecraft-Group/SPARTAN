@@ -171,11 +171,10 @@ namespace spartan {
         virtual int powerOn();
         virtual int powerOff();
 
-        virtual int pollData();
+        int pollData(std::vector<EncodedPacket> &packets) override;
         // returns RESULT_FALSE if no new data, RESULT_SUCCESS if member data was updated with latest reading,
         // ERROR in the case of an error
         int hasNewData();
-        virtual bool update();
 
         bool writeReg(uint8_t* buffer, unsigned short size);
 

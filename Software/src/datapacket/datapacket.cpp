@@ -2,6 +2,33 @@
 
 #include <string>
 
+std::string spartan::format_encoded_packet(EncodedPacket &packet) {
+    std::string formatted = std::to_string(packet.length) + std::to_string(packet.timestamp) + ","
+            + std::to_string(packet.length);
+
+    for (int i = 0; i < packet.length; i++) {
+        formatted += std::to_string(packet.data[i]);
+    }
+
+    return formatted;
+}
+
+spartan::DecodedPacket::DecodedPacket(ulong timestamp) : m_timestamp(timestamp) {}
+
+ulong spartan::DecodedPacket::get_timestamp() const {
+    return m_timestamp;
+}
+
+spartan::IMUDecodedPacket::IMUDecodedPacket(ulong timestamp, const float *data) : DecodedPacket(timestamp) {
+    m_temp = data[0];
+    m_accel_x = data[1];
+    m_accel_y = data[2];
+    m_accel_z = data[3];
+    m_gyro_x = data[4];
+    m_gyro_y = data[5];
+    m_gyro_z = data[6];
+}
+
 void spartan::PacketType::setTimestamp(unsigned long timestamp) {
     m_timestamp = timestamp;
 }
@@ -19,12 +46,11 @@ void spartan::IMUDataPacket::update() {
     unsigned long timestamp = m_lsm6ds33->getTimestamp();
 
     if (timestamp == getTimestamp()) {
-        // pollData() failed; sensor data has not changed, so no need to update data
-        // TODO: Return error?
+        // Sensor data has not changed, so no need to update data
         return;
     }
 
-    // pollData() succeeded; set timestamp
+    // Set timestamp
     setTimestamp(timestamp);
 
     // Populate data fields

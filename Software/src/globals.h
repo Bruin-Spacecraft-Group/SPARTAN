@@ -58,6 +58,12 @@ namespace spartan {
         MAG
     };
 
+    // IDs used to identify the data contained in an EncodedPacket
+    enum data_id {
+        LSM6DS33_DATA,
+        LSM6DS33_SET,
+    };
+
     enum flight_state {
         // status constants (as currently used in systems.h)
         DISCONNECTED,

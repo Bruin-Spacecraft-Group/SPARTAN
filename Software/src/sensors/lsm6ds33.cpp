@@ -162,44 +162,6 @@ int spartan::LSM6DS33::powerOff() {
     return RESULT_SUCCESS;
 }
 
-// Polling functions
-
-bool spartan::LSM6DS33::update() {
-    if (m_status == STATUS_OFF)
-        return ERROR_INVALID_STATUS;
-
-    if (hasNewData() == RESULT_FALSE)
-        //std::cerr << "No new data" << std::endl;
-        return false;
-
-    // set I2C address
-    if (m_i2c.address(lsm6Address) != mraa::SUCCESS) {
-        std::cerr << "Unable to set I2C address." << std::endl;
-        return false;
-    }
-
-    // read temp,x,y,z (14 bytes) into buffer
-    if (m_i2c.readBytesReg(lsm6ds33::OUT_TEMP_L, m_buffer, lsm6ds33::BUFFER_SIZE) == -1) {
-        std::cerr << "Unable to read data bytes starting from LSM6DS33_OUT_TEMP_L." << std::endl;
-        return false;
-    }
-
-    //record rawacceleration values using data reads for x,y,z respectively
-    //DATAx0 is the least significant byte, and DATAx1 is the most significant byte
-    //conversion of raw sensor data into relevant values based on constant offset values
-    m_temp = ((m_buffer[1] << 8) | m_buffer[0]);
-
-    m_gyro.x = ((m_buffer[3] << 8) | m_buffer[2]);
-    m_gyro.y = ((m_buffer[5] << 8) | m_buffer[4]);
-    m_gyro.z = ((m_buffer[7] << 8) | m_buffer[6]);
-
-    m_accel.x = ((m_buffer[9] << 8) | m_buffer[8]);
-    m_accel.y = ((m_buffer[11] << 8) | m_buffer[10]);
-    m_accel.z = ((m_buffer[13] << 8) | m_buffer[12]);
-
-    return true;
-}
-
 int spartan::LSM6DS33::hasNewData() {
     // NOTE: STATUS_REG on lSM6DS33 used to check if data is available for temp/gyro/accel
     if (m_status == STATUS_OFF)
@@ -248,21 +210,32 @@ void spartan::LSM6DS33::printRawValues() {
 
 // Override sensor base class functions
 
-int spartan::LSM6DS33::pollData() {
-    if (!update())
+int spartan::LSM6DS33::pollData(std::vector<EncodedPacket> &packets) {
+    if (m_status == STATUS_OFF)
+        return ERROR_INVALID_STATUS;
+
+    if (hasNewData() == RESULT_FALSE)
+        //std::cerr << "No new data" << std::endl;
         return RESULT_FALSE;
 
-    // Set timestamp
-    setTimestamp(spartan::getTimeMillis());
+    // set I2C address
+    if (m_i2c.address(lsm6Address) != mraa::SUCCESS) {
+        std::cerr << "Unable to set I2C address." << std::endl;
+        return false;
+    }
 
-    // Populate m_data
-    m_data[0] = (float) ((m_temp / 16.0) + m_offsets._temp_offset);
-    m_data[1] = (float) ((m_accel.x * _accel_multiplier) + m_offsets._accel_offsets.x);
-    m_data[2] = (float) ((m_accel.y * _accel_multiplier) + m_offsets._accel_offsets.y);
-    m_data[3] = (float) ((m_accel.z * _accel_multiplier) + m_offsets._accel_offsets.z);
-    m_data[4] = (float) ((m_gyro.x * _gyro_multiplier) + m_offsets._gyro_offsets.x);
-    m_data[5] = (float) ((m_gyro.y * _gyro_multiplier) + m_offsets._gyro_offsets.y);
-    m_data[6] = (float) ((m_gyro.z * _gyro_multiplier) + m_offsets._gyro_offsets.z);
+    // read temp,x,y,z (14 bytes) into buffer
+    if (m_i2c.readBytesReg(lsm6ds33::OUT_TEMP_L, m_buffer, lsm6ds33::BUFFER_SIZE) == -1) {
+        std::cerr << "Unable to read data bytes starting from LSM6DS33_OUT_TEMP_L." << std::endl;
+        return false;
+    }
+
+    packets.push_back(EncodedPacket {
+        .id = spartan::data_id::LSM6DS33_DATA,
+        .timestamp = spartan::getTimeMillis(),
+        .length = lsm6ds33::BUFFER_SIZE,
+        .data = m_buffer,
+    });
 
     return RESULT_SUCCESS;
 }

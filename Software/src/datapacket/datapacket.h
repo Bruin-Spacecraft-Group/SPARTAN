@@ -6,7 +6,42 @@
 #include "sensors/sensor.h"
 #include "sensors/lsm6ds33.h"
 
+using ulong = unsigned long;
+
 namespace spartan {
+    struct EncodedPacket {
+        uint8_t id;
+        ulong timestamp;
+        uint8_t length;
+        uint8_t *data;
+    };
+
+    std::string format_encoded_packet(EncodedPacket &packet);
+
+    class DecodedPacket {
+    public:
+        explicit DecodedPacket(ulong timestamp);
+
+        ulong get_timestamp() const;
+
+    private:
+        ulong m_timestamp;
+    };
+
+    class IMUDecodedPacket : public DecodedPacket {
+    public:
+        IMUDecodedPacket(ulong timestamp, const float *data);
+
+    private:
+        float m_accel_x;
+        float m_accel_y;
+        float m_accel_z;
+        float m_gyro_x;
+        float m_gyro_y;
+        float m_gyro_z;
+        float m_temp;
+    };
+
     class PacketType {
     public:
         virtual int getSize() const = 0;

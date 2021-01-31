@@ -12,14 +12,11 @@
 #define DEBUG true
 
 int main() {
-    std::array<spartan::PacketType*, 1> dataPackets{};
+    std::vector<spartan::EncodedPacket> dataPackets;
     std::array<spartan::Sensor*, 1> sensors{};
 
     // TODO: Initialize Sensors
     sensors[0] = new spartan::LSM6DS33(1, 0);
-
-    // TODO: Initialize DataPackets
-    dataPackets[0] = new spartan::IMUDataPacket(sensors[0]);
 
     // Initialize sensors
     for (auto &sensor: sensors) {
@@ -32,20 +29,18 @@ int main() {
     // TODO: flight loop
     for (int count  = 0; count < 100; count++) {
         for (auto &sensor: sensors) {
-            if (sensor->pollData() != spartan::RESULT_SUCCESS) {
+            if (sensor->pollData(dataPackets) != spartan::RESULT_SUCCESS) {
                 sensor->printPollingError();
             }
         }
 
         for (auto &dataPacket : dataPackets) {
-            dataPacket->update();
-
             if (DEBUG) {
-                std::cout << "Packet size " << dataPacket->getSize() << std::endl;
-                std::cout << dataPacket->format() << std::endl;
+                std::cout << "Packet size " << dataPacket.length << std::endl;
+                std::cout << spartan::format_encoded_packet(dataPacket) << std::endl;
             }
 
-            fout << dataPacket->format();
+            fout << spartan::format_encoded_packet(dataPacket);
         }
 
         std::this_thread::sleep_for(std::chrono::seconds(1));

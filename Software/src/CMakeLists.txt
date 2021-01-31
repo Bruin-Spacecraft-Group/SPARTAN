@@ -8,7 +8,7 @@ add_library(
     sensors/lsm6ds33.cpp
 
     utils/utils.cpp
-)
+        datapacket/decoder.cpp datapacket/decoder.h)
 
 target_include_directories(
     spartanflightlib
