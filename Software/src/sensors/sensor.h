@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 
-#include "datapacket.h"
 #include "globals.h"
 
 namespace spartan {

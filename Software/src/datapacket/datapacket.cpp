@@ -3,11 +3,12 @@
 #include <string>
 
 std::string spartan::format_encoded_packet(EncodedPacket &packet) {
-    std::string formatted = std::to_string(packet.length) + std::to_string(packet.timestamp) + ","
-            + std::to_string(packet.length);
+    std::string formatted = std::to_string(packet.timestamp) + ',';
+    formatted += packet.id;
+    formatted += packet.length;
 
     for (int i = 0; i < packet.length; i++) {
-        formatted += std::to_string(packet.data[i]);
+        formatted += packet.data[i];
     }
 
     return formatted;
@@ -41,28 +42,6 @@ spartan::IMUDataPacket::IMUDataPacket(Sensor *lsm6ds33)
     : m_lsm6ds33(dynamic_cast<spartan::LSM6DS33*>(lsm6ds33)) {}
 
 int spartan::IMUDataPacket::getSize() const { return 7; }
-
-void spartan::IMUDataPacket::update() {
-    unsigned long timestamp = m_lsm6ds33->getTimestamp();
-
-    if (timestamp == getTimestamp()) {
-        // Sensor data has not changed, so no need to update data
-        return;
-    }
-
-    // Set timestamp
-    setTimestamp(timestamp);
-
-    // Populate data fields
-    float *data = m_lsm6ds33->getData();
-    m_temp = data[0];
-    m_accel_x = data[1];
-    m_accel_y = data[2];
-    m_accel_z = data[3];
-    m_gyro_x = data[4];
-    m_gyro_y = data[5];
-    m_gyro_z = data[6];
-}
 
 std::string spartan::IMUDataPacket::format() const { 
     return "\ttimestamp: " + std::to_string(m_timestamp)

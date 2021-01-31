@@ -3,12 +3,14 @@
 
 #include <string>
 
-#include "sensors/sensor.h"
 #include "sensors/lsm6ds33.h"
 
 using ulong = unsigned long;
 
 namespace spartan {
+    class Sensor;
+    class LSM6DS33;
+
     struct EncodedPacket {
         uint8_t id;
         ulong timestamp;
@@ -45,7 +47,6 @@ namespace spartan {
     class PacketType {
     public:
         virtual int getSize() const = 0;
-        virtual void update() = 0;
         virtual std::string format() const = 0;
 
         void setTimestamp(unsigned long timestamp);
@@ -61,7 +62,6 @@ namespace spartan {
 
         int getSize() const override;
         std::string format() const override;
-        void update() override;
 
     private:
         LSM6DS33 *m_lsm6ds33;

@@ -13,12 +13,15 @@
 #include <mock/i2c.h>
 #endif
 
+#include "datapacket.h"
 #include <sensors/sensor.h>
 #include <globals.h>
 
 // Data sheet and other info about sensor can be referenced here: https://www.st.com/resource/en/datasheet/lsm6ds33.pdf
 
 namespace spartan {
+    class EncodedPacket;
+
     // Available settings
     namespace lsm6ds33 {
         enum AccelRange {
@@ -175,6 +178,7 @@ namespace spartan {
         // returns RESULT_FALSE if no new data, RESULT_SUCCESS if member data was updated with latest reading,
         // ERROR in the case of an error
         int hasNewData();
+        bool update();
 
         bool writeReg(uint8_t* buffer, unsigned short size);
 

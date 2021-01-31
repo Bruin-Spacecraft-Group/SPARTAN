@@ -8,8 +8,12 @@
 #include <sensors/ads1115.h>
 #include <sensors/lsm6ds33.h>
 #include <utils/utils.h>
+#include "decoder.h"
 
 #define DEBUG true
+
+using std::cout;
+using std::endl;
 
 int main() {
     std::vector<spartan::EncodedPacket> dataPackets;
@@ -26,8 +30,10 @@ int main() {
     std::ofstream fout;
     fout.open("data.txt");
 
+    cout << spartan::data_id::LSM6DS33_DATA << endl;
+
     // TODO: flight loop
-    for (int count  = 0; count < 100; count++) {
+    for (int count  = 0; count < 1; count++) {
         for (auto &sensor: sensors) {
             if (sensor->pollData(dataPackets) != spartan::RESULT_SUCCESS) {
                 sensor->printPollingError();
@@ -36,8 +42,8 @@ int main() {
 
         for (auto &dataPacket : dataPackets) {
             if (DEBUG) {
-                std::cout << "Packet size " << dataPacket.length << std::endl;
-                std::cout << spartan::format_encoded_packet(dataPacket) << std::endl;
+                cout << "Packet size " << (int) dataPacket.length << endl;
+                cout << spartan::format_encoded_packet(dataPacket) << endl;
             }
 
             fout << spartan::format_encoded_packet(dataPacket);

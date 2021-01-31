@@ -4,7 +4,7 @@
 // Constructors
 
 spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID, spartan::LSM6DS33::lsm6Settings settings)
-    : Sensor(busID, lsm6ID, 7), m_settings(settings), m_i2c(busID, true) { // raw=true, disable pinmapper for board
+    : Sensor(busID, lsm6ID), m_settings(settings), m_i2c(busID, true) { // raw=true, disable pinmapper for board
     if (lsm6ID)
         lsm6Address = lsm6ds33::HIGH_ADDRESS;
     else
@@ -13,7 +13,7 @@ spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID, spartan::LSM6DS33::lsm6Settin
 }
 
 spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID)
-    : Sensor(busID, lsm6ID, 7), m_i2c(busID, true) {
+    : Sensor(busID, lsm6ID), m_i2c(busID, true) {
     if (lsm6ID)
         lsm6Address = lsm6ds33::HIGH_ADDRESS;
     else
@@ -162,6 +162,29 @@ int spartan::LSM6DS33::powerOff() {
     return RESULT_SUCCESS;
 }
 
+bool spartan::LSM6DS33::update() {
+    if (m_status == STATUS_OFF)
+        return ERROR_INVALID_STATUS;
+
+    if (hasNewData() == RESULT_FALSE)
+        //std::cerr << "No new data" << std::endl;
+        return RESULT_FALSE;
+
+    // set I2C address
+    if (m_i2c.address(lsm6Address) != mraa::SUCCESS) {
+        std::cerr << "Unable to set I2C address." << std::endl;
+        return false;
+    }
+
+    // read temp,x,y,z (14 bytes) into buffer
+    if (m_i2c.readBytesReg(lsm6ds33::OUT_TEMP_L, m_buffer, lsm6ds33::BUFFER_SIZE) == -1) {
+        std::cerr << "Unable to read data bytes starting from LSM6DS33_OUT_TEMP_L." << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
 int spartan::LSM6DS33::hasNewData() {
     // NOTE: STATUS_REG on lSM6DS33 used to check if data is available for temp/gyro/accel
     if (m_status == STATUS_OFF)
@@ -211,23 +234,8 @@ void spartan::LSM6DS33::printRawValues() {
 // Override sensor base class functions
 
 int spartan::LSM6DS33::pollData(std::vector<EncodedPacket> &packets) {
-    if (m_status == STATUS_OFF)
-        return ERROR_INVALID_STATUS;
-
-    if (hasNewData() == RESULT_FALSE)
-        //std::cerr << "No new data" << std::endl;
+    if (!update()) {
         return RESULT_FALSE;
-
-    // set I2C address
-    if (m_i2c.address(lsm6Address) != mraa::SUCCESS) {
-        std::cerr << "Unable to set I2C address." << std::endl;
-        return false;
-    }
-
-    // read temp,x,y,z (14 bytes) into buffer
-    if (m_i2c.readBytesReg(lsm6ds33::OUT_TEMP_L, m_buffer, lsm6ds33::BUFFER_SIZE) == -1) {
-        std::cerr << "Unable to read data bytes starting from LSM6DS33_OUT_TEMP_L." << std::endl;
-        return false;
     }
 
     packets.push_back(EncodedPacket {

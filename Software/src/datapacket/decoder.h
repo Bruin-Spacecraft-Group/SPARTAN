@@ -3,18 +3,22 @@
 
 #include "datapacket.h"
 
+#include <string>
 #include <cstdint>
 #include <vector>
+
+using std::string;
 
 namespace spartan {
 
 
     class Decoder {
     public:
-        void decode(const EncodedPacket &packet);
+        // Decodes a string into a DecodedPacket
+        void decode(const string &packet);
 
         // Decoders for each sensor
-        DecodedPacket* decode_lsm6ds33(const EncodedPacket &packet) const;
+        DecodedPacket* decode_lsm6ds33(ulong timestamp, const char *data) const;
 
         // Setters for each sensor's settings
         void set_lsm6ds33();
