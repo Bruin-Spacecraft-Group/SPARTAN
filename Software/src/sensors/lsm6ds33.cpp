@@ -22,16 +22,16 @@ spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID)
 
 // Write functions
 
-bool spartan::LSM6DS33::writeReg(uint8_t* buffer, unsigned short size) {
+int spartan::LSM6DS33::writeReg(uint8_t* buffer, unsigned short size) {
     mraa::Result msg = m_i2c.write(buffer, size);
 
     // Error handling
     
     switch (msg) {
         case mraa::SUCCESS:
-            return true;
+            return RESULT_SUCCESS;
         case mraa::ERROR_INVALID_PARAMETER:
-            std::cerr << "Invalid parameter." << std::endl; 
+            std::cerr << "ERROR_INVALID_PARAMETER" << std::endl; 
             break;
         case mraa::ERROR_INVALID_HANDLE:
             std::cerr << "ERROR_INVALID_HANDLE" << std::endl; 
@@ -61,7 +61,7 @@ bool spartan::LSM6DS33::writeReg(uint8_t* buffer, unsigned short size) {
             break;
     }   
 
-    return false;
+    return ERROR_WRITE;
 }
 
 // Device settings
@@ -101,7 +101,7 @@ void spartan::LSM6DS33::setMultipliers() {
     }
 }
 
-bool spartan::LSM6DS33::updateSettings() {
+int spartan::LSM6DS33::updateSettings() {
     // Update multiplier constant
     setMultipliers();
 
@@ -109,18 +109,18 @@ bool spartan::LSM6DS33::updateSettings() {
     m_buffer[0] = lsm6ds33::CTRL1_XL;
     m_buffer[1] = (m_settings.accel_odr << 4) | m_settings.accelRange | m_settings.accelAAFreq;
 
-    if (!writeReg(m_buffer, 2))
-        return false;
+    if (writeReg(m_buffer, 2) != RESULT_SUCCESS)
+        return ERROR_WRITE;
 
     m_buffer[0] = lsm6ds33::CTRL2_G;
     m_buffer[1] = (m_settings.gyro_odr << 4) | m_settings.gyroRange;
 
-    if (!writeReg(m_buffer, 2))
-        return false;
-    return true;
+    if (writeReg(m_buffer, 2) != RESULT_SUCCESS)
+        return ERROR_WRITE;
+    return RESULT_SUCCESS;
 }
 
-bool spartan::LSM6DS33::updateSettings(spartan::LSM6DS33::lsm6Settings settings) {
+int spartan::LSM6DS33::updateSettings(spartan::LSM6DS33::lsm6Settings settings) {
     m_settings = settings;
     return updateSettings();
 }
@@ -140,7 +140,7 @@ int spartan::LSM6DS33::powerOn() {
     // Update settings for accelerometer and gyroscope
     if (!updateSettings()) {
         std::cerr << "Update setting failed" << std::endl;
-        return ERROR_ADDR;
+        return ERROR_UPDATE_SETTING;
     }
 
     // CTRL3_C has default 1 on IF_INC page 49 in datasheet
@@ -152,7 +152,7 @@ int spartan::LSM6DS33::powerOn() {
     }
 
     //run first update of sensor
-    if (update() == false) {
+    if (update() != RESULT_SUCCESS) {
         std::cerr << "Unable to initial poll LSM6DS33." << std::endl;
         return ERROR_POLL;
     }
@@ -196,24 +196,25 @@ int spartan::LSM6DS33::powerOff() {
 // Polling functions
 
 // TODO(harrisoncassar): Update this `update` function to utilize `ERROR_*` enums defined in `globals.h`
-bool spartan::LSM6DS33::update() {
+int spartan::LSM6DS33::update() {
     if (m_status == STATUS_OFF)
-        return false; // Should be returning ERROR_INVALID_STATUS
+        return ERROR_INVALID_STATUS;
 
-    if (hasNewData() == RESULT_FALSE)
-        //std::cerr << "No new data" << std::endl;
-        return false;
+    if (hasNewData() == RESULT_FALSE) {
+        std::cerr << "No new data" << std::endl;
+        return RESULT_FALSE;
+    }
 
     // set I2C address
     if (m_i2c.address(lsm6Address) != mraa::SUCCESS) {
         std::cerr << "Unable to set I2C address." << std::endl;
-        return false;
+        return ERROR_ADDR;
     }
 
     // read temp,x,y,z (14 bytes) into buffer
     if (m_i2c.readBytesReg(lsm6ds33::OUT_TEMP_L, m_buffer, lsm6ds33::BUFFER_SIZE) == -1) {
         std::cerr << "Unable to read data bytes starting from LSM6DS33_OUT_TEMP_L." << std::endl;
-        return false;
+        return ERROR_READ;
     }
 
     //record rawacceleration values using data reads for x,y,z respectively
@@ -229,7 +230,7 @@ bool spartan::LSM6DS33::update() {
     m_accel.y = ((m_buffer[11] << 8) | m_buffer[10]);
     m_accel.z = ((m_buffer[13] << 8) | m_buffer[12]);
 
-    return true;
+    return RESULT_SUCCESS;
 }
 
 int spartan::LSM6DS33::hasNewData() {
@@ -281,7 +282,7 @@ void spartan::LSM6DS33::printRawValues() {
 // Override sensor base class functions
 
 int spartan::LSM6DS33::pollData(MasterDataPacket &dp) {
-    if (!update())
+    if (update() != RESULT_SUCCESS)
         return RESULT_FALSE;
     dp.temp = (float) ((m_temp / 16) + m_offsets._temp_offset);
     dp.accel_x = (float) ((m_accel.x*_accel_multiplier) + m_offsets._accel_offsets.x);
