@@ -174,14 +174,14 @@ namespace spartan {
         int pollData(MasterDataPacket &dp) override;
         // returns RESULT_FALSE if no new data, RESULT_SUCCESS if member data was updated with latest reading,
         // ERROR in the case of an error
-        int hasNewData();   
+        int hasNewData();
         virtual int update();
 
-        bool writeReg(uint8_t* buffer, unsigned short size);
+        int writeReg(uint8_t* buffer, unsigned short size);
 
         void setMultipliers();
-        bool updateSettings();
-        bool updateSettings(lsm6Settings settings);
+        int updateSettings();
+        int updateSettings(lsm6Settings settings);
 
         //virtual bool longPoll() { return false; /*dummy*/}
         // call pollData() over a longer period of time, averaging out the values (maybe allow time input functionality, or

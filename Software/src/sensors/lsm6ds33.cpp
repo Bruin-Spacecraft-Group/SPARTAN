@@ -22,16 +22,16 @@ spartan::LSM6DS33::LSM6DS33(int busID, int lsm6ID)
 
 // Write functions
 
-bool spartan::LSM6DS33::writeReg(uint8_t* buffer, unsigned short size) {
+int spartan::LSM6DS33::writeReg(uint8_t* buffer, unsigned short size) {
     mraa::Result msg = m_i2c.write(buffer, size);
 
     // Error handling
     
     switch (msg) {
         case mraa::SUCCESS:
-            return true;
+            return RESULT_SUCCESS;
         case mraa::ERROR_INVALID_PARAMETER:
-            std::cerr << "Invalid parameter." << std::endl; 
+            std::cerr << "ERROR_INVALID_PARAMETER" << std::endl; 
             break;
         case mraa::ERROR_INVALID_HANDLE:
             std::cerr << "ERROR_INVALID_HANDLE" << std::endl; 
@@ -61,7 +61,7 @@ bool spartan::LSM6DS33::writeReg(uint8_t* buffer, unsigned short size) {
             break;
     }   
 
-    return false;
+    return ERROR_WRITE;
 }
 
 // Device settings
@@ -101,7 +101,7 @@ void spartan::LSM6DS33::setMultipliers() {
     }
 }
 
-bool spartan::LSM6DS33::updateSettings() {
+int spartan::LSM6DS33::updateSettings() {
     // Update multiplier constant
     setMultipliers();
 
@@ -109,18 +109,18 @@ bool spartan::LSM6DS33::updateSettings() {
     m_buffer[0] = lsm6ds33::CTRL1_XL;
     m_buffer[1] = (m_settings.accel_odr << 4) | m_settings.accelRange | m_settings.accelAAFreq;
 
-    if (!writeReg(m_buffer, 2))
-        return false;
+    if (writeReg(m_buffer, 2) != RESULT_SUCCESS)
+        return ERROR_WRITE;
 
     m_buffer[0] = lsm6ds33::CTRL2_G;
     m_buffer[1] = (m_settings.gyro_odr << 4) | m_settings.gyroRange;
 
-    if (!writeReg(m_buffer, 2))
-        return false;
-    return true;
+    if (writeReg(m_buffer, 2) != RESULT_SUCCESS)
+        return ERROR_WRITE;
+    return RESULT_SUCCESS;
 }
 
-bool spartan::LSM6DS33::updateSettings(spartan::LSM6DS33::lsm6Settings settings) {
+int spartan::LSM6DS33::updateSettings(spartan::LSM6DS33::lsm6Settings settings) {
     m_settings = settings;
     return updateSettings();
 }
@@ -140,7 +140,7 @@ int spartan::LSM6DS33::powerOn() {
     // Update settings for accelerometer and gyroscope
     if (!updateSettings()) {
         std::cerr << "Update setting failed" << std::endl;
-        return ERROR_ADDR;
+        return ERROR_UPDATE_SETTING;
     }
 
     // CTRL3_C has default 1 on IF_INC page 49 in datasheet
@@ -198,7 +198,7 @@ int spartan::LSM6DS33::powerOff() {
 // TODO(harrisoncassar): Update this `update` function to utilize `ERROR_*` enums defined in `globals.h`
 int spartan::LSM6DS33::update() {
     if (m_status == STATUS_OFF)
-        return ERROR_INVALID_STATUS; // Should be returning ERROR_INVALID_STATUS
+        return ERROR_INVALID_STATUS;
 
     if (hasNewData() == RESULT_FALSE) {
         std::cerr << "No new data" << std::endl;

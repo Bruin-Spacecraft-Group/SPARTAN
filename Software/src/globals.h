@@ -64,7 +64,7 @@ namespace spartan {
         // maybe this as a general status for being mission ready before launch? (this would be right after turn-on)
         IDLE,
         READY_TO_RECIEVE,
-        READY_TO_SEND,
+        READY_TO_SEND
     };
 
     // return codes (success and error types)
@@ -77,6 +77,8 @@ namespace spartan {
         ERROR_READ,
         ERROR_POLL,
         ERROR_INVALID_STATUS,
+        ERROR_WRITE,
+        ERROR_UPDATE_SETTING
     };
 
     // sensor status types
