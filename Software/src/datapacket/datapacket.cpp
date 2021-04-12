@@ -20,7 +20,7 @@ ulong spartan::DecodedPacket::get_timestamp() const {
     return m_timestamp;
 }
 
-spartan::IMUDecodedPacket::IMUDecodedPacket(ulong timestamp, const float *data) : DecodedPacket(timestamp) {
+spartan::IMUPacket::IMUPacket(ulong timestamp, const float *data) : DecodedPacket(timestamp) {
     m_temp = data[0];
     m_accel_x = data[1];
     m_accel_y = data[2];
@@ -29,38 +29,3 @@ spartan::IMUDecodedPacket::IMUDecodedPacket(ulong timestamp, const float *data) 
     m_gyro_y = data[5];
     m_gyro_z = data[6];
 }
-
-void spartan::PacketType::setTimestamp(unsigned long timestamp) {
-    m_timestamp = timestamp;
-}
-
-unsigned long spartan::PacketType::getTimestamp() const {
-    return m_timestamp;
-}
-
-spartan::IMUDataPacket::IMUDataPacket(Sensor *lsm6ds33)
-    : m_lsm6ds33(dynamic_cast<spartan::LSM6DS33*>(lsm6ds33)) {}
-
-int spartan::IMUDataPacket::getSize() const { return 7; }
-
-std::string spartan::IMUDataPacket::format() const { 
-    return "\ttimestamp: " + std::to_string(m_timestamp)
-           + "\n\taccel_y: " + std::to_string(m_accel_y) 
-           + "\n\taccel_z: " + std::to_string(m_accel_z) 
-           + "\n\tgyro_x: " + std::to_string(m_gyro_x) 
-           + "\n\tgyro_y: " + std::to_string(m_gyro_y) 
-           + "\n\tgyro_z: " + std::to_string(m_gyro_z) 
-           + "\n\ttemperature: " + std::to_string(m_temp);
-};
-
-int spartan::AltimeterDataPacket::getSize() const { return 3; }
-
-int spartan::GPSDataPacket::getSize() const { return 4; }
-
-int spartan::AVNHealthPacket::getSize() const { return 7; }
-
-int spartan::FCHealthPacket::getSize() const { return 3; }
-
-int spartan::RadioHealthPacket::getSize() const { return 3; }
-
-int spartan::PayloadHealthPacket::getSize() const { return 3; }

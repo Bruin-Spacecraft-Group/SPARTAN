@@ -20,9 +20,9 @@ void spartan::Decoder::decode(const string &packet) {
 }
 
 spartan::DecodedPacket* spartan::Decoder::decode_lsm6ds33(ulong timestamp, const char *data) const {
-    //record raw acceleration values using data reads for x,y,z respectively
-    //DATAx0 is the least significant byte, and DATAx1 is the most significant byte
-    //conversion of raw sensor data into relevant values based on constant offset values
+    // record raw acceleration values using data reads for x,y,z respectively
+    // DATAx0 is the least significant byte, and DATAx1 is the most significant byte
+    // conversion of raw sensor data into relevant values based on constant offset values
     int32_t temp = ((data[1] << 8) | data[0]);
 
     int32_t gyro_x = ((data[3] << 8) | data[2]);
@@ -43,7 +43,7 @@ spartan::DecodedPacket* spartan::Decoder::decode_lsm6ds33(ulong timestamp, const
         (float) ((gyro_z * m_lsm6ds33_settings.gyro_multiplier) + m_lsm6ds33_settings.gyro_offset_z)
     };
 
-    return new IMUDecodedPacket(timestamp, decoded_data);
+    return new IMUPacket(timestamp, decoded_data);
 }
 
 void spartan::Decoder::set_lsm6ds33() {

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "globals.h"
+#include "../globals.h"
 
 namespace spartan {
     class EncodedPacket;
@@ -27,9 +27,6 @@ namespace spartan {
         // Debug options
         virtual int printValues() const = 0;
         void printEscapedValues(bool normalize) const;
-
-        // Data setters
-        void setTimestamp(unsigned long timestamp);
 
         // Data getters
         int getBusID() const;

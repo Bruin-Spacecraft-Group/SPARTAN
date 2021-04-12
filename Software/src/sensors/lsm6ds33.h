@@ -10,12 +10,12 @@
 #if !defined(__x86_64__) && !defined(_WIN32)
 #include <mraa/i2c.hpp>
 #else
-#include <mock/i2c.h>
+#include "../../mock/i2c.h"
 #endif
 
-#include "datapacket.h"
-#include <sensors/sensor.h>
-#include <globals.h>
+#include "../datapacket/datapacket.h"
+#include "sensor.h"
+#include "../globals.h"
 
 // Data sheet and other info about sensor can be referenced here: https://www.st.com/resource/en/datasheet/lsm6ds33.pdf
 

@@ -4,11 +4,11 @@
 #include <iostream>
 #include <thread>
 
-#include <datapacket/datapacket.h>
-#include <sensors/ads1115.h>
-#include <sensors/lsm6ds33.h>
-#include <utils/utils.h>
-#include "decoder.h"
+#include "../src/datapacket/datapacket.h"
+#include "../src/sensors/ads1115.h"
+#include "../src/sensors/lsm6ds33.h"
+#include "../src/utils/utils.h"
+#include "../src/datapacket/decoder.h"
 
 #define DEBUG true
 
@@ -40,7 +40,7 @@ int main() {
             }
         }
 
-        for (auto &dataPacket : dataPackets) {
+        for (auto &dataPacket: dataPackets) {
             if (DEBUG) {
                 cout << "Packet size " << (int) dataPacket.length << endl;
                 cout << spartan::format_encoded_packet(dataPacket) << endl;

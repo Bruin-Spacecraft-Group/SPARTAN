@@ -10,8 +10,6 @@
 using std::string;
 
 namespace spartan {
-
-
     class Decoder {
     public:
         // Decodes a string into a DecodedPacket

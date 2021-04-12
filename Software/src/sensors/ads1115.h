@@ -5,11 +5,11 @@
 #if !defined(__x86_64__) && !defined(_WIN32)
 #include <mraa/i2c.hpp>
 #else
-#include <mock/i2c.h>
+#include "../../mock/i2c.h"
 #endif
 
 #include <stdint.h>
-#include <sensors/sensor.h>
+#include "sensor.h"
 
 namespace spartan
 {
